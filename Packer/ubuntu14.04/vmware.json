@@ -1,0 +1,115 @@
+{
+    "builders": [
+        {
+		"type": "vmware-iso",
+	    "vmx_template_path": "packer.vmx",
+		"guest_os_type": "ubuntu-64",
+	    "remote_type": "esx5",
+	    "remote_username": "vmbuildadmin",
+	    "remote_host": "wtgc-vmbd-01.internal.sanger.ac.uk",
+	    "remote_private_key_file": "vmware_private_key.pem",
+	    "remote_datastore": "wtgc-vmbd-01:datastore1",
+		"iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
+		"iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+		"iso_checksum_type": "md5",
+	    "vnc_port_min": 5980,
+	    "vnc_port_max": 5990,
+		"ssh_username": "packer",
+		"ssh_password": "packer",
+		"ssh_timeout": "60m",
+		"shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+		"http_directory": "data/",
+		"headless": false,
+	    "version": 8,
+	    "tools_upload_flavor": "linux",
+	    "format": "ovf",
+		"boot_command": [
+	      "<esc><esc><enter><wait>",
+	      "/install/vmlinuz  ",
+	      " auto",
+	      " console-setup/ask_detect=false",
+	      " console-setup/layoutcode=us",
+	      " console-setup/modelcode=pc105",
+	      " debconf/frontend=noninteractive",
+	      " debian-installer=en_US",
+	      " fb=false",
+	      " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+	      " initrd=/install/initrd.gz",
+	      " kbd-chooser/method=us",
+	      " keyboard-configuration/layout=USA",
+	      " keyboard-configuration/variant=USA",
+	      " hostname={{ .Name }} ",
+	      " locale=en_US",
+	      " netcfg/get_domain=vm",
+	      " netcfg/get_hostname={{ .Name }}",
+	      " noapic",
+	      " -- ",
+	      "<enter><wait>"
+		]
+
+        },
+        {
+		"type": "virtualbox-iso",
+		"guest_os_type": "Ubuntu_64",
+		"iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
+		"iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+		"iso_checksum_type": "md5",
+		"ssh_username": "packer",
+		"ssh_password": "packer",
+		"ssh_timeout": "60m",
+		"shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+		"http_directory": "data/",
+		"headless": false,
+		"boot_command": [
+			  " <esc><esc><enter><wait>",
+			  " /install/vmlinuz noapic ",
+			  " debian-installer=en_GB auto locale=en_GBS kbd-chooser/method=gb ",
+			  " hostname={{ .Name }} ",
+			  " fb=false debconf/frontend=noninteractive ",
+			  " keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB ",
+			  " keyboard-configuration/variant=GB console-setup/ask_detect=false ",
+			  " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg ",
+			  " initrd=/install/initrd.gz -- <enter>"
+			]
+
+        },
+        {
+            "flavor": "m1.small",
+            "image_name": "ubuntu precise",
+            "source_image": "82b55c8c-cce1-4301-92c4-b005180531de",
+            "ssh_username": "ubuntu",
+            "use_floating_ip": "true",
+            "floating_ip_pool": "nova",
+            "type": "openstack",
+            "security_groups": "ssh"
+        }
+
+
+    ],
+    "provisioners": [
+    	{
+    		"scripts": [
+    			"scripts/install_vmtools.sh",
+    		],
+    		"type": "shell",
+    		"execute_command": "echo 'packer' | sudo -S bash '{{ .Path }}'",
+    		"only": ["vmware-iso"]
+    	},
+        {
+            "scripts": [
+                "scripts/update.sh",
+                "scripts/sudoers.sh",
+                "scripts/compiler_tools.sh",
+                "scripts/minimize.sh"
+            ],
+            "type": "shell",
+            "execute_command": "echo 'packer' | sudo -S bash '{{ .Path }}'"
+        },
+        {
+        	"only": ["openstack"],
+            "destination": "/tmp/stash",
+            "source": "./data/",
+            "type": "file"
+        }
+    ]
+}
