@@ -1,1 +1,3 @@
 vmware_private_key.pem
+logfile
+packer_cache/*

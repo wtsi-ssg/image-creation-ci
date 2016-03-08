@@ -2,8 +2,11 @@
 {
   "min_packer_version": "0.9.0",
   "variables": {
-    "packer_username": "packer",
-    "packer_password": "packer"
+    "packer_username": "ubuntu",
+    "packer_password": "ubuntu",
+    "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}",
+    "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
+    "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a"
   },
 
   "builders": [
@@ -13,12 +16,12 @@
       "guest_os_type": "ubuntu-64",
       "remote_type": "esx5",
       "remote_username": "vmbuildadmin",
-      "remote_host": "wtgc-vmbd-01.internal.sanger.ac.uk",
+      "remote_host": "{{ user `vmware_host` }}",
       "remote_private_key_file": "vmware_private_key.pem",
       "remote_datastore": "wtgc-vmbd-01:datastore1",
-      "remote_password": "{{user `vm_pass`}}",
-      "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
-      "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+      "remote_password": "{{ user `vm_pass` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "md5",
       "vnc_port_min": 5970,
       "vnc_port_max": 5990,
@@ -58,8 +61,8 @@
       {
       "type": "virtualbox-iso",
       "guest_os_type": "Ubuntu_64",
-      "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
-      "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+      "iso_url": "{{ user `iso_url` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_checksum_type": "md5",
       "ssh_username": "{{user `packer_username`}}",
       "ssh_password": "{{user `packer_password`}}",

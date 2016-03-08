@@ -22,6 +22,16 @@ export OS_PASSWORD=not_my_password
 
 Where all the variables are set appropriately.
 
+### Software
+
+* Packer also needs to be installed from [https://www.packer.io/](https://www.packer.io/)
+
+* Openstack tools
+
+```
+apt-get install python-novaclient python-glanceclient
+```
+
 ## A walkthrough the configuration
 
 The configuration template.json is split in to two parts, Provisioners and Builders.

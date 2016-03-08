@@ -23,7 +23,7 @@
             "execute_command": "sudo bash '{{.Path}}'"
         },
         {
-            "destination": "/stash",
+            "destination": "/tmp/stash",
             "source": "./data/",
             "type": "file"
         }

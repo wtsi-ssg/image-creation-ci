@@ -30,9 +30,41 @@ PACKER_LOG_PATH=${PWD}/packer_log.$$
 PACKER_BIN="/home/jjn/bin/packer"
 
 function join { local IFS="$1"; shift; echo "$*"; }
+function usage {
+	echo "usage:-"
+	echo ""
+	echo "$0 build|validate vmware|virtualbox|openstack|all"
+	echo ""
+	echo "Build images for various platforms or all"
+	echo ""
+	echo "Validate will run the validation of the template with the appriate environment"
+	echo "configured"
+	echo ""
+	echo "If a VMWARE build is requested a password for the ESXi server will be prompted"
+	echo "for if it is not set in the environment variable VMWARE_PASSWORD"
 
+}
 
 builders=""
+
+ACTION=$1
+
+case ${ACTION} in
+	validate)
+		echo "** VALIDATING TEMPLATE ONLY"
+		;;
+	build)
+		echo "Building images"
+		;;
+	*)
+		echo "Bad argument ${ACTION}"
+		usage
+		exit
+		;;
+	esac
+		
+
+shift
 
 for build in $@ ; do
 	case "${build}" in 
@@ -84,5 +116,9 @@ fi
 
 BUILD=$( join , ${builders} )
 
-$PACKER_BIN build  -only=$BUILD $variables template.json
+if [ $ACTION == 'validate' ] ; then
+	echo $PACKER_BIN $ACTION -only=$BUILD $variables template.json
+fi
+
+$PACKER_BIN $ACTION -only=$BUILD $variables template.json
 
