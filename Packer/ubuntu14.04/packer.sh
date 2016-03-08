@@ -74,5 +74,5 @@ fi
 
 BUILD=$( join , ${builders} )
 
-$PACKER_BIN build template.json --only=$BUILD
+$PACKER_BIN build  -only=$BUILD -var "'vm_pass=${vm_pwd}'" template.json
 
