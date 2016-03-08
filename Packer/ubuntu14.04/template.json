@@ -16,7 +16,7 @@
       "remote_host": "wtgc-vmbd-01.internal.sanger.ac.uk",
       "remote_private_key_file": "vmware_private_key.pem",
       "remote_datastore": "wtgc-vmbd-01:datastore1",
-      "remote_password": "{{user `vm_pass`}}"
+      "remote_password": "{{user `vm_pass`}}",
       "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
       "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
       "iso_checksum_type": "md5",
