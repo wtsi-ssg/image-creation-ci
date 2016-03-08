@@ -32,29 +32,23 @@ PACKER_BIN="/home/jjn/bin/packer"
 function join { local IFS="$1"; shift; echo "$*"; }
 
 
-
-echo "Password require to connect to the machine ${VMWARE_BUILD_HOST}"
-
-read -s  -p Password: vm_pwd
-
-echo ""
 builders=""
 
 for build in $@ ; do
 	case "${build}" in 
 		openstack)
 			echo "Openstack"
-			builders="${builders} openstack"
+			builders+="openstack "
 			openstack=1
 		;;
 		vmware)
 			echo "VMware"
-			builders="${builders} vmware-iso"
+			builders+="vmware-iso "
 			vmware=1
 		;;
 		virtualbox)
 			echo "VirtualBox"
-			builders="${builders} virtualbox-iso"
+			builder+="virtualbox-iso "
 			vbox=1
 		;;
 		all)
@@ -72,7 +66,23 @@ if [ "x${builders}"  == "x" ] ; then
 	exit
 fi
 
+variables=""
+
+if [ $vmware == 1 ] ; then
+	if [ "x${VMWARE_PASSWORD}" == "x" ]; then
+		echo "Password require to connect to the machine ${VMWARE_BUILD_HOST}"
+
+		read -s  -p Password: vm_pwd
+	else
+		vm_pwd=${VMWARE_PASSWORD}
+	fi
+	echo ""
+	variables+="-var 'vm_pass=${vm_pwd}' "
+fi
+
+
+
 BUILD=$( join , ${builders} )
 
-$PACKER_BIN build  -only=$BUILD -var "'vm_pass=${vm_pwd}'" template.json
+$PACKER_BIN build  -only=$BUILD $variables template.json
 

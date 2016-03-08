@@ -1,6 +1,6 @@
 
 {
-
+  "min_packer_version": "0.9.0",
   "variables": {
     "packer_username": "packer",
     "packer_password": "packer"
