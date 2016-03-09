@@ -80,7 +80,7 @@ for build in $@ ; do
 		;;
 		virtualbox)
 			echo "VirtualBox"
-			builder+="virtualbox-iso "
+			builders+="virtualbox-iso "
 			vbox=1
 		;;
 		all)
