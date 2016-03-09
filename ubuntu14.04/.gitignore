@@ -1,3 +1,6 @@
 vmware_private_key.pem
 logfile
 packer_cache/*
+packer-vmware-iso/*
+output-virtualbox-iso/*
+
