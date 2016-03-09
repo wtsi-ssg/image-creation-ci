@@ -100,14 +100,6 @@
   "provisioners": [
     {
       "scripts": [
-          "scripts/install_vmtools.sh"
-      ],
-      "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'",
-      "only": ["vmware-iso"]
-    },
-    {
-      "scripts": [
           "scripts/update.sh",
           "scripts/sudoers.sh",
           "scripts/compiler_tools.sh",
@@ -115,6 +107,14 @@
       ],
       "type": "shell",
       "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'"
+    },
+    {
+      "scripts": [
+          "scripts/install_vmtools.sh"
+      ],
+      "type": "shell",
+      "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'",
+      "only": ["vmware-iso"]
     },
     {
       "only": ["openstack"],
