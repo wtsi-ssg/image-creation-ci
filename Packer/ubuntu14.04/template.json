@@ -6,7 +6,10 @@
     "packer_password": "ubuntu",
     "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}",
     "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
-    "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a"
+    "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+    "vm_pass": "{{ env `VMWARE_PASSWORD` }}",
+    "boot_cmd": "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
+
   },
 
   "builders": [
@@ -34,29 +37,13 @@
       "version": 8,
       "tools_upload_flavor": "linux",
       "format": "ovf",
-      "boot_command": [
-        "<esc><esc><enter><wait>",
-        "/install/vmlinuz  ",
-        " auto",
-        " console-setup/ask_detect=false",
-        " console-setup/layoutcode=us",
-        " console-setup/modelcode=pc105",
-        " debconf/frontend=noninteractive",
-        " debian-installer=en_US",
-        " fb=false",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
-        " initrd=/install/initrd.gz",
-        " kbd-chooser/method=us",
-        " keyboard-configuration/layout=USA",
-        " keyboard-configuration/variant=USA",
-        " hostname={{ .Name }} ",
-        " locale=en_US",
-        " netcfg/get_domain=vm",
-        " netcfg/get_hostname={{ .Name }}",
-        " noapic",
-        " -- ",
-        "<enter><wait>"
-        ]
+      "boot_command": [ 
+        "{{user `boot_cmd`}}",
+        "hostname={{ .Name }} ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "netcfg/get_hostname={{ .Name }} ",
+        "-- <enter><wait> "
+      ]
       },
       {
       "type": "virtualbox-iso",
@@ -70,18 +57,13 @@
       "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
       "http_directory": "data/",
       "headless": false,
-      "boot_command": [
-        " <esc><esc><enter><wait>",
-        " /install/vmlinuz noapic ",
-        " debian-installer=en_GB auto locale=en_GBS kbd-chooser/method=gb ",
-        " hostname={{ .Name }} ",
-        " fb=false debconf/frontend=noninteractive ",
-        " keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB ",
-        " keyboard-configuration/variant=GB console-setup/ask_detect=false ",
-        " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg ",
-        " initrd=/install/initrd.gz -- <enter>"
-        ]
-      },
+      "boot_command": [ 
+        "{{user `boot_cmd`}}",
+        "hostname={{ .Name }} ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "netcfg/get_hostname={{ .Name }} ",
+        "-- <enter><wait> "
+      ]      },
       {
         "flavor": "m1.small",
         "image_name": "ubuntu precise",

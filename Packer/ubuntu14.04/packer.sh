@@ -104,12 +104,10 @@ if [ $vmware == 1 ] ; then
 	if [ "x${VMWARE_PASSWORD}" == "x" ]; then
 		echo "Password require to connect to the machine ${VMWARE_BUILD_HOST}"
 
-		read -s  -p Password: vm_pwd
-	else
-		vm_pwd=${VMWARE_PASSWORD}
-	fi
-	echo ""
-	variables+="-var 'vm_pass=${vm_pwd}' "
+		read -s  -p Password: VMWARE_PASSWORD
+	fi	
+#	echo ""
+#	variables+="-var 'vm_pass=${vm_pwd}' "
 fi
 
 
@@ -117,6 +115,7 @@ fi
 BUILD=$( join , ${builders} )
 
 if [ $ACTION == 'validate' ] ; then
+	echo $VMWARE_PASSWORD
 	echo $PACKER_BIN $ACTION -only=$BUILD $variables template.json
 fi
 
