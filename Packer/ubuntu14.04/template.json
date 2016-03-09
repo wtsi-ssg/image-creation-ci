@@ -99,13 +99,13 @@
       "only": ["vmware-iso"]
     },
     {
-      "scipts": [
+      "scripts": [
         "scripts/install_cloud-init.sh"
       ],
       "type": "shell",
       "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'",
       "only": ["vmware-iso", "virtualbox-iso"]
-    }
+    },
     {
       "only": ["openstack"],
       "destination": "/tmp/stash",
