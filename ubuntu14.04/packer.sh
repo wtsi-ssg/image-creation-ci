@@ -24,8 +24,8 @@ export VMWARE_BUILD_HOST=wtgc-vmbd-01.internal.sanger.ac.uk
 
 # Packer debug
 
-PACKER_LOG=1
-PACKER_LOG_PATH=${PWD}/packer_log.$$
+export PACKER_LOG=1
+export PACKER_LOG_PATH=/tmp/packer_log.$$
 
 PACKER_BIN="/home/jjn/bin/packer"
 
@@ -66,6 +66,11 @@ case ${ACTION} in
 
 shift
 
+vmware=0
+vbox=0
+openstack=0
+null=0
+
 for build in $@ ; do
 	case "${build}" in 
 		openstack)
@@ -82,6 +87,15 @@ for build in $@ ; do
 			echo "VirtualBox"
 			builders+="virtualbox-iso "
 			vbox=1
+		;;
+		null)
+			echo "Null Builder - all other builders invalidated but running configuration script"
+			builders="null "
+			null=1
+			vmware=1
+			vbox=1
+			openstack=1
+			break
 		;;
 		all)
 			echo "Building all architectures"
@@ -100,22 +114,22 @@ fi
 
 variables=""
 
-if [ $vmware == 1 ] ; then
+if [ ${vmware} -eq 1 ] ; then
 	if [ "x${VMWARE_PASSWORD}" == "x" ]; then
 		echo "Password require to connect to the machine ${VMWARE_BUILD_HOST}"
 
 		read -s  -p Password: VMWARE_PASSWORD
 	fi	
-#	echo ""
-#	variables+="-var 'vm_pass=${vm_pwd}' "
+	echo ""
+	variables+="-var vm_pass='${VMWARE_PASSWORD}' "
 fi
 
-
+echo "Logging to ${PACKER_LOG_PATH}"
 
 BUILD=$( join , ${builders} )
 
-if [ $ACTION == 'validate' ] ; then
-	echo $VMWARE_PASSWORD
+if [ $ACTION == 'validate' -o $null == 1 ] ; then
+#	echo $VMWARE_PASSWORD
 	echo $PACKER_BIN $ACTION -only=$BUILD $variables template.json
 fi
 

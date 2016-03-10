@@ -1,3 +1,33 @@
+# Packer Ubuntu 14.04-4 builder
+
+These are scripts to build base image of Ubuntu 14.04-4 for 
+- Virtual Box
+- VMWare
+- Openstack
+
+## Usage
+
+./packer.sh (build|validate) (virtualbox|vmware|openstack|all)
+
+This will build images for the supplied platform(s) or all. If the option validate is issued then the template will only be checked for syntax.
+
+## ESX password
+
+If a vmware build is requested & the environment variable **VMWARE_PASSWORD** is not set then the password to connect to the ESX server will be requested. This is required for the creation of the output OVF file. It can be supplied in the VMWARE_PASSWORD environment variable if required.
+
+## VMWare private key
+
+Communication with the ESX server is via SSH a private key is required to connect to the server, this should be placed in the file **vmware_private_key.pem** 
+
+## Openstack Credentials
+
+The packer.sh script should be modified with the appropriate openstack credentials in the variables:-
+
+- OS_USERNAME
+- OS_PASSWORD
+- OS_TENANT_NAME
+
+
 ## VMWare cleanup
 
 If the vmware build fails it can leave residue behind on the ESX host. This will prevent future builds from working. 
