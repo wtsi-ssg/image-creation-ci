@@ -1,4 +1,4 @@
-= Image creation for Science As A Service
+# Image creation for Science As A Service
 
 Files under this tree are for creating images for the science as a service programme
 
