@@ -16,7 +16,7 @@ This will build images for the supplied platform(s) or all. If the option valida
 
 ## Prequisites
 
-- Packer version 0.9.0 (or later)
+- Packer version 0.9.0 (or later) (assumed to be in ${HOME}/bin/packer)
 - Openstack packages
 -- python-glanceclient
 -- python-novaclient

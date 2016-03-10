@@ -1,16 +1,6 @@
 #!/bin/bash
 
-# Set up the openstack environment - required even if not building the openstack images
 
-
-
-
-export OS_NO_CACHE=True
-export COMPUTE_API_VERSION=1.1
-export no_proxy=,172.31.4.18
-export OS_CLOUDNAME=overcloud
-export OS_AUTH_URL=http://172.31.4.18:5000/v2.0/
-export NOVA_VERSION=1.1
 
 # Change these
 
@@ -37,7 +27,7 @@ export PACKER_LOG_PATH=/tmp/packer_log.$$
 
 # Paths to necessary binaries
 
-PACKER_BIN="/home/jjn/bin/packer"
+PACKER_BIN="${HOME}/bin/packer"
 GLANCE=/usr/bin/glance
 QEMU_IMG=/usr/bin/qemu-img
 
