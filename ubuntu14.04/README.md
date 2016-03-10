@@ -5,11 +5,22 @@ These are scripts to build base image of Ubuntu 14.04-4 for
 - VMWare
 - Openstack
 
+
+
+
 ## Usage
 
 ./packer.sh (build|validate) (virtualbox|vmware|openstack|all)
 
 This will build images for the supplied platform(s) or all. If the option validate is issued then the template will only be checked for syntax.
+
+## Prequisites
+
+- Packer version 0.9.0 (or later)
+- Openstack packages
+-- python-glanceclient
+-- python-novaclient
+- Qemu
 
 ## ESX password
 
@@ -21,11 +32,46 @@ Communication with the ESX server is via SSH a private key is required to connec
 
 ## Openstack Credentials
 
-The packer.sh script should be modified with the appropriate openstack credentials in the variables:-
+The openstack.sh script should be modified with the appropriate openstack credentials & environment in the variables:-
+
+
+- COMPUTE_API_VERSION
+
+Version required to support openstack clients (1.1 minimum)
+
+- OS_CLOUDNAME
+
+Name of the cloud to connect to (in the event of multiple cloud environments)
+
+- OS_AUTH_URL
+
+URL of the API endpoint
+
+- NOVA_VERSION
+
+Should match the COMPUTE_API_VERSION above.
 
 - OS_USERNAME
+
+Username to connect to the openstack environment with
+
 - OS_PASSWORD
+
+Password for the above user
+
 - OS_TENANT_NAME
+
+Tenant within openstack to use for the build
+
+- OS_BASE_IMG
+
+Base image ID to use for the build
+
+- OS_SECURITY_GRP
+
+Security group to apply to the build (must allow SSH access to the booted image)
+
+## 
 
 
 ## VMWare cleanup

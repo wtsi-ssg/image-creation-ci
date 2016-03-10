@@ -7,7 +7,9 @@
     "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}",
     "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
     "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
-
+    "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
+    "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
+    "image_name": "{{ env `IMAGE_NAME`}}",
     "null_user": "jjntoo",
     "null_key": "/home/jjn/.ssh/id_rsa",
     "boot_cmd": "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
@@ -17,6 +19,7 @@
   "builders": [
       {
       "type": "vmware-iso",
+      "output_directory": "{{ user `image_name` }}",
       "vmx_template_path": "packer.vmx",
       "guest_os_type": "ubuntu-64",
       "remote_type": "esx5",
@@ -49,6 +52,7 @@
       },
       {
       "type": "virtualbox-iso",
+      "output_directory": "{{ user `image_name` }}",
       "guest_os_type": "Ubuntu_64",
       "iso_url": "{{ user `iso_url` }}",
       "iso_checksum": "{{ user `iso_checksum` }}",
@@ -68,13 +72,13 @@
       ]      },
       {
         "flavor": "m1.small",
-        "image_name": "ubuntu precise",
-        "source_image": "82b55c8c-cce1-4301-92c4-b005180531de",
+        "image_name": "{{ user `image_name` }}",
+        "source_image": "{{ user `openstack_imgid` }}",
         "ssh_username": "ubuntu",
         "use_floating_ip": "true",
         "floating_ip_pool": "nova",
         "type": "openstack",
-        "security_groups": "ssh"
+        "security_groups": "{{user `openstack_sg`}}"
       },
 
 

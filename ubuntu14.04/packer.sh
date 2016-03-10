@@ -92,13 +92,14 @@ function openstackpp {
 	  echo Error converting image
 	  return
 	fi
+	echo Uploading image
 	if ! $GLANCE image-create --file ${PACKER_QCOW} --disk-format qcow2 --container-format bare  --progress  --name "${IMAGE_NAME}" ; then
 	  echo Error uploading image
 	  exit 4
 	fi
-	echo cleaning local file system
+	echo Cleaning local file system
 	rm ${PACKER_RAW} ${PACKER_QCOW}
-	echo cleaning glance
+	echo Cleaning glance
 	$GLANCE image-delete ${IMAGEID}
 }
 
