@@ -14,20 +14,32 @@ export NOVA_VERSION=1.1
 
 # Change these
 
-export OS_USERNAME=a_username
-export OS_PASSWORD=a_password
-export OS_TENANT_NAME=a_tenant
+. ./openstack.sh
+
+#export OS_USERNAME=a_username
+#export OS_PASSWORD=a_password
+#export OS_TENANT_NAME=a_tenant
 
 # VMWare environment
 export VMWARE_BUILD_HOST=wtgc-vmbd-01.internal.sanger.ac.uk
 #
+
+# Image naming conventing
+
+export IMAGE_NAME="ubuntu_14_04_4_WTSI_"
+
+IMAGE_NAME+=$( date +%Y%m%d%H%M%s )
 
 # Packer debug
 
 export PACKER_LOG=1
 export PACKER_LOG_PATH=/tmp/packer_log.$$
 
+# Paths to necessary binaries
+
 PACKER_BIN="/home/jjn/bin/packer"
+GLANCE=/usr/bin/glance
+QEMU_IMG=/usr/bin/qemu-img
 
 function join { local IFS="$1"; shift; echo "$*"; }
 function usage {
@@ -44,6 +56,52 @@ function usage {
 	echo "for if it is not set in the environment variable VMWARE_PASSWORD"
 
 }
+
+function openstackpp {
+	echo "Openstack post-processing"
+	if [ ! -x $GLANCE ] ; then
+		echo "Glance not available - cannot continue"
+		return
+	fi
+
+	if [ ! -x $QEMU_IMG ] ; then
+		echo "qemu-img not available - cannot continue"
+		return
+	fi
+
+	LOG=$0
+	if [ ! -f $LOG ] ; then
+		echo "No logfile available - cannot continue"
+		return
+	fi
+	IMAGEID=$( grep "openstack,artifact,0,id" $LOG | awk -F, '{print $NF}' )
+	if [ -z "${IMAGEID}" ]; then
+		echo "IMAGE not generated"
+		return
+	fi
+	echo Downloading raw image
+	PACKER_RAW=/tmp/${IMAGEID}.raw
+	PACKER_QCOW=/tmp/${IMAGEID}.qcow2
+	if ! $GLANCE image-download --progress --file ${PACKER_RAW} ${IMAGEID} ; then
+	  echo Error downloading image
+	  return
+	fi
+	echo Converting to QCOW2
+	if ! $QEMU_IMG convert -f raw -O qcow2 ${PACKER_RAW} ${PACKER_QCOW} ; then
+	  echo Error converting image
+	  return
+	fi
+	if ! $GLANCE image-create --file ${PACKER_QCOW} --disk-format qcow2 --container-format bare  --progress  --name "${IMAGE_NAME}" ; then
+	  echo Error uploading image
+	  exit 4
+	fi
+	echo cleaning local file system
+	rm ${PACKER_RAW} ${PACKER_QCOW}
+	echo cleaning glance
+	$GLANCE image-delete ${IMAGEID}
+}
+
+
 
 builders=""
 
@@ -133,5 +191,12 @@ if [ $ACTION == 'validate' -o $null == 1 ] ; then
 	echo $PACKER_BIN $ACTION -only=$BUILD $variables template.json
 fi
 
-$PACKER_BIN $ACTION -only=$BUILD $variables template.json
+$PACKER_BIN -machine-readable $ACTION -only=$BUILD $variables template.json | tee ${PACKER_LOG_PATH}.o
+
+if [ $openstack -eq 1 ] ; then
+	openstackpp(${PACKER_LOG}.o)
+fi
+
+
+
 

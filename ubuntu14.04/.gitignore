@@ -1,5 +1,6 @@
 vmware_private_key.pem
 logfile
+openstack.sh
 packer_cache/*
 packer-vmware-iso/*
 output-virtualbox-iso/*
