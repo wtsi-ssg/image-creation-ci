@@ -69,11 +69,12 @@ function openstackpp {
 		return
 	fi
 
-	LOG=$0
+	LOG=$1
 	if [ ! -f $LOG ] ; then
 		echo "No logfile available - cannot continue"
 		return
 	fi
+	echo "Searching $LOG for an image"
 	IMAGEID=$( grep "openstack,artifact,0,id" $LOG | awk -F, '{print $NF}' )
 	if [ -z "${IMAGEID}" ]; then
 		echo "IMAGE not generated"
@@ -194,7 +195,7 @@ fi
 $PACKER_BIN -machine-readable $ACTION -only=$BUILD $variables template.json | tee ${PACKER_LOG_PATH}.o
 
 if [ $openstack -eq 1 ] ; then
-	openstackpp(${PACKER_LOG}.o)
+	openstackpp ${PACKER_LOG_PATH}.o
 fi
 
 
