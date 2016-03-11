@@ -63,7 +63,7 @@ Password for the above user
 
 Tenant within openstack to use for the build
 
-- OS_BASE_IMG
+- OS_BASE_IMAGE
 
 Base image ID to use for the build
 
