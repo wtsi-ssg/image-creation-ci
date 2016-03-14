@@ -9,7 +9,7 @@ echo "Installing cloud-init"
 
 echo "Patching cc_disk_setup.py"
 
-cc_disk_setup=/mnt/usr/lib/python2.7/dist-packages/cloudinit/config/cc_disk_setup.py
+cc_disk_setup=/usr/lib/python2.7/dist-packages/cloudinit/config/cc_disk_setup.py
 cc_disk_setup_md5=08b45fa565f2cf3fdf31760ae93a6962
 
 chksum=$( md5sum $cc_disk_setup | cut -f1 -d\   )
@@ -54,7 +54,7 @@ fi
 
 echo "Installing disk configuration for cloud.cfg"
 
-cat >>/etc/clod/cloud.cfg <<-EOF
+cat >>/etc/cloud/cloud.cfg <<-EOF
 disk_setup:
     /dev/vdb:
        table_type: 'mbr'
