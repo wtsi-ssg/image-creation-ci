@@ -97,7 +97,8 @@
           "scripts/update.sh",
           "scripts/sudoers.sh",
           "scripts/compiler_tools.sh",
-          "scripts/minimize.sh"
+          "scripts/minimize.sh",
+          "scripts/install_cloud-init.sh"
       ],
       "type": "shell",
       "except": [ "null" ],
@@ -110,14 +111,6 @@
       "type": "shell",
       "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'",
       "only": ["vmware-iso"]
-    },
-    {
-      "scripts": [
-        "scripts/install_cloud-init.sh"
-      ],
-      "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'",
-      "only": ["vmware-iso", "virtualbox-iso"]
     },
     {
       "only": ["openstack"],
