@@ -3,6 +3,7 @@
 # install_cloud-init.sh
 #  Installs the cloud init package after building
 #
+
 echo "Installing cloud-init"
 
 echo ${PACKER_BUILDER_TYPE}

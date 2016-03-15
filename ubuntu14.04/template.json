@@ -19,6 +19,7 @@
   "builders": [
       {
       "type": "vmware-iso",
+      "vm_name": "{{ user `image_name` }}",
       "output_directory": "{{ user `image_name` }}",
       "vmx_template_path": "packer.vmx",
       "guest_os_type": "ubuntu-64",
@@ -102,14 +103,14 @@
       ],
       "type": "shell",
       "except": [ "null" ],
-      "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'"
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'"
     },
     {
       "scripts": [
           "scripts/install_vmtools.sh"
       ],
       "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | sudo -S bash '{{ .Path }}'",
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
       "only": ["vmware-iso"]
     },
     {
