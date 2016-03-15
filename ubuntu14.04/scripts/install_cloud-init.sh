@@ -5,7 +5,12 @@
 #
 echo "Installing cloud-init"
 
-# apt-get -y install cloud-init
+echo ${PACKER_BUILDER_TYPE}
+if [ ${PACKER_BUILDER_TYPE} != 'null' ] ; then
+	apt-get -y install cloud-init
+else
+	echo "Null builder - skipping install of cloud-init"
+fi
 
 echo "Patching cc_disk_setup.py"
 
@@ -54,9 +59,32 @@ fi
 
 echo "Installing disk configuration for cloud.cfg"
 
-cat >>/etc/cloud/cloud.cfg <<-EOF
+case ${PACKER_BUILDER_TYPE} in
+	null)
+		CLOUD_FILE=/tmp/cloud.cfg
+		DEVICE=/dev/null
+	;;
+	openstack)
+		CLOUD_FILE=/etc/cloud/cloud.cfg
+		DEVICE=/dev/vdb
+	;;
+	vmware-iso)
+		CLOUD_FILE=/etc/cloud/cloud.cfg
+		DEVICE=/dev/sdb
+	;;
+	virtualbox-iso)
+		CLOUD_FILE=/etc/cloud/cloud.cfg
+		DEVICE=/dev/sdb
+	;;
+	*)
+		echo "Unknown builder!"
+		exit 1
+	;;
+esac
+
+cat >>${CLOUD_FILE} <<EOF
 disk_setup:
-    /dev/vdb:
+    ${DEVICE}:
        table_type: 'mbr'
        layout: True
        overwrite: False
@@ -65,11 +93,11 @@ disk_setup:
 fs_setup:
     - label: Data1
       filesystem: 'ext4'
-      device: '/dev/vdb'
+      device: '${DEVICE}'
       partition: '1'
       overwrite: false
 
 mounts:
-    - [ /dev/vdb1, /data1, auto, "defaults" ]
+    - [ ${DEVICE}, /data1, auto, "defaults" ]
 
 EOF

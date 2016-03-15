@@ -1,14 +1,5 @@
 #!/bin/bash -eux
 
-mv /etc/apt/sources.list /etc/apt/sources.list.old
-
-cat > /etc/apt/sources.list << EOF
-deb mirror://mirrors.ubuntu.com/mirrors.txt precise main restricted universe multiverse
-deb mirror://mirrors.ubuntu.com/mirrors.txt precise-updates main restricted universe multiverse
-deb mirror://mirrors.ubuntu.com/mirrors.txt precise-backports main restricted universe multiverse
-deb mirror://mirrors.ubuntu.com/mirrors.txt precise-security main restricted universe multiverse
-EOF
-
 apt-get update
 apt-get -y upgrade
 apt-get -y dist-upgrade

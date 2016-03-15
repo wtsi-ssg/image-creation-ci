@@ -121,8 +121,8 @@
     {
       "only": [ "null" ],
       "type": "shell",
-      "inline": [
-        "echo {{ user `vm_pass` }}"
+      "scripts": [
+        "scripts/install_cloud-init.sh"
         ]
 
     }
