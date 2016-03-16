@@ -74,6 +74,34 @@ Security group to apply to the build (must allow SSH access to the booted image)
 ## 
 
 
+## Scripts
+
+The scripts directory contains provisioner scripts that are called by packer to customize the image.
+
+- compiler_tools.sh
+
+Installs the packages require to bulid software & linux kernel
+
+- sudoers.sh
+
+Updates the sudoers file
+
+- update.sh
+
+Updates all packages to the latest version (apt-get ugrade / dist-upgrade) and purges the cache
+
+- install_cloud-init.sh
+
+Installs the cloud-init package used for per-instance configuration of the machine.
+
+This script also patches the cc_disk_setup.py module of cloud init to fix a bug in version 0.7.5. The script will check that the file is the correct one before attempting to patch.
+
+The Cloud-init configuration is updated to cause the initialization & mounting of the first extra disk (the name of this is dependant on the hypervisor in use - vdb for openstack or sdb for vmware/virtualbox)
+
+- install_vmtools.sh (only run on vmware build)
+
+Installs the vmwaretools provided by the hypervisor. Note these are the vmware supplied tools not the "recommended" opensource tools - these would not install cleanly at the time of writing (16/3/2016)
+
 ## VMWare cleanup
 
 If the vmware build fails it can leave residue behind on the ESX host. This will prevent future builds from working. 
