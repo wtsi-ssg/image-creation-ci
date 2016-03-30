@@ -179,11 +179,10 @@ echo "Logging to ${PACKER_LOG_PATH}"
 BUILD=$( join , ${builders} )
 
 if [ $ACTION == 'validate' -o $null == 1 ] ; then
-#	echo $VMWARE_PASSWORD
-	echo $PACKER_BIN $ACTION -only=$BUILD $variables template.json
+    $PACKER_BIN $ACTION -only=$BUILD $variables template.json || exit 1
 fi
 
-$PACKER_BIN -machine-readable $ACTION -only=$BUILD $variables template.json | tee ${PACKER_LOG_PATH}.o
+$PACKER_BIN -machine-readable $ACTION -only=$BUILD $variables template.json | tee ${PACKER_LOG_PATH}.o || exit 1
 
 if [ $openstack -eq 1 ] ; then
 	openstackpp ${PACKER_LOG_PATH}.o
