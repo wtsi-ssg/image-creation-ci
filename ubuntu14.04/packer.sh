@@ -29,6 +29,7 @@ echo "Building image ${IMAGE_NAME}"
 export PACKER_LOG=1
 export PACKER_LOG_PATH=/tmp/packer_log.$$
 
+export VMWARE_PASSWORD="foo"
 # Paths to necessary binaries
 
 PACKER_BIN="${HOME}/bin/packer"
@@ -166,27 +167,19 @@ if [ "x${builders}"  == "x" ] ; then
 	exit
 fi
 
-variables=""
-
-if [ ${vmware} -eq 1 ] ; then
-	if [ "x${VMWARE_PASSWORD}" == "x" ]; then
-		echo "Password require to connect to the machine ${VMWARE_BUILD_HOST}"
-
-		read -s  -p Password: VMWARE_PASSWORD
-	fi	
-	echo ""
-	variables+="-var vm_pass='${VMWARE_PASSWORD}' "
-fi
+variables='-var-file=./variables.json'
 
 echo "Logging to ${PACKER_LOG_PATH}"
 
 BUILD=$( join , ${builders} )
 
 if [ $ACTION == 'validate' -o $null == 1 ] ; then
-    $PACKER_BIN $ACTION -only=$BUILD $variables template.json || exit 1
+	
+    echo $PACKER_BIN $ACTION -only=$BUILD $variables template.json || exit 1
+  	$PACKER_BIN $ACTION -only=$BUILD $variables template.json || exit 1
 fi
 
-$PACKER_BIN -machine-readable $ACTION -only=$BUILD $variables template.json | tee ${PACKER_LOG_PATH}.o || exit 1
+$PACKER_BIN -machine-readable $ACTION -only=$BUILD -var-file=./variables.json template.json | tee ${PACKER_LOG_PATH}.o || exit 1
 
 if [ $openstack -eq 1 ] ; then
 	openstackpp ${PACKER_LOG_PATH}.o

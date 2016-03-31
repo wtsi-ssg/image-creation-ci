@@ -2,18 +2,10 @@
 {
   "min_packer_version": "0.9.0",
   "variables": {
-    "packer_username": "ubuntu",
-    "packer_password": "ubuntu",
-    "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}",
-    "iso_url": "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso",
-    "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
     "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
     "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
     "image_name": "{{ env `IMAGE_NAME`}}",
-    "null_user": "jjntoo",
-    "null_key": "/home/jjn/.ssh/id_rsa",
-    "boot_cmd": "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
-
+    "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}"
   },
 
   "builders": [
@@ -100,7 +92,9 @@
           "scripts/compiler_tools.sh",
           "scripts/minimize.sh",
           "scripts/install_cloud-init.sh",
-          "scripts/add_version.sh"
+          "scripts/add_version.sh",
+          "{{user `extra_script`}}"
+
       ],
       "type": "shell",
       "except": [ "null" ],

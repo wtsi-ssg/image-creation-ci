@@ -22,10 +22,6 @@ This will build images for the supplied platform(s) or all. If the option valida
 -- python-novaclient
 - Qemu
 
-## ESX password
-
-If a vmware build is requested & the environment variable **VMWARE_PASSWORD** is not set then the password to connect to the ESX server will be requested. This is required for the creation of the output OVF file. It can be supplied in the VMWARE_PASSWORD environment variable if required.
-
 ## VMWare private key
 
 Communication with the ESX server is via SSH a private key is required to connect to the server, this should be placed in the file **vmware_private_key.pem** 
@@ -72,6 +68,28 @@ Base image ID to use for the build
 Security group to apply to the build (must allow SSH access to the booted image)
 
 ## 
+
+## Variables
+
+The files *variables.json* contains configuration variables required to build the image important variables are:-
+
+- packer_username
+- packer_password
+
+The username & password that will be burnt into the image as a default user
+
+- iso_url
+- iso_checksum
+
+The URL of an ISO image to build against - this is used for virtualbox & vmware builds
+
+- vm_pass
+
+The password to use to connect to the vmware build host
+
+- extra_script
+
+An additional script to run to configure this image - this script must exist, if no additional customization is required this should be a "NOOP" script (eg /bin/true)
 
 
 ## Scripts
