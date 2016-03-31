@@ -6,6 +6,6 @@
     "boot_cmd": "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
     "null_user": "<null username>",
     "null_key": "<null key file>",
-    "vm_pass": "cSAZDb4qzk2",
+    "vm_pass": "<password>",
     "extra_script": "scripts/null"
 }
