@@ -7,10 +7,11 @@
 echo "Installing cloud-init"
 
 echo ${PACKER_BUILDER_TYPE}
-if [ ${PACKER_BUILDER_TYPE} != 'null' ] ; then
+if [ ${PACKER_BUILDER_TYPE} != 'null' -o ${PACKER_BUILDER_TYPE} == 'vmware-iso' ] ; then
 	apt-get -y install cloud-init
 else
-	echo "Null builder - skipping install of cloud-init"
+	echo "${PACKER_BUILDER_TYPE} builder - skipping install of cloud-init"
+	exit 0
 fi
 
 echo "Patching cc_disk_setup.py"

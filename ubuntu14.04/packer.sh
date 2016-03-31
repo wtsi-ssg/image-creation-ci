@@ -14,11 +14,15 @@
 export VMWARE_BUILD_HOST=wtgc-vmbd-01.internal.sanger.ac.uk
 #
 
-# Image naming conventing
+# Image naming conventing import from file in CWD
 
-export IMAGE_NAME="ubuntu_14_04_4_WTSI_"
+export IMAGE_NAME=$( cat ./image_name )
 
-IMAGE_NAME+=$( date +%Y%m%d%H%M%s )
+# export IMAGE_NAME="ubuntu_14_04_4_WTSI_"
+
+IMAGE_NAME+=$( date +%Y%m%d%H%M%S )
+
+echo "Building image ${IMAGE_NAME}"
 
 # Packer debug
 

@@ -100,8 +100,8 @@
           "scripts/compiler_tools.sh",
           "scripts/minimize.sh",
           "scripts/install_cloud-init.sh",
-	  "scripts/install_mysql.sh"
-
+	        "scripts/install_mysql.sh",
+          "scripts/add_version.sh"
       ],
       "type": "shell",
       "except": [ "null" ],
