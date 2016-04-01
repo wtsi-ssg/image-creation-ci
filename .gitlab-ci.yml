@@ -34,7 +34,7 @@ validate_standard_templates:
    - packer
   script:
    - cd ubuntu14.04
-   - ./packer.py validate -f variables.json.example 
+   - ./create_image.py validate -f variables.json.example 
 
 validate_mysql_templates:
   stage: validate
@@ -42,7 +42,7 @@ validate_mysql_templates:
    - packer
   script:
    - cd ubuntu14.04-mysql
-   - ./packer.py validate 
+   - ./create_image.py validate 
 
 validate_pgsql_templates:
   stage: validate
@@ -50,7 +50,7 @@ validate_pgsql_templates:
    - packer
   script:
    - cd ubuntu14.04-pgsql
-   - ./packer.py validate 
+   - ./create_image.py validate 
 
 validate_iRODS_templates:
   stage: validate
@@ -58,7 +58,7 @@ validate_iRODS_templates:
    - packer
   script:
    - cd ubuntu14.04-iRODS
-   - ./packer.py validate 
+   - ./create_image.py validate 
 
 build_openstack_mysql:
  stage: build
@@ -67,7 +67,7 @@ build_openstack_mysql:
  script:
   - cd ubuntu14.04-mysql
   - IMAGE_NAME=${IMAGE_NAME}"mysql_"
-  - ./packer.py build -p openstack -o $IMAGE_NAME -s 
+  - ./create_image.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_mysql:
   stage: build
@@ -77,16 +77,15 @@ build_vmware_mysql:
    - cd ubuntu14.04-mysql
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"mysql_"$(date +%Y%m%d%H%M%S )
-   - ./packer.py build -p vmware-iso -o $IMAGE_NAME
+   - ./create_image.py build -p vmware-iso -o $IMAGE_NAME
 
-build_openstack_pgsql:
  stage: build
  tags:
   - packer
  script:
   - cd ubuntu14.04-pgsql
   - IMAGE_NAME=${IMAGE_NAME}"pgsql_"
-  - ./packer.py build -p openstack -o $IMAGE_NAME -s 
+  - ./create_image.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_pgsql:
   stage: build
@@ -96,7 +95,7 @@ build_vmware_pgsql:
    - cd ubuntu14.04-pgsql
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"pgsql_"$(date +%Y%m%d%H%M%S )
-   - ./packer.py build -p vmware-iso -o $IMAGE_NAME
+   - ./create_image.py build -p vmware-iso -o $IMAGE_NAME
 
 
 build_openstack_irods:
@@ -109,7 +108,7 @@ build_openstack_irods:
   - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-icat-4.1.8-64bit.deb ./files
   - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
   - IMAGE_NAME=${IMAGE_NAME}"iRODS_"
-  - ./packer.py build -p openstack -o $IMAGE_NAME -s 
+  - ./create_image.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_irods:
   stage: build
@@ -122,7 +121,7 @@ build_vmware_irods:
    - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"iRODS_"$(date +%Y%m%d%H%M%S )
-   - ./packer.py build -p vmware-iso -o $IMAGE_NAME
+   - ./create_image.py build -p vmware-iso -o $IMAGE_NAME
 
 
 

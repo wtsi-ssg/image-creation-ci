@@ -14,6 +14,7 @@ import time
 import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
+import packer
 
 def argument_parser():
     """
@@ -45,31 +46,26 @@ def process_args(args):
     Prepares the environment and runs checks depending upon the platform
     """
     if 'all' in args.platform:
-        platform = ['virtualbox', 'openstack', 'vmware-iso']
-    else:
-        platform = args.platform
+        args.platform = ['virtualbox', 'openstack', 'vmware-iso']
 
-    #convert the list of platforms into a string suitable for subprocess
-    platform = str((platform)).strip('[]').replace(" ", "").replace("'", "")
-
-    if 'openstack' in platform:
+    if 'openstack' in args.platform:
         if (args.os_name is None) and ('build' in args.mode):
             print("To use openstack you must specify the output file name")
             sys.exit(1)
 
         nova, glance = authenticate()
-        versions = list()
+
+        count = 0
         for image in glance.images.list():
             if 'private' not in image['visibility']:
                 continue
             if str(args.os_name) in image['name']:
-                versions.append(image)
+                count += 1
+                if count > 1:
+                    print("There are multiple versions of this image in the openstack repository, please clean these up before continuing")
+                    sys.exit(1)
 
-        if len(versions) > 1:
-            print("There are multiple versions of this image in the openstack repository, please clean these up before continuing")
-            sys.exit(1)
-
-    return args, platform
+    return args
 
 def authenticate():
     """
@@ -151,7 +147,7 @@ def openstack_cleanup(store, os_name):
         print(e.output)
         print('The large image could not be destroyed, please run this manually')
 
-def packer(args, platform):
+def run_packer(args):
     """
     This function creates the string that calls packer that will be passed to subprocess.
     """
@@ -163,17 +159,19 @@ def packer(args, platform):
     if packer_bin is None:
         packer_bin = '/software/packer-0.9.0/bin/packer'
 
-    try:
-        subprocess.check_call([packer_bin, args.mode, '-only=' + platform, '-var-file=' + args.var_file, 'template.json'])
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-        sys.exit(1)
+    p = packer.Packer('template.json', exc=[], only=args.platform, vars=dict(), var_file=args.var_file, exec_path=packer_bin)
 
-    if ('validate' not in args.mode) and ('openstack' in platform):
-        openstack_cleanup(args.store, args.os_name)
+    if 'validate' in args.mode:
+        p.validate(syntax_only=False)
+        print('success')
+    else:
+        p.build(parallel=True, debug=False, force=False)
+        if ('openstack' in args.platform):
+            openstack_cleanup(args.store, args.os_name)
 
 def main():
-    packer(*process_args(argument_parser()))
+    print(packer.__path__)
+    run_packer(process_args(argument_parser()))
 
 if __name__ == "__main__":
     main()
