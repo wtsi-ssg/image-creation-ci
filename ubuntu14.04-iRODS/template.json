@@ -5,7 +5,7 @@
     "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
     "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
     "image_name": "{{ env `IMAGE_NAME`}}",
-    "vmware_host": "{{ user `VMWARE_BUILD_HOST` }}",
+    "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}",
     "vm_pass": "{{ env `VMWARE_PASSWORD` }}"
   },
 

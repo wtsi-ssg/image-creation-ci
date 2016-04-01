@@ -26,7 +26,7 @@ def argument_parser():
         )
     parser.add_argument(
         '-p', '--platform', dest='platform', default=['all'], nargs='*',
-        choices=['all', 'virtualbox', 'openstack', 'vmware']
+        choices=['all', 'virtualbox', 'openstack', 'vmware-iso']
         )
     parser.add_argument(
         '-o', '--openstack-name', dest='os_name',
@@ -45,7 +45,7 @@ def process_args(args):
     Prepares the environment and runs checks depending upon the platform
     """
     if 'all' in args.platform:
-        platform = ['virtualbox', 'openstack', 'vmware']
+        platform = ['virtualbox', 'openstack', 'vmware-iso']
     else:
         platform = args.platform
 
