@@ -7,7 +7,7 @@ variables:
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
  OS_BASE_IMAGE: "20811a86-6dbb-4ef7-9047-75a4a6727773"
- IMAGE_NAME: "ubuntu_14_04_4_WTSI_iRODS_"
+ IMAGE_NAME: "ubuntu_14_04_4_WTSI_"
  OS_SECURITY_GRP: "ssh"
  OS_API_KEY: "test"
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
@@ -65,6 +65,7 @@ build_openstack_pgsql:
   - packer
  script:
   - cd ubuntu14.04-pgsql
+  - IMAGE_NAME=${IMAGE_NAME}"pgsql_"
   - ./packer.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_pgsql:
@@ -74,8 +75,8 @@ build_vmware_pgsql:
   script:
    - cd ubuntu14.04-pgsql
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=$IMAGE_NAME$(date +%Y%m%d%H%M%S )
-   - ./packer.sh build vmware
+   - IMAGE_NAME=${IMAGE_NAME}"pgsql_"$(date +%Y%m%d%H%M%S )
+   - ./packer.py build -p vmware -o $IMAGE_NAME
 
 build_openstack_irods:
  stage: build
@@ -86,6 +87,7 @@ build_openstack_irods:
   - cd ubuntu14.04-iRODS
   - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-icat-4.1.8-64bit.deb ./files
   - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
+  - IMAGE_NAME=${IMAGE_NAME}"iRODS_"
   - ./packer.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_irods:
@@ -98,8 +100,8 @@ build_vmware_irods:
    - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-icat-4.1.8-64bit.deb ./files
    - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=$IMAGE_NAME$(date +%Y%m%d%H%M%S )
-   - ./packer.sh build vmware
+   - IMAGE_NAME=${IMAGE_NAME}"iRODS_"$(date +%Y%m%d%H%M%S )
+   - ./packer.py build -p vmware -o $IMAGE_NAME
 
 
 
