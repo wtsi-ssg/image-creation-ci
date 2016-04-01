@@ -60,6 +60,25 @@ validate_iRODS_templates:
    - cd ubuntu14.04-iRODS
    - ./packer.py validate 
 
+build_openstack_mysql:
+ stage: build
+ tags:
+  - packer
+ script:
+  - cd ubuntu14.04-mysql
+  - IMAGE_NAME=${IMAGE_NAME}"mysql_"
+  - ./packer.py build -p openstack -o $IMAGE_NAME -s 
+
+build_vmware_mysql:
+  stage: build
+  tags:
+   - packer
+  script:
+   - cd ubuntu14.04-mysql
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - IMAGE_NAME=${IMAGE_NAME}"mysql_"$(date +%Y%m%d%H%M%S )
+   - ./packer.py build -p vmware-iso -o $IMAGE_NAME
+
 build_openstack_pgsql:
  stage: build
  tags:
@@ -78,6 +97,7 @@ build_vmware_pgsql:
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"pgsql_"$(date +%Y%m%d%H%M%S )
    - ./packer.py build -p vmware-iso -o $IMAGE_NAME
+
 
 build_openstack_irods:
  stage: build
