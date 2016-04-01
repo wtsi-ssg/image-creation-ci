@@ -113,7 +113,7 @@
       "type": "file",
       "source": "./scripts/irods_init.sh",
       "destination": "/var/tmp/irods_init.sh"
-    }
+    },
     {
       "only": ["openstack"],
       "destination": "/tmp/stash",
