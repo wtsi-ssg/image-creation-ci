@@ -77,7 +77,7 @@ build_vmware_pgsql:
    - cd ubuntu14.04-pgsql
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"pgsql_"$(date +%Y%m%d%H%M%S )
-   - ./packer.py build -p vmware -o $IMAGE_NAME
+   - ./packer.py build -p vmware-iso -o $IMAGE_NAME
 
 build_openstack_irods:
  stage: build
@@ -102,7 +102,7 @@ build_vmware_irods:
    - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"iRODS_"$(date +%Y%m%d%H%M%S )
-   - ./packer.py build -p vmware -o $IMAGE_NAME
+   - ./packer.py build -p vmware-iso -o $IMAGE_NAME
 
 
 
