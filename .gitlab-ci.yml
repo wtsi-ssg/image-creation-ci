@@ -59,15 +59,31 @@ validate_iRODS_templates:
    - cd ubuntu14.04-iRODS
    - ./packer.py validate 
 
+build_openstack_pgsql:
+ stage: build
+ tags:
+  - packer
+ script:
+  - cd ubuntu14.04-pgsql
+  - ./packer.py build -p openstack -o $IMAGE_NAME -s 
 
+build_vmware_pgsql:
+  stage: build
+  tags:
+   - packer
+  script:
+   - cd ubuntu14.04-pgsql
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - IMAGE_NAME=$IMAGE_NAME$(date +%Y%m%d%H%M%S )
+   - ./packer.sh build vmware
 
 build_openstack_irods:
  stage: build
  tags:
-  - openstack 
+  - packer
  script:
   - LATEST=514
-  - cd ubuntu1404-iRODS
+  - cd ubuntu14.04-iRODS
   - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-icat-4.1.8-64bit.deb ./files
   - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
   - ./packer.py build -p openstack -o $IMAGE_NAME -s 
@@ -78,30 +94,14 @@ build_vmware_irods:
    - packer
   script:
    - LATEST=514
-   - cd ubuntu1404-iRODS
+   - cd ubuntu14.04-iRODS
    - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-icat-4.1.8-64bit.deb ./files
    - scp -oStrictHostKeyChecking=no gitlab-runner@172.17.27.70:/opt/packages/ubuntu1404/irods/"$LATEST"/irods-database-plugin-postgres-1.8.deb ./files
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=$IMAGE_NAME$(date +%Y%m%d%H%M%S )
    - ./packer.sh build vmware
 
-build_openstack_pgsql:
- stage: build
- tags:
-  - openstack 
- script:
-  - cd ubuntu1404-pgsql
-  - ./packer.py build -p openstack -o $IMAGE_NAME -s 
 
-build_vmware_pgsql:
-  stage: build
-  tags:
-   - packer
-  script:
-   - cd ubuntu1404-pgsql
-   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=$IMAGE_NAME$(date +%Y%m%d%H%M%S )
-   - ./packer.sh build vmware
 
 
 test_openstack_irods:
