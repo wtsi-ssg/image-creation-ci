@@ -32,6 +32,9 @@ def argument_parser():
         '-o', '--openstack-name', dest='os_name',
         help='''This is used to set the final name of the image, if not set the image name will be random.''')
     parser.add_argument(
+        '-f', '--var-file', dest='var_file', default='variables.json',
+        help='''This is used to set the final name of the image, if not set the image name will be random.''')
+    parser.add_argument(
         '-s', '--store', dest='store', action='store_true',
         help='''This is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
 
@@ -66,8 +69,7 @@ def process_args(args):
             print("There are multiple versions of this image in the openstack repository, please clean these up before continuing")
             sys.exit(1)
 
-
-    return args.mode, platform, args.os_name, args.store
+    return args, platform
 
 def authenticate():
     """
@@ -149,7 +151,7 @@ def openstack_cleanup(store, os_name):
         print(e.output)
         print('The large image could not be destroyed, please run this manually')
 
-def packer(mode, platform, os_name, store):
+def packer(args, platform):
     """
     This function creates the string that calls packer that will be passed to subprocess.
     """
@@ -162,13 +164,13 @@ def packer(mode, platform, os_name, store):
         packer_bin = '/software/packer-0.9.0/bin/packer'
 
     try:
-        subprocess.check_call([packer_bin, mode, '-only=' + platform, '-var-file=variables.json', 'template.json'])
+        subprocess.check_call([packer_bin, args.mode, '-only=' + platform, '-var-file=' + args.var_file, 'template.json'])
     except subprocess.CalledProcessError as e:
         print(e.output)
         sys.exit(1)
 
-    if ('validate' not in mode) and ('openstack' in platform):
-        openstack_cleanup(store, os_name)
+    if ('validate' not in args.mode) and ('openstack' in platform):
+        openstack_cleanup(args.store, args.os_name)
 
 def main():
     packer(*process_args(argument_parser()))
