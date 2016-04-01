@@ -16,7 +16,7 @@ variables:
 
 
 stages:
- - init
+ - validate
  - build
  - test
 
@@ -29,7 +29,7 @@ stages:
   #  - shellcheck packer.sh
 
 validate_standard_templates:
-  stage: init
+  stage: validate
   tags: 
    - packer
   script:
@@ -37,7 +37,7 @@ validate_standard_templates:
    - ./packer.py validate -f variables.json.example 
 
 validate_mysql_templates:
-  stage: init
+  stage: validate
   tags: 
    - packer
   script:
@@ -45,7 +45,7 @@ validate_mysql_templates:
    - ./packer.py validate 
 
 validate_pgsql_templates:
-  stage: init
+  stage: validate
   tags: 
    - packer
   script:
@@ -53,7 +53,7 @@ validate_pgsql_templates:
    - ./packer.py validate 
 
 validate_iRODS_templates:
-  stage: init
+  stage: validate
   tags: 
    - packer
   script:
