@@ -10,6 +10,7 @@ variables:
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_"
  OS_SECURITY_GRP: "ssh"
  OS_API_KEY: "test"
+ VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
  https_proxy: "http://wwwcache.sanger.ac.uk:3128"
 
@@ -106,19 +107,19 @@ build_vmware_irods:
 
 
 
-test_openstack_irods:
-  stage: test 
-  tags:
-  - kitchen 
-  script:
-  - echo $USER
-  - echo $PWD
-  - old_proxy=http://wwwcache.sanger.ac.uk:3128
-  - unset http_proxy
-  - unset https_proxy
-  - kitchen verify
-  - export http_proxy=$old_proxy
-  - export https_proxy=$old_proxy
+# test_openstack_irods:
+#   stage: test 
+#   tags:
+#   - kitchen 
+#   script:
+#   - echo $USER
+#   - echo $PWD
+#   - old_proxy=http://wwwcache.sanger.ac.uk:3128
+#   - unset http_proxy
+#   - unset https_proxy
+#   - kitchen verify
+#   - export http_proxy=$old_proxy
+#   - export https_proxy=$old_proxy
 
 
 
