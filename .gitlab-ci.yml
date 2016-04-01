@@ -33,7 +33,7 @@ validate_standard_templates:
    - packer
   script:
    - cd ubuntu14.04
-   - ./packer.py validate 
+   - ./packer.py validate -f variables.json.example 
 
 validate_mysql_templates:
   stage: init
