@@ -27,12 +27,39 @@ stages:
   # script:
   #  - shellcheck packer.sh
 
-validate_templates:
+validate_standard_templates:
   stage: init
   tags: 
    - packer
   script:
+   - cd ubuntu14.04
    - ./packer.py validate 
+
+validate_mysql_templates:
+  stage: init
+  tags: 
+   - packer
+  script:
+   - cd ubuntu14.04-mysql
+   - ./packer.py validate 
+
+validate_pgsql_templates:
+  stage: init
+  tags: 
+   - packer
+  script:
+   - cd ubuntu14.04-pgsql
+   - ./packer.py validate 
+
+validate_iRODS_templates:
+  stage: init
+  tags: 
+   - packer
+  script:
+   - cd ubuntu14.04-iRODS
+   - ./packer.py validate 
+
+
 
 build_openstack_irods:
  stage: build
