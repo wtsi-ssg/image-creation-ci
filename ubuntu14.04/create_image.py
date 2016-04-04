@@ -163,14 +163,13 @@ def run_packer(args):
 
     if 'validate' in args.mode:
         p.validate(syntax_only=False)
-        print('success')
+        print('Template validated successfully.')
     else:
         p.build(parallel=True, debug=False, force=False)
         if ('openstack' in args.platform):
             openstack_cleanup(args.store, args.os_name)
 
 def main():
-    print(packer.__path__)
     run_packer(process_args(argument_parser()))
 
 if __name__ == "__main__":
