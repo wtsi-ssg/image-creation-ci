@@ -79,7 +79,7 @@ build_vmware_mysql:
    - IMAGE_NAME=${IMAGE_NAME}"mysql_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build -p vmware-iso -o $IMAGE_NAME
 
-build_vmware_pgsql:
+build_openstack_pgsql:
  stage: build
  tags:
   - packer
