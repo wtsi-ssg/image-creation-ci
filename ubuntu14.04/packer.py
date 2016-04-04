@@ -163,7 +163,7 @@ class Packer():
         for var, value in self.vars.items():
             self._add_opt("-var '{0}={1}'".format(var, value))
         if self.var_file:
-            self._add_opt('-vars-file={0}'.format(self.var_file))
+            self._add_opt('-var-file={0}'.format(self.var_file))
 
     def _joinc(self, lst):
         """Returns a comma delimited string from a list"""
