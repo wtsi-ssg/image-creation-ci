@@ -1,179 +1,226 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
-import argparse
-import getpass
-import random
-import string
-from os import environ
+import sh
 import os
-import subprocess
-import sys
-import shlex
-import time
-import glanceclient.v2.client as glclient
-import novaclient.client as nvclient
-import keystoneclient.v2_0.client as ksclient
+import json
+import zipfile
 
-def argument_parser():
+__version__ = '0.0.2'
+
+DEFAULT_PACKER_PATH = 'packer'
+
+
+class Packer():
+    """Packer interface using the `sh` module (http://amoffat.github.io/sh/)
     """
-    Parses the command line arguments
-    """
-    parser = argparse.ArgumentParser(description="MUST FILL IN LATER")
-    parser.add_argument(
-        'mode', choices=['validate', 'build'],
-        help='''Set whether to validate the template or whether to build images'''
-        )
-    parser.add_argument(
-        '-p', '--platform', dest='platform', default=['all'], nargs='*',
-        choices=['all', 'virtualbox', 'openstack', 'vmware-iso']
-        )
-    parser.add_argument(
-        '-o', '--openstack-name', dest='os_name',
-        help='''This is used to set the final name of the image, if not set the image name will be random.''')
-    parser.add_argument(
-        '-f', '--var-file', dest='var_file', default='variables.json',
-        help='''This is used to set the final name of the image, if not set the image name will be random.''')
-    parser.add_argument(
-        '-s', '--store', dest='store', action='store_true',
-        help='''This is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
+    def __init__(self, packerfile, exc=None, only=None, vars=None,
+                 var_file=None, exec_path=DEFAULT_PACKER_PATH):
+        """
+        :param string packerfile: Path to Packer template file
+        :param list exc: List of builders to exclude
+        :param list only: List of builders to include
+        :param dict vars: Key Value pairs of template variables
+        :param string var_file: Path to variables file
+        :param string exec_path: Path to Packer executable
+        """
+        self.packerfile = self._validate_argtype(packerfile, str)
+        self.var_file = var_file
+        if not os.path.isfile(self.packerfile):
+            raise OSError('packerfile not found at path: {0}'.format(
+                self.packerfile))
+        self.exc = self._validate_argtype(exc if exc else [], list)
+        self.only = self._validate_argtype(only if only else [], list)
+        self.vars = self._validate_argtype(vars if vars else {}, dict)
+        self.packer = sh.Command(exec_path)
 
-    return parser.parse_args()
+    def build(self, parallel=True, debug=False, force=False):
+        """Executes a Packer build (`packer build`)
+        :param bool parallel: Run builders in parallel
+        :param bool debug: Run in debug mode
+        :param bool force: Force artifact output even if exists
+        """
+        self.ccmd = self.packer.build
+        self._add_opt('-parallel=true' if parallel else None)
+        self._add_opt('-debug' if debug else None)
+        self._add_opt('-force' if force else None)
+        self._append_base_arguments()
+        self._add_opt(self.packerfile)
+        return self.ccmd()
 
-def process_args(args):
-    """
-    Prepares the environment and runs checks depending upon the platform
-    """
-    if 'all' in args.platform:
-        platform = ['virtualbox', 'openstack', 'vmware-iso']
-    else:
-        platform = args.platform
+    def fix(self, to_file=None):
+        """Implements the `packer fix` function
+        :param string to_file: File to output fixed template to
+        """
+        self.ccmd = self.packer.fix
+        self._add_opt(self.packerfile)
+        result = self.ccmd()
+        if to_file:
+            with open(to_file, 'w') as f:
+                f.write(result.stdout)
+        result.fixed = json.loads(result.stdout)
+        return result
 
-    #convert the list of platforms into a string suitable for subprocess
-    platform = str((platform)).strip('[]').replace(" ", "").replace("'", "")
+    def inspect(self, mrf=True):
+        """Inspects a Packer Templates file (`packer inspect -machine-readable`)
+        To return the output in a readable form, the `-machine-readable` flag
+        is appended automatically, afterwhich the output is parsed and returned
+        as a dict of the following format:
+          "variables": [
+            {
+              "name": "aws_access_key",
+              "value": "{{env `AWS_ACCESS_KEY_ID`}}"
+            },
+            {
+              "name": "aws_secret_key",
+              "value": "{{env `AWS_ACCESS_KEY`}}"
+            }
+          ],
+          "provisioners": [
+            {
+              "type": "shell"
+            }
+          ],
+          "builders": [
+            {
+              "type": "amazon-ebs",
+              "name": "amazon"
+            }
+          ]
+        :param bool mrf: output in machine-readable form.
+        """
+        self.ccmd = self.packer.inspect
+        self._add_opt('-machine-readable' if mrf else None)
+        self._add_opt(self.packerfile)
+        result = self.ccmd()
+        if mrf:
+            result.parsed_output = self._parse_inspection_output(
+                result.stdout)
+        return result
 
-    if 'openstack' in platform:
-        if (args.os_name is None) and ('build' in args.mode):
-            print("To use openstack you must specify the output file name")
-            sys.exit(1)
+    def push(self, create=True, token=False):
+        """Implmenets the `packer push` function
+        UNTESTED! Must be used alongside an Atlas account
+        """
+        self.ccmd = self.packer.push
+        self._add_opt('-create=true' if create else None)
+        self._add_opt('-tokn={0}'.format(token) if token else None)
+        self._add_opt(self.packerfile)
+        return self.ccmd()
 
-        nova, glance = authenticate()
-        versions = list()
-        for image in glance.images.list():
-            if 'private' not in image['visibility']:
-                continue
-            if str(args.os_name) in image['name']:
-                versions.append(image)
-
-        if len(versions) > 1:
-            print("There are multiple versions of this image in the openstack repository, please clean these up before continuing")
-            sys.exit(1)
-
-    return args, platform
-
-def authenticate():
-    """
-    This function returns authenticated nova and glance objects
-    """
-    keystone = ksclient.Client(auth_url=environ.get('OS_AUTH_URL'),
-                               username=environ.get('OS_USERNAME'),
-                               password=environ.get('OS_PASSWORD'),
-                               tenant_name=environ.get('OS_TENANT_NAME'),
-                               region_name=environ.get('OS_REGION_NAME'))
-    nova = nvclient.Client("2",
-                           auth_url=environ.get('OS_AUTH_URL'),
-                           username=environ.get('OS_USERNAME'),
-                           api_key=environ.get('OS_PASSWORD'),
-                           project_id=environ.get('OS_TENANT_NAME'),
-                           region_name=environ.get('OS_REGION_NAME'))
-
-    glance_endpoint = keystone.service_catalog.url_for(service_type='image')
-    glance = glclient.Client(glance_endpoint, token=keystone.auth_token)
-
-    return nova, glance
-
-def openstack_cleanup(store, os_name):
-    """
-    This function is only run if openstack is one of the builders.
-    If the image is to be stored then the image will be shrunk and the original image deleted,
-    if there were any other images in openstack of the same type they will be removed.
-    """
-    nova, glance = authenticate()
-
-    large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
-
-    os_name_date = os_name + time.strftime("%Y%m%d%H%M%S")
-
-    if store:
+    def validate(self, syntax_only=False):
+        """Validates a Packer Template file (`packer validate`)
+        If the validation failed, an `sh` exception will be raised.
+        :param bool syntax_only: Whether to validate the syntax only
+        without validating the configuration itself.
+        """
+        self.ccmd = self.packer.validate
+        self._add_opt('-syntax-only' if syntax_only else None)
+        self._append_base_arguments()
+        self._add_opt(self.packerfile)
+        # as sh raises an exception rather than return a value when execution
+        # fails we create an object to return the exception and the validation
+        # state
         try:
-            downloaded_file = ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
-            subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, large_image.id])
-        except subprocess.CalledProcessError as e:
-            print(e.output)
-            try:
-                subprocess.check_call(['openstack', 'image', 'delete', large_image])
-            except subprocess.CalledProcessError as f:
-                print(f.output)
-                print("Failed to remove the uncompressed image from openstack, you will need to clean this up manually.")
-                sys.exit(1)
+            validation = self.ccmd()
+            validation.succeeded = True if validation.exit_code == 0 else False
+            validation.error = None
+        except Exception as ex:
+            validation = ValidationObject()
+            validation.succeeded = False
+            validation.failed = True
+            validation.error = ex.message
+        return validation
 
-        local_qcow = ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
-        subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
+    def version(self):
+        """Returns Packer's version number (`packer version`)
+        As of v0.7.5, the format shows when running `packer version`
+        is: Packer vX.Y.Z. This method will only returns the number, without
+        the `packer v` prefix so that you don't have to parse the version
+        yourself.
+        """
+        return self.packer.version().split('v')[1].rstrip('\n')
 
-        os.remove(downloaded_file)
+    def _add_opt(self, option):
+        if option:
+            self.ccmd = self.ccmd.bake(option)
 
-        try:
-            subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name_date])
+    def _validate_argtype(self, arg, argtype):
+        if not isinstance(arg, argtype):
+            raise PackerException('{0} argument must be of type {1}'.format(
+                arg, argtype))
+        return arg
 
-            final_image = nova.images.find(name=os_name_date)
+    def _append_base_arguments(self):
+        """Appends base arguments to packer commands.
+        -except, -only, -var and -vars-file are appeneded to almost
+        all subcommands in packer. As such this can be called to add
+        these flags to the subcommand.
+        """
+        if self.exc and self.only:
+            raise PackerException('Cannot provide both "except" and "only"')
+        elif self.exc:
+            self._add_opt('-except={0}'.format(self._joinc(self.exc)))
+        elif self.only:
+            self._add_opt('-only={0}'.format(self._joinc(self.only)))
+        for var, value in self.vars.items():
+            self._add_opt("-var '{0}={1}'".format(var, value))
+        if self.var_file:
+            self._add_opt('-var-file={0}'.format(self.var_file))
 
-            environ['OS_IMAGE_ID'] = final_image.id
-            print("Image created and compressed with id: " + final_image.id)
-        except subprocess.CalledProcessError as e:
-            print(e.output)
-            os.remove(local_qcow)
+    def _joinc(self, lst):
+        """Returns a comma delimited string from a list"""
+        return str(','.join(lst))
 
-        for image in glance.images.list():
-            if 'private' not in image['visibility']:
-                continue
-            if str(os_name) not in image['name']:
-                continue
-            if str(os_name_date) not in image['name']:
-                try:
-                    subprocess.check_call(['openstack', 'image', 'delete', image['id']])
-                except subprocess.CalledProcessError as e:
-                    print(e.output)
-                    print('The original image could not be destroyed, please run this manually')
+    def _joins(self, lst):
+        """Returns a space delimited string from a list"""
+        return str(' '.join(lst))
 
-    try:
-        subprocess.check_call(['openstack', 'image', 'delete', large_image.id])
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-        print('The large image could not be destroyed, please run this manually')
+    def _parse_inspection_output(self, output):
+        """Parses the machine-readable output `packer inspect` provides.
+        See the inspect method for more info.
+        This has been tested vs. Packer v0.7.5
+        """
+        parts = {'variables': [], 'builders': [], 'provisioners': []}
+        for l in output.splitlines():
+            l = l.split(',')
+            if l[2].startswith('template'):
+                del l[0:2]
+                component = l[0]
+                if component == 'template-variable':
+                    variable = {"name": l[1], "value": l[2]}
+                    parts['variables'].append(variable)
+                elif component == 'template-builder':
+                    builder = {"name": l[1], "type": l[2]}
+                    parts['builders'].append(builder)
+                elif component == 'template-provisioner':
+                    provisioner = {"type": l[1]}
+                    parts['provisioners'].append(provisioner)
+        return parts
 
-def packer(args, platform):
-    """
-    This function creates the string that calls packer that will be passed to subprocess.
-    """
 
-    #This line must come before packer is called as the packer template relies upon it
-    environ['IMAGE_NAME'] = ''.join(random.choice(string.lowercase) for i in range(20))
+class Installer():
+    def __init__(self, packer_path, installer_path):
+        self.packer_path = packer_path
+        self.installer_path = installer_path
 
-    packer_bin = environ.get('PACKER_BIN')
-    if packer_bin is None:
-        packer_bin = '/software/packer-0.9.0/bin/packer'
+    def install(self):
+        with open(self.installer_path, 'rb') as f:
+            zip = zipfile.ZipFile(f)
+            for path in zip.namelist():
+                zip.extract(path, self.packer_path)
+        exec_path = os.path.join(self.packer_path, 'packer')
+        if not self._verify(exec_path):
+            raise PackerException('packer installation failed. '
+                                  'Executable could not be found under: '
+                                  '{0}'.format(exec_path))
+        else:
+            return exec_path
 
-    try:
-        subprocess.check_call([packer_bin, args.mode, '-only=' + platform, '-var-file=' + args.var_file, 'template.json'])
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-        sys.exit(1)
+    def _verify(self, packer):
+        return True if os.path.isfile(packer) else False
 
-    if ('validate' not in args.mode) and ('openstack' in platform):
-        openstack_cleanup(args.store, args.os_name)
 
-def main():
-    packer(*process_args(argument_parser()))
+class ValidationObject():
+    pass
 
-if __name__ == "__main__":
-    main()
+
+class PackerException(Exception):
+    pass
