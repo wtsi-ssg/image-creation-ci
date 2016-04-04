@@ -17,8 +17,9 @@ variables:
 
 stages:
  - validate
- - build
- - test
+ - pgsql
+ - mysql
+ - irods
 
 #validate_scripts:
   # stage: init
@@ -61,7 +62,7 @@ validate_iRODS_templates:
    - ./create_image.py validate 
 
 build_openstack_mysql:
- stage: build
+ stage: mysql
  tags:
   - packer
  script:
@@ -70,7 +71,7 @@ build_openstack_mysql:
   - ./create_image.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_mysql:
-  stage: build
+  stage: mysql
   tags:
    - packer
   script:
@@ -80,7 +81,7 @@ build_vmware_mysql:
    - ./create_image.py build -p vmware-iso -o $IMAGE_NAME
 
 build_openstack_pgsql:
- stage: build
+ stage: pgsql
  tags:
   - packer
  script:
@@ -89,7 +90,7 @@ build_openstack_pgsql:
   - ./create_image.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_pgsql:
-  stage: build
+  stage: pgsql
   tags:
    - packer
   script:
@@ -100,7 +101,7 @@ build_vmware_pgsql:
 
 
 build_openstack_irods:
- stage: build
+ stage: irods
  tags:
   - packer
  script:
@@ -112,7 +113,7 @@ build_openstack_irods:
   - ./create_image.py build -p openstack -o $IMAGE_NAME -s 
 
 build_vmware_irods:
-  stage: build
+  stage: irods
   tags:
    - packer
   script:
