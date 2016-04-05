@@ -7,6 +7,9 @@
 ## * chown it www-data so it can update itself
 ## * and finally tidy up tmp!
 
+export HTTP_PROXY=172.18.24.1:3128
+export HTTPS_PROXY=172.18.24.1:3128
+
 cd /tmp
 wget https://wordpress.org/latest.tar.gz
 tar zxf latest.tar.gz
