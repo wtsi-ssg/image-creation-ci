@@ -27,6 +27,9 @@ def argument_parser():
         '-m', '--mode', dest='mode', choices=['validate', 'build'],
         help='''\nSet whether to validate the template or whether to build images'''
         )
+    requiredNamed.add_argument(
+        '-tf', '--tem-file', dest='tem_file', required='true',
+        help='''\nThis is used to set the template file for the image''')
     parser.add_argument(
         '-p', '--platform', dest='platform', default=['all'], nargs='*',
         choices=['all', 'virtualbox', 'openstack', 'vmware-iso'],
@@ -38,12 +41,13 @@ def argument_parser():
     parser.add_argument(
         '-vf', '--var-file', dest='var_file', default='variables.json',
         help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
-    parser.add_argument(
-        '-tf', '--tem-file', dest= 'tem_file', default='template.json',
-        help='''\nThis is used to set the template file for the image''')
+
     parser.add_argument(
         '-s', '--store', dest='store', action='store_true',
         help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
+    parser.add_argument(
+        '-l', '--packer-location', dest='packer',
+        help='''\nThis is used to specify the location of packer.''')
 
 
     args = parser.parse_args()
@@ -84,6 +88,7 @@ def authenticate():
     """
     This function returns authenticated nova and glance objects
     """
+
     keystone = ksclient.Client(auth_url=environ.get('OS_AUTH_URL'),
                                username=environ.get('OS_USERNAME'),
                                password=environ.get('OS_PASSWORD'),
@@ -95,6 +100,7 @@ def authenticate():
                            api_key=environ.get('OS_PASSWORD'),
                            project_id=environ.get('OS_TENANT_NAME'),
                            region_name=environ.get('OS_REGION_NAME'))
+
 
     glance_endpoint = keystone.service_catalog.url_for(service_type='image')
     glance = glclient.Client(glance_endpoint, token=keystone.auth_token)
@@ -168,11 +174,15 @@ def run_packer(args):
     #This line must come before packer is called as the packer template relies upon it
     environ['IMAGE_NAME'] = ''.join(random.choice(string.lowercase) for i in range(20))
 
-    packer_bin = environ.get('PACKER_BIN')
-    if packer_bin is None:
+    if args.packer is not None:
+        packer_bin = args.packer
+    elif environ.get('PACKER_BIN') is not None:
+        packer_bin = environ.get('PACKER_BIN')
+    else:
+        print("packer location was not specified, trying /software")
         packer_bin = '/software/packer-0.9.0/bin/packer'
 
-    p = packer.Packer('template.json', exc=[], only=args.platform, vars=dict(), var_file=args.var_file, exec_path=packer_bin)
+    p = packer.Packer(args.tem_file, exc=[], only=args.platform, vars=dict(), var_file=args.var_file, exec_path=packer_bin)
 
     if 'validate' in args.mode:
         p.validate(syntax_only=False)
