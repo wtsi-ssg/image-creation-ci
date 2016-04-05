@@ -14,42 +14,39 @@ import time
 import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
-import packer
 
+"""
+Parses the command line arguments
+"""
+parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
+requiredNamed = parser.add_argument_group('required arguments')
+
+requiredNamed.add_argument(
+    '-m', '--mode', dest='mode', choices=['validate', 'build'],
+    help='''\nSet whether to validate the template or whether to build images'''
+    )
+requiredNamed.add_argument(
+    '-tf', '--tem-file', dest='tem_file', required='true',
+    help='''\nThis is used to set the template file for the image''')
+parser.add_argument(
+    '-p', '--platform', dest='platform', default=['all'], nargs='*',
+    choices=['all', 'virtualbox', 'openstack', 'vmware-iso'],
+    help='''\nSet the platform to build the images on'''
+    )
+parser.add_argument(
+    '-o', '--openstack-name', dest='os_name',
+    help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
+parser.add_argument(
+    '-vf', '--var-file', dest='var_file', default='variables.json',
+    help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
+
+parser.add_argument(
+    '-s', '--store', dest='store', action='store_true',
+    help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
+parser.add_argument(
+    '-l', '--packer-location', dest='packer',
+    help='''\nThis is used to specify the location of packer.''')
 def argument_parser():
-    """
-    Parses the command line arguments
-    """
-    parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
-    requiredNamed = parser.add_argument_group('required arguments')
-
-    requiredNamed.add_argument(
-        '-m', '--mode', dest='mode', choices=['validate', 'build'],
-        help='''\nSet whether to validate the template or whether to build images'''
-        )
-    requiredNamed.add_argument(
-        '-tf', '--tem-file', dest='tem_file', required='true',
-        help='''\nThis is used to set the template file for the image''')
-    parser.add_argument(
-        '-p', '--platform', dest='platform', default=['all'], nargs='*',
-        choices=['all', 'virtualbox', 'openstack', 'vmware-iso'],
-        help='''\nSet the platform to build the images on'''
-        )
-    parser.add_argument(
-        '-o', '--openstack-name', dest='os_name',
-        help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
-    parser.add_argument(
-        '-vf', '--var-file', dest='var_file', default='variables.json',
-        help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
-
-    parser.add_argument(
-        '-s', '--store', dest='store', action='store_true',
-        help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
-    parser.add_argument(
-        '-l', '--packer-location', dest='packer',
-        help='''\nThis is used to specify the location of packer.''')
-
-
     args = parser.parse_args()
 
     #nasty bodge to force the error message to format correctly
@@ -195,7 +192,6 @@ def run_packer(args):
 
         sys.exit(1)
 
-    #p = packer.Packer(args.tem_file, exc=[], only=args.platform, vars=dict(), var_file=args.var_file, exec_path=packer_bin)
 
     if 'validate' not in args.mode and ('openstack' in args.platform):
             openstack_cleanup(args.store, args.os_name)
