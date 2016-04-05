@@ -24,7 +24,7 @@ def argument_parser():
     requiredNamed = parser.add_argument_group('required arguments')
 
     requiredNamed.add_argument(
-        '-m', '--mode', dest='mode', choices=['validate', 'build'], 
+        '-m', '--mode', dest='mode', choices=['validate', 'build'],
         help='''\nSet whether to validate the template or whether to build images'''
         )
     parser.add_argument(
@@ -36,8 +36,11 @@ def argument_parser():
         '-o', '--openstack-name', dest='os_name',
         help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
     parser.add_argument(
-        '-f', '--var-file', dest='var_file', default='variables.json',
+        '-vf', '--var-file', dest='var_file', default='variables.json',
         help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
+    parser.add_argument(
+        '-tf', '--tem-file', dest= 'tem_file', default='template.json',
+        help='''\nThis is used to set the template file for the image''')
     parser.add_argument(
         '-s', '--store', dest='store', action='store_true',
         help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
