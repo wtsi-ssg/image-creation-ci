@@ -46,6 +46,7 @@ parser.add_argument(
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
+
 def argument_parser():
     args = parser.parse_args()
 
@@ -185,13 +186,10 @@ def run_packer(args):
     for element in args.platform:
         platform += element +','
 
-    test = packer_bin + " " + args.mode + " " + '-only='+platform+ ' ' + '-var-file=' + args.var_file + ' ' + args.tem_file
-    print(shlex.split(test))
     try:
-        subprocess.check_call(shlex.split(test))
+        subprocess.check_call([packer_bin, args.mode, '-only='+platform, '-var-file='+ args.var_file, args.tem_file])
     except subprocess.CalledProcessError as f:
         print(f.output)
-
         sys.exit(1)
 
 
