@@ -21,25 +21,35 @@ def argument_parser():
     Parses the command line arguments
     """
     parser = argparse.ArgumentParser(description="MUST FILL IN LATER")
-    parser.add_argument(
-        'mode', choices=['validate', 'build'],
-        help='''Set whether to validate the template or whether to build images'''
+    requiredNamed = parser.add_argument_group('required arguments')
+
+    requiredNamed.add_argument(
+        '-m', '--mode', dest='mode', choices=['validate', 'build'], 
+        help='''\nSet whether to validate the template or whether to build images'''
         )
     parser.add_argument(
         '-p', '--platform', dest='platform', default=['all'], nargs='*',
-        choices=['all', 'virtualbox', 'openstack', 'vmware-iso']
+        choices=['all', 'virtualbox', 'openstack', 'vmware-iso'],
+        help='''\nSet the platform to build the images on'''
         )
     parser.add_argument(
         '-o', '--openstack-name', dest='os_name',
-        help='''This is used to set the final name of the image, if not set the image name will be random.''')
+        help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
     parser.add_argument(
         '-f', '--var-file', dest='var_file', default='variables.json',
-        help='''This is used to set the final name of the image, if not set the image name will be random.''')
+        help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
     parser.add_argument(
         '-s', '--store', dest='store', action='store_true',
-        help='''This is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
+        help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
 
-    return parser.parse_args()
+
+    args = parser.parse_args()
+
+    #nasty bodge to force the error message to format correctly
+    if args.mode is not None:
+        return ars
+    else:
+        parser.parse_args(['-h'])
 
 def process_args(args):
     """
