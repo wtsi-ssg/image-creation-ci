@@ -85,19 +85,21 @@ def authenticate():
     """
     This function returns authenticated nova and glance objects
     """
-
-    keystone = ksclient.Client(auth_url=environ.get('OS_AUTH_URL'),
+    try:
+        keystone = ksclient.Client(auth_url=environ.get('OS_AUTH_URL'),
+                                   username=environ.get('OS_USERNAME'),
+                                   password=environ.get('OS_PASSWORD'),
+                                   tenant_name=environ.get('OS_TENANT_NAME'),
+                                   region_name=environ.get('OS_REGION_NAME'))
+        nova = nvclient.Client("2",
+                               auth_url=environ.get('OS_AUTH_URL'),
                                username=environ.get('OS_USERNAME'),
-                               password=environ.get('OS_PASSWORD'),
-                               tenant_name=environ.get('OS_TENANT_NAME'),
+                               api_key=environ.get('OS_PASSWORD'),
+                               project_id=environ.get('OS_TENANT_NAME'),
                                region_name=environ.get('OS_REGION_NAME'))
-    nova = nvclient.Client("2",
-                           auth_url=environ.get('OS_AUTH_URL'),
-                           username=environ.get('OS_USERNAME'),
-                           api_key=environ.get('OS_PASSWORD'),
-                           project_id=environ.get('OS_TENANT_NAME'),
-                           region_name=environ.get('OS_REGION_NAME'))
-
+    except:
+        print('Authentication with openstack failed, please check that the environment variables are set correctly.')
+        sys.exit(1)
 
     glance_endpoint = keystone.service_catalog.url_for(service_type='image')
     glance = glclient.Client(glance_endpoint, token=keystone.auth_token)
