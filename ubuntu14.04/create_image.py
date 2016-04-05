@@ -182,14 +182,22 @@ def run_packer(args):
         print("packer location was not specified, trying /software")
         packer_bin = '/software/packer-0.9.0/bin/packer'
 
-    p = packer.Packer(args.tem_file, exc=[], only=args.platform, vars=dict(), var_file=args.var_file, exec_path=packer_bin)
+    platform = str()
+    for element in args.platform:
+        platform += element +','
 
-    if 'validate' in args.mode:
-        p.validate(syntax_only=False)
-        print('Template validated successfully.')
-    else:
-        p.build(parallel=True, debug=False, force=False)
-        if ('openstack' in args.platform):
+    test = packer_bin + " " + args.mode + " " + '-only='+platform+ ' ' + '-var-file=' + args.var_file + ' ' + args.tem_file
+    print(shlex.split(test))
+    try:
+        subprocess.check_call(shlex.split(test))
+    except subprocess.CalledProcessError as f:
+        print(f.output)
+
+        sys.exit(1)
+
+    #p = packer.Packer(args.tem_file, exc=[], only=args.platform, vars=dict(), var_file=args.var_file, exec_path=packer_bin)
+
+    if 'validate' not in args.mode and ('openstack' in args.platform):
             openstack_cleanup(args.store, args.os_name)
 
 def main():
