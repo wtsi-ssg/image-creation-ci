@@ -20,7 +20,7 @@ def argument_parser():
     """
     Parses the command line arguments
     """
-    parser = argparse.ArgumentParser(description="MUST FILL IN LATER")
+    parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
     requiredNamed = parser.add_argument_group('required arguments')
 
     requiredNamed.add_argument(
@@ -47,7 +47,7 @@ def argument_parser():
 
     #nasty bodge to force the error message to format correctly
     if args.mode is not None:
-        return ars
+        return args
     else:
         parser.parse_args(['-h'])
 
