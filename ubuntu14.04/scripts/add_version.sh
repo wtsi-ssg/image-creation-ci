@@ -4,6 +4,5 @@
 #
 
 
-VERSION_FILE=/etc/wtgc_version_id
-
-echo ${IMAGE_NAME} >${VERSION_FILE}
+VERSION_FILE=/tmp/wtgc_version_id
+echo $image >${VERSION_FILE}

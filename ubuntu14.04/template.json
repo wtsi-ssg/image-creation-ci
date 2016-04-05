@@ -99,7 +99,10 @@
       ],
       "type": "shell",
       "except": [ "null" ],
-      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'"
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+      "environment_vars": [ 
+	"image={{ user `image_name` }}"
+	]
     },
     {
       "scripts": [
@@ -118,8 +121,11 @@
     {
       "only": [ "null" ],
       "type": "shell",
+      "environment_vars": [ 
+	"image={{ user `image_name` }}"
+	],
       "scripts": [
-        "scripts/install_cloud-init.sh"
+          "scripts/add_version.sh"
         ]
 
     }
