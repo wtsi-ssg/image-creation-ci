@@ -179,8 +179,6 @@ def run_packer(args):
             print("packer location was not specified, trying /software")
             packer_bin = '/software/packer-0.9.0/bin/packer'
 
-        print(packer_bin)
-
     platform = str()
     for element in args.platform:
         platform += element +','
