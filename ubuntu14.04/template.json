@@ -91,11 +91,10 @@
           "{{user `directory`}}/scripts/update.sh",
           "{{user `directory`}}/scripts/sudoers.sh",
           "{{user `directory`}}/scripts/compiler_tools.sh",
-          "{{user `directory`}}/scripts/minimize.sh",
-          "{{user `directory`}}/scripts/install_cloud-init.sh",
+          "{{user `extra_script`}}",
           "{{user `directory`}}/scripts/add_version.sh",
-          "{{user `extra_script`}}"
-
+          "{{user `directory`}}/scripts/install_cloud-init.sh",
+          "{{user `directory`}}/scripts/minimize.sh"
       ],
       "type": "shell",
       "except": [ "null" ],
