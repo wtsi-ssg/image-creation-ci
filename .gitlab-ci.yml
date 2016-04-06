@@ -44,5 +44,5 @@ build_vmware:
    - cd ubuntu14.04
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
-   - ./create_image.py -m build -tf template.json -vf ../../variables.json -p vmware-iso -o $IMAGE_NAME
+   - ./create_image.py -m build -tf template.json -vf variables.json.example -p vmware-iso -o $IMAGE_NAME
 
