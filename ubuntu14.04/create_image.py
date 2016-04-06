@@ -22,11 +22,11 @@ parser = argparse.ArgumentParser(description="This script allows one to build im
 requiredNamed = parser.add_argument_group('required arguments')
 
 requiredNamed.add_argument(
-    '-m', '--mode', dest='mode', choices=['validate', 'build'],
+    'mode', choices=['validate', 'build'],
     help='''\nSet whether to validate the template or whether to build images'''
     )
 requiredNamed.add_argument(
-    '-tf', '--tem-file', dest='tem_file', required='true',
+    'tem_file',
     help='''\nThis is used to set the template file for the image''')
 parser.add_argument(
     '-p', '--platform', dest='platform', default=['all'], nargs='*',
@@ -47,14 +47,6 @@ parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
 
-def argument_parser():
-    args = parser.parse_args()
-
-    #nasty bodge to force the error message to format correctly
-    if args.mode is not None:
-        return args
-    else:
-        parser.parse_args(['-h'])
 
 def process_args(args):
     """
@@ -179,8 +171,15 @@ def run_packer(args):
     elif environ.get('PACKER_BIN') is not None:
         packer_bin = environ.get('PACKER_BIN')
     else:
-        print("packer location was not specified, trying /software")
-        packer_bin = '/software/packer-0.9.0/bin/packer'
+        process = subprocess.Popen(['which','packer'], stdout=subprocess.PIPE)
+        output = process.communicate()[0]
+        if len(output.strip()) > 0:
+            packer_bin = output.strip()
+        else:
+            print("packer location was not specified, trying /software")
+            packer_bin = '/software/packer-0.9.0/bin/packer'
+
+        print(packer_bin)
 
     platform = str()
     for element in args.platform:
@@ -197,7 +196,7 @@ def run_packer(args):
             openstack_cleanup(args.store, args.os_name)
 
 def main():
-    run_packer(process_args(argument_parser()))
+    run_packer(process_args(parser.parse_args()))
 
 if __name__ == "__main__":
     main()
