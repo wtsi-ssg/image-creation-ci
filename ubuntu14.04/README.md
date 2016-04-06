@@ -3,24 +3,31 @@
 These are scripts to build base image of Ubuntu 14.04-4 for 
 - Virtual Box
 - VMWare
-- Openstack
-
-
-
+- Openstack 
 
 ## Usage
 
-./packer.sh (build|validate) (virtualbox|vmware|openstack|all)
+**Legacy:** *./packer.sh (build|validate) (virtualbox|vmware|openstack|all)*  
+./create_image.py (build|validate) (template) (variable file) [options]
 
 This will build images for the supplied platform(s) or all. If the option validate is issued then the template will only be checked for syntax.
 
 ## Prequisites
 
-- Packer version 0.9.0 (or later) (assumed to be in ${HOME}/bin/packer)
+- Packer version 0.9.0 (or later), this can be set either in the path, as an environment variable $PACKER_BIN or on the command line. If none of these are set then ./create_image.py will try and use the copy of packer in /software
 - Openstack packages
--- python-glanceclient
--- python-novaclient
-- Qemu
+- python packages:  
+  - python-glanceclient  
+  - python-novaclient  
+  - python-openstackclient  
+  - argparse  
+  - random  
+  - string  
+  - os  
+  - subprocess  
+  - sys  
+  - time  
+
 
 ## VMWare private key
 
@@ -73,23 +80,18 @@ Security group to apply to the build (must allow SSH access to the booted image)
 
 The files *variables.json* contains configuration variables required to build the image important variables are:-
 
-- packer_username
-- packer_password
-
+### packer_username &  packer_password
 The username & password that will be burnt into the image as a default user
 
-- iso_url
-- iso_checksum
-
+### iso_url &  iso_checksum
 The URL of an ISO image to build against - this is used for virtualbox & vmware builds
 
-- vm_pass
-
+### vm_pass
 The password to use to connect to the vmware build host
-
-- extra_script
-
+### extra_script
 An additional script to run to configure this image - this script must exist, if no additional customization is required this should be a "NOOP" script (eg /bin/true)
+### directory 
+The directory variable is a file path to the image-creation/ubuntu14.04 directory. This is useful if this repository is being used as a subrepo. This is how the majority of the images are being built in the SciaaS area of gitlab. If you have simply cloned the image and want to run it inside this repository then simply leave the value as '.' 
 
 
 ## Scripts
