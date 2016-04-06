@@ -7,5 +7,5 @@
     "null_user": "<null username>",
     "null_key": "<null key file>",
     "VMWARE_BUILD_HOST": "wtgc-vmbd-01.internal.sanger.ac.uk",
-    "extra_script": "scripts/add_version.sh "
+    "extra_script": "./scripts/add_version.sh"
 }
