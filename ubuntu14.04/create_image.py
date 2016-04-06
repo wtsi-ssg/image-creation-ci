@@ -28,6 +28,10 @@ requiredNamed.add_argument(
 requiredNamed.add_argument(
     'tem_file',
     help='''\nThis is used to set the template file for the image''')
+requiredNamed.add_argument(
+    'var_file',
+    help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
+
 parser.add_argument(
     '-p', '--platform', dest='platform', default=['all'], nargs='*',
     choices=['all', 'virtualbox', 'openstack', 'vmware-iso'],
