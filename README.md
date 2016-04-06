@@ -124,7 +124,7 @@ Installs the vmwaretools provided by the hypervisor. Note these are the vmware s
 
 # Contributing
 **Do not push major releases to the minor branch without warning the user base**
-When contributing to this repository it is important to bear in mind that this repository is being used as a submodule by many other repositories. At the time of writing all repositories in the SciaaS area of gitlab use this repository. Therefore any changes must be minor or patch level. If the user base is not known then email http://lists.sanger.ac.uk/mailman/listinfo/openstack-beta
+When contributing to this repository it is important to bear in mind that this repository is being used as a submodule by many other repositories. At the time of writing all repositories in the SciaaS area of gitlab use this repository. Please test all code thoroughly in branches before pushing to master. Therefore any changes must be minor or patch level. If the user base is not known then email http://lists.sanger.ac.uk/mailman/listinfo/openstack-beta
 
 # Troubleshooting  
 ### VMWare cleanup
