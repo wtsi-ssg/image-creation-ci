@@ -39,14 +39,12 @@ parser.add_argument(
 parser.add_argument(
     '-vf', '--var-file', dest='var_file', default='variables.json',
     help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
-
 parser.add_argument(
     '-s', '--store', dest='store', action='store_true',
     help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
-
 
 def process_args(args):
     """

@@ -14,7 +14,7 @@
       "type": "vmware-iso",
       "vm_name": "{{ user `image_name` }}",
       "output_directory": "{{ user `image_name` }}",
-      "vmx_template_path": "packer.vmx",
+      "vmx_template_path": "{{user `directory`}}/packer.vmx",
       "guest_os_type": "ubuntu-64",
       "remote_type": "esx5",
       "remote_username": "vmbuildadmin",
@@ -31,7 +31,7 @@
       "ssh_password": "{{user `packer_password`}}",
       "ssh_timeout": "60m",
       "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-      "http_directory": "data/",
+      "http_directory": "{{user `directory`}}/data/",
       "headless": false,
       "version": 8,
       "tools_upload_flavor": "linux",
@@ -55,7 +55,7 @@
       "ssh_password": "{{user `packer_password`}}",
       "ssh_timeout": "60m",
       "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-      "http_directory": "data/",
+      "http_directory": "{{user `directory`}}/data/",
       "headless": false,
       "boot_command": [ 
         "{{user `boot_cmd`}}",
@@ -88,12 +88,12 @@
   "provisioners": [
     {
       "scripts": [
-          "scripts/update.sh",
-          "scripts/sudoers.sh",
-          "scripts/compiler_tools.sh",
-          "scripts/minimize.sh",
-          "scripts/install_cloud-init.sh",
-          "scripts/add_version.sh",
+          "{{user `directory`}}/scripts/update.sh",
+          "{{user `directory`}}/scripts/sudoers.sh",
+          "{{user `directory`}}/scripts/compiler_tools.sh",
+          "{{user `directory`}}/scripts/minimize.sh",
+          "{{user `directory`}}/scripts/install_cloud-init.sh",
+          "{{user `directory`}}/scripts/add_version.sh",
           "{{user `extra_script`}}"
 
       ],
@@ -101,12 +101,12 @@
       "except": [ "null" ],
       "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
       "environment_vars": [ 
-	"image={{ user `image_name` }}"
-	]
+  "image={{ user `image_name` }}"
+  ]
     },
     {
       "scripts": [
-          "scripts/install_vmtools.sh"
+          "{{user `directory`}}/scripts/install_vmtools.sh"
       ],
       "type": "shell",
       "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
@@ -115,17 +115,17 @@
     {
       "only": ["openstack"],
       "destination": "/tmp/stash",
-      "source": "./data/",
+      "source": "{{user `directory`}}/data/",
       "type": "file"
     },
     {
       "only": [ "null" ],
       "type": "shell",
       "environment_vars": [ 
-	"image={{ user `image_name` }}"
-	],
+  "image={{ user `image_name` }}"
+  ],
       "scripts": [
-          "scripts/add_version.sh"
+          "{{user `directory`}}/scripts/add_version.sh"
         ]
 
     }
