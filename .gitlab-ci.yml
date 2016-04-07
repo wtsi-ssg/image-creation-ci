@@ -26,23 +26,38 @@ validate_template:
    - cd ubuntu14.04
    - ./create_image.py validate template.json variables.json.example 
 
-build_openstack:
- stage: build
- tags:
-  - packer
- script:
-  - cd ubuntu14.04
-  - IMAGE_NAME=${IMAGE_NAME}"standard_"
-  - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME -s 
-
-
-build_vmware:
-  stage: build
+test_openstack_irods:
+  stage: test 
   tags:
-   - packer
+  - kitchen 
   script:
-   - cd ubuntu14.04
-   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
-   - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
+  - echo $USER
+  - echo $PWD
+  - unset http_proxy
+  - unset https_proxy
+  - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
+  - kitchen verify
+  - export http_proxy=$http_proxy
+  - export https_proxy=$https_proxy
+
+
+# build_openstack:
+#  stage: build
+#  tags:
+#   - packer
+#  script:
+#   - cd ubuntu14.04
+#   - IMAGE_NAME=${IMAGE_NAME}"standard_"
+#   - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME -s 
+
+
+# build_vmware:
+#   stage: build
+#   tags:
+#    - packer
+#   script:
+#    - cd ubuntu14.04
+#    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+#    - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
+#    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
 
