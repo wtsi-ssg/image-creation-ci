@@ -47,7 +47,7 @@ stages:
 #    - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
 #    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
 
-test_openstack:
+test_openstack_no_disk:
   # stage: test
   stage: init
   tags:
@@ -55,6 +55,21 @@ test_openstack:
    - kitchen
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
+  - export ADDITIONAL_DISK=false
   - unset http_proxy; unset https_proxy; kitchen verify || kitchen destroy
   - if [[ "${PIPESTATUS[0]}"  -ne "0" ]]; then exit 1; else kitchen destroy; fi
   - kitchen destroy
+
+test_openstack_disk:
+  # stage: test
+  stage: init
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
+  - export ADDITIONAL_DISK=true
+  - unset http_proxy; unset https_proxy; kitchen verify || kitchen destroy
+  - if [[ "${PIPESTATUS[0]}"  -ne "0" ]]; then exit 1; else kitchen destroy; fi
+  - kitchen destroy
+
