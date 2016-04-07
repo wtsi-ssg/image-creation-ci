@@ -14,7 +14,7 @@ driver:
   private_key_path: ~/.ssh/test.pem
  
 block_device_mapping:
-  make_volume: false
+  make_volume: true
   volume_id: 00000-111111-0000222-000
   device_name: vdb
   availability_zone: nova
