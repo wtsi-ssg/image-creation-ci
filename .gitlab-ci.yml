@@ -9,7 +9,7 @@ variables:
  OS_BASE_IMAGE: "20811a86-6dbb-4ef7-9047-75a4a6727773"
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_"
  OS_SECURITY_GRP: "ssh"
- OS_API_KEY: "test"
+ OS_KEY: "test"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
  https_proxy: "http://wwwcache.sanger.ac.uk:3128"
