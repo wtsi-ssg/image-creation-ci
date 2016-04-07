@@ -16,6 +16,7 @@ driver:
     make_volume: true
     volume_id: 5bd3a17d-ab27-425b-96c5-faf003f5cec6
     device_name: vda
+    volume_size: 1000
     availability_zone: nova
     delete_on_termination: true
     creation_timeout: 600
