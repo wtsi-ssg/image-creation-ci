@@ -27,7 +27,7 @@ validate_template:
    - ./create_image.py validate template.json variables.json.example 
 
 test_openstack_irods:
-  stage: test 
+  stage: build
   tags:
   - kitchen 
   script:
