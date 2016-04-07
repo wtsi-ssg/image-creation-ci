@@ -33,5 +33,5 @@ suites:
 #    attributes:
 
 busser:
-  ruby_bindir: ~/.rvm/rubies/ruby-2.2.1/bin/
+  ruby_bindir: /home/openstack-runner/.rvm/rubies/ruby-2.2.1/bin/
 
