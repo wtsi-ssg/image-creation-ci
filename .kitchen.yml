@@ -15,7 +15,7 @@ driver:
  
 block_device_mapping:
   make_volume: true
-  device_name: vd
+  device_name: vda
   availability_zone: nova
   delete_on_termination: true
   creation_timeout: 600
