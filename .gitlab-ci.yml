@@ -47,8 +47,8 @@ build_vmware:
    - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
 
-test_openstack_irods:
-  stage: build
+test_openstack:
+  stage: test
   tags:
    - openstack
    - kitchen
