@@ -36,6 +36,7 @@ test_openstack_irods:
   - unset http_proxy
   - unset https_proxy
   - export RUBYPATH=/software/ruby-2.1.1/bin/
+  - $RUBYPATH -S
   - which ruby
   - whereis ruby
   - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
