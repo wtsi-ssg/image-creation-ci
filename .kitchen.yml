@@ -11,6 +11,7 @@ driver:
   username: ubuntu
   key_name: <%= ENV['OS_KEY'] %>
   floating_ip_pool: nova
+  private_key_path: ~/.ssh/test.pem
 
 transport:
   ssh_key: ~/.ssh/test.pem
