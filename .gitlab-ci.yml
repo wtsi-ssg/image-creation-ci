@@ -29,7 +29,8 @@ validate_template:
 test_openstack_irods:
   stage: build
   tags:
-  - openstack
+   - openstack
+   - kitchen
   script:
   - echo $USER
   - echo $PWD
