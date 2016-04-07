@@ -6,7 +6,7 @@ driver:
   openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
   security_groups:
   - ssh
-  image_ref: <%= ENV['OS_IMAGE_ID'] %>
+  image_ref: <%= ENV['OS_BASE_IMAGE'] %>
   flavor_ref: m1.medium
   username: ubuntu
   key_name: <%= ENV['OS_KEY'] %>
