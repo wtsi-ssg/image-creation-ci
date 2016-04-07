@@ -16,7 +16,7 @@ driver:
 block_device_mapping:
   make_volume: true
   snapshot_id: 00000-111111-0000222-000
-  device_name: vdb
+  device_name: vda
   availability_zone: nova
   delete_on_termination: true
   creation_timeout: 120
