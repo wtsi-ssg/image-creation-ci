@@ -40,6 +40,7 @@ test_openstack_irods:
   - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
   - kitchen verify || kitchen destroy
+  - if [[ "${PIPESTATUS[0]}"  -ne "0" ]]; then exit 1; else kitchen destroy; fi
   - kitchen destroy
   - export http_proxy=$http_proxy
   - export https_proxy=$https_proxy
