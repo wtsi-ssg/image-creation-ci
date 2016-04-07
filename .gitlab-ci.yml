@@ -39,8 +39,9 @@ test_openstack_irods:
   - $RUBYPATH -S
   - which ruby
   - whereis ruby
+  - GEM_PATH=$GEM_PATH:/software/ruby-2.1.1/bin/gem
   - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
-  - kitchen diagnose --all
+  - kitchen verify
   - export http_proxy=$http_proxy
   - export https_proxy=$https_proxy
 
