@@ -1,0 +1,36 @@
+---
+driver:
+  name: openstack
+  openstack_username: <%= ENV['OS_USERNAME'] %>
+  openstack_api_key: <%= ENV['OS_PASSWORD'] %>
+  openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
+  security_groups:
+  - ssh
+  image_ref: <%= ENV['OS_IMAGE_ID'] %>
+  flavor_ref: m1.medium
+  username: ubuntu
+  key_name: <%= ENV['OS_KEY'] %>
+  floating_ip_pool: nova
+
+transport:
+  ssh_key: ~/.ssh/test.pem
+  connection_timeout: 10
+  connection_retries: 5
+  username: ubuntu
+  password: ubuntu
+
+provisioner:
+  name: shell
+
+platforms:
+  - name: ubuntu-14.04
+  - name: centos-7.1
+
+suites:
+  - name: default
+#    run_list:
+#    attributes:
+
+busser:
+  ruby_bindir: /software/ruby-2.1.1/bin/
+
