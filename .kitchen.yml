@@ -13,7 +13,7 @@ driver:
   floating_ip_pool: nova
   private_key_path: ~/.ssh/test.pem
   block_device_mapping:
-    make_volume: true
+    make_volume: %= ENV['ADDITIONAL_DISK'] %>
     device_name: vdb
     volume_size: 1
     availability_zone: nova
