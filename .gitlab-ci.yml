@@ -56,8 +56,7 @@ test_openstack_no_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
   - cp .kitchen.no_disk.yml .kitchen.yml
-  - unset http_proxy; unset https_proxy; kitchen verify || kitchen destroy
-  - if [[ "${PIPESTATUS[0]}"  -ne "0" ]]; then exit 1; else kitchen destroy; fi
+  - unset http_proxy; unset https_proxy; kitchen verify
   - kitchen destroy
 
 test_openstack_disk:
@@ -69,7 +68,6 @@ test_openstack_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
   - cp .kitchen.disk.yml .kitchen.yml
-  - unset http_proxy; unset https_proxy; kitchen verify || kitchen destroy
-  - if [[ "${PIPESTATUS[0]}"  -ne "0" ]]; then exit 1; else kitchen destroy; fi
+  - unset http_proxy; unset https_proxy; kitchen verify
   - kitchen destroy
 
