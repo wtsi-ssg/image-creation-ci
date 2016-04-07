@@ -34,6 +34,7 @@ test_openstack_irods:
   script:
   - echo $USER
   - echo $PWD
+  - echo $HOME
   - unset http_proxy
   - unset https_proxy
   - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
