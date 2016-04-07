@@ -1,3 +1,3 @@
 #!/bin/bash
 
-apt-get install -y ruby rubygems
+apt-get install -y ruby rubygems-integration 
