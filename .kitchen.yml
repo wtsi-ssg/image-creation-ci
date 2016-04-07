@@ -32,6 +32,6 @@ suites:
 #    run_list:
 #    attributes:
 
-busser:
-  ruby_bindir: /software/ruby-2.1.1/bin/
+# busser:
+#   ruby_bindir: /software/ruby-2.1.1/bin/
 
