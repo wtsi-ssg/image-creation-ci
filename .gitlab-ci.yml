@@ -29,18 +29,14 @@ validate_template:
 test_openstack_irods:
   stage: build
   tags:
-  - packer
+  - kitchen
   script:
   - echo $USER
   - echo $PWD
   - unset http_proxy
   - unset https_proxy
-  - export RUBYPATH=/software/ruby-2.1.1/bin/ruby
-  - $RUBYPATH -S
   - which ruby
   - whereis ruby
-  - export PATH=/software/ruby-2.1.1/bin/ruby:$PATH
-  - export GEM_PATH=/software/ruby-2.1.1/bin/gem
   - gem list
   - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
   - kitchen verify
