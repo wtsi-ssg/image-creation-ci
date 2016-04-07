@@ -6,7 +6,7 @@ variables:
  OS_AUTH_URL: "http://172.31.4.18:5000/v2.0/"
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
- OS_BASE_IMAGE: "b7cb150b-0a62-41c7-a889-7638b4815d3c"
+ #OS_BASE_IMAGE: "b7cb150b-0a62-41c7-a889-7638b4815d3c"
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_"
  OS_SECURITY_GRP: "ssh"
  OS_KEY: "test"
@@ -17,6 +17,7 @@ variables:
 stages:
  - init
  - build
+ - test
 
 validate_template:
   stage: init
@@ -26,43 +27,37 @@ validate_template:
    - cd ubuntu14.04
    - ./create_image.py validate template.json variables.json.example 
 
+build_openstack:
+ stage: build
+ tags:
+  - packer
+ script:
+  - cd ubuntu14.04
+  - IMAGE_NAME=${IMAGE_NAME}"standard_"
+  - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME -s 
+
+
+build_vmware:
+  stage: build
+  tags:
+   - packer
+  script:
+   - cd ubuntu14.04
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
+   - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
+
 test_openstack_irods:
   stage: build
   tags:
    - openstack
    - kitchen
   script:
-  - echo $USER
-  - echo $PWD
-  - echo $HOME
   - unset http_proxy
   - unset https_proxy
-  - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
-  - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
   - kitchen verify || kitchen destroy
   - if [[ "${PIPESTATUS[0]}"  -ne "0" ]]; then exit 1; else kitchen destroy; fi
   - kitchen destroy
   - export http_proxy=$http_proxy
   - export https_proxy=$https_proxy
-
-
-# build_openstack:
-#  stage: build
-#  tags:
-#   - packer
-#  script:
-#   - cd ubuntu14.04
-#   - IMAGE_NAME=${IMAGE_NAME}"standard_"
-#   - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME -s 
-
-
-# build_vmware:
-#   stage: build
-#   tags:
-#    - packer
-#   script:
-#    - cd ubuntu14.04
-#    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-#    - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
-#    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
-
