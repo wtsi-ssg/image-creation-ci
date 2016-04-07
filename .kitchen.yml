@@ -33,5 +33,5 @@ suites:
 #    attributes:
 
 busser:
-  ruby_bindir: /software/ruby-2.1.1/bin/ruby
+  ruby_bindir: /software/ruby-2.1.1/bin/
 
