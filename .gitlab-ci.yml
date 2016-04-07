@@ -35,7 +35,7 @@ test_openstack_irods:
   - echo $PWD
   - unset http_proxy
   - unset https_proxy
-  - export RUBYPATH=/software/ruby-2.1.1/bin/
+  - export RUBYPATH=/software/ruby-2.1.1/bin/ruby
   - $RUBYPATH -S
   - which ruby
   - whereis ruby
