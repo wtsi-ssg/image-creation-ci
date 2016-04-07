@@ -13,7 +13,7 @@ driver:
   floating_ip_pool: nova
   private_key_path: ~/.ssh/test.pem
   block_device_mapping:
-    make_volume: false
+    make_volume: true
     volume_id: 5bd3a17d-ab27-425b-96c5-faf003f5cec6
     device_name: vda
     availability_zone: nova
