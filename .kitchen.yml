@@ -14,12 +14,12 @@ driver:
   private_key_path: ~/.ssh/test.pem
 
 block_device_mapping:
-  make_volume: true
+  make_volume: false
   snapshot_id: 00000-111111-0000222-000
   device_name: vda
   availability_zone: nova
   delete_on_termination: true
-  creation_timeout: 120
+  creation_timeout: 600
 
 transport:
   ssh_key: ~/.ssh/test.pem
