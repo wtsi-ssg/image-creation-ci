@@ -40,7 +40,7 @@ test_openstack_irods:
   - which ruby
   - whereis ruby
   - export OS_IMAGE_ID=b7cb150b-0a62-41c7-a889-7638b4815d3c
-  - kitchen verify
+  - kitchen diagnose --all
   - export http_proxy=$http_proxy
   - export https_proxy=$https_proxy
 
