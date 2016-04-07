@@ -6,7 +6,7 @@ variables:
  OS_AUTH_URL: "http://172.31.4.18:5000/v2.0/"
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
- OS_BASE_IMAGE: "b7cb150b-0a62-41c7-a889-7638b4815d3c"
+ OS_BASE_IMAGE: "20811a86-6dbb-4ef7-9047-75a4a6727773"
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_"
  OS_SECURITY_GRP: "ssh"
  OS_KEY: "test"
