@@ -54,7 +54,7 @@ test_openstack_no_disk:
    - kitchen
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
-  - cp .kitchen.no_disk.yml .kitchen.yml
+  - cp .kitchen.openstack.no_disk.yml .kitchen.yml
   - unset http_proxy; unset https_proxy; kitchen verify
   - kitchen destroy
 
@@ -65,7 +65,7 @@ test_openstack_disk:
    - kitchen
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
-  - cp .kitchen.disk.yml .kitchen.yml
+  - cp .kitchen.openstack.disk.yml .kitchen.yml
   - unset http_proxy; unset https_proxy; kitchen verify
   - kitchen destroy
 
