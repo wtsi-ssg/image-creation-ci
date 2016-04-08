@@ -35,7 +35,7 @@ platforms:
   - name: ubuntu-14.04
 
 suites:
-  - name: default
+  - name: volume
 
 busser:
   ruby_bindir: /usr/bin
