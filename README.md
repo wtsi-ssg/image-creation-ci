@@ -123,8 +123,8 @@ The Cloud-init configuration is updated to cause the initialization & mounting o
 Installs the vmwaretools provided by the hypervisor. Note these are the vmware supplied tools not the "recommended" opensource tools - these would not install cleanly at the time of writing (16/3/2016)
 
 # Contributing
-**Do not push major releases to the minor branch without warning the user base**
-When contributing to this repository it is important to bear in mind that this repository is being used as a submodule by many other repositories. At the time of writing all repositories in the SciaaS area of gitlab use this repository. Please test all code thoroughly in branches before pushing to master. Therefore any changes must be minor or patch level. If the user base is not known then email http://lists.sanger.ac.uk/mailman/listinfo/openstack-beta
+**All commits to the master branch should only be done after thorough testing on another branch. Any commit to the master branch should have a tag that follows semantic versioning as laid out at semver.org. Before commiting a major change all users must be told**
+ At the time of writing all repositories in the SciaaS area of gitlab use this repository. Therefore all contributors to those repositories must be informed. If the user base is not known then email http://lists.sanger.ac.uk/mailman/listinfo/openstack-beta
 
 # Troubleshooting  
 ### VMWare cleanup
@@ -140,8 +140,8 @@ cd /vmfs/volumes/wtgc-vmbd-01:datastore1
 ```
 
 - Check to see if there are any registered vms:-
-	
-```	
+  
+``` 
 vim-cmd vmsvc/getallvms
 Vmid         Name                                        File                                    Guest OS      Version   Annotation
 40     packer-vmware-iso   [wtgc-vmbd-01:datastore1] packer-vmware-iso/packer-vmware-iso.vmx   ubuntu64Guest   vmx-08              
@@ -160,5 +160,6 @@ Powered off
 - If running power off with `vim-cmd vmsvc/power.off 40` 
 - Unregister the VM with `vim-cmd vmsvc/unregister 40`
 - Finally delete the directory 'packer-vmware-iso' (if it exists)
+
 
 
