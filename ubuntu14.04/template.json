@@ -5,7 +5,6 @@
     "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
     "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
     "image_name": "{{ env `IMAGE_NAME`}}",
-    "vmware_host": "{{ env `VMWARE_BUILD_HOST` }}",
     "vm_pass": "{{ env `VMWARE_PASSWORD` }}"
   },
 
@@ -18,7 +17,7 @@
       "guest_os_type": "ubuntu-64",
       "remote_type": "esx5",
       "remote_username": "vmbuildadmin",
-      "remote_host": "{{ user `vmware_host` }}",
+      "remote_host": "{{ user `VMWARE_BUILD_HOST` }}",
       "remote_private_key_file": "vmware_private_key.pem",
       "remote_datastore": "wtgc-vmbd-01:datastore1",
       "remote_password": "{{ user `vm_pass` }}",
