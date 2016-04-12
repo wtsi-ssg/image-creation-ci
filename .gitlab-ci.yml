@@ -19,13 +19,13 @@ stages:
  - build
  - test
 
-# validate_template:
-#   stage: init
-#   tags: 
-#    - packer
-#   script:
-#    - cd ubuntu14.04
-#    - ./create_image.py validate template.json variables.json.example 
+validate_template:
+  stage: init
+  tags: 
+   - packer
+  script:
+   - cd ubuntu14.04
+   - ./create_image.py validate template.json variables.json.example 
 
 build_openstack:
  stage: build
@@ -55,7 +55,7 @@ test_openstack_no_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
   - cp .kitchen.openstack.no_disk.yml .kitchen.yml
-  - unset http_proxy; unset https_proxy; kitchen test
+  - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
 
 test_openstack_disk:
@@ -66,6 +66,6 @@ test_openstack_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
   - cp .kitchen.openstack.disk.yml .kitchen.yml
-  - unset http_proxy; unset https_proxy; kitchen test
+  - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
 
