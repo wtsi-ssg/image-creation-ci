@@ -14,10 +14,16 @@ variables:
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
  https_proxy: "http://wwwcache.sanger.ac.uk:3128"
 
+
+cache:
+  key: "${CI_BUILD_ID}"
+  untracked: true
+
 stages:
  - init
  - build
  - test
+ - store
 
 validate_template:
   stage: init
@@ -68,4 +74,13 @@ test_openstack_disk:
   - cp .kitchen.openstack.disk.yml .kitchen.yml
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
+
+store_openstack_image:
+  stage: store
+  tags:
+  - packer
+  - script:
+  - cd ubuntu14.04
+  - IMAGE_NAME=${IMAGE_NAME}"standard_"
+  - ./cleanup.py
 

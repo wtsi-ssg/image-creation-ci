@@ -111,8 +111,6 @@ def openstack_cleanup(store, os_name):
 
     large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
 
-    os_name_date = os_name + time.strftime("%Y%m%d%H%M%S")
-
     if store:
         try:
             downloaded_file = ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
@@ -132,7 +130,10 @@ def openstack_cleanup(store, os_name):
         os.remove(downloaded_file)
 
         try:
-            subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name_date])
+            subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name])
+
+            with open('image_name', 'w+') as store_name:
+                store_name.write(os_name)
 
             final_image = nova.images.find(name=os_name_date)
 
@@ -140,19 +141,8 @@ def openstack_cleanup(store, os_name):
             print("Image created and compressed with id: " + final_image.id)
         except subprocess.CalledProcessError as e:
             print(e.output)
-            os.remove(local_qcow)
 
-        for image in glance.images.list():
-            if 'private' not in image['visibility']:
-                continue
-            if str(os_name) not in image['name']:
-                continue
-            if str(os_name_date) not in image['name']:
-                try:
-                    subprocess.check_call(['openstack', 'image', 'delete', image['id']])
-                except subprocess.CalledProcessError as e:
-                    print(e.output)
-                    print('The original image could not be destroyed, please run this manually')
+        os.remove(local_qcow)
 
     try:
         subprocess.check_call(['openstack', 'image', 'delete', large_image.id])
