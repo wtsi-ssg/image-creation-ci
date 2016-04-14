@@ -16,7 +16,7 @@ variables:
 
 
 cache:
-  key: "$CI_BUILD_NAME"
+  key: "$CI_BUILD_REF_NAME"
   untracked: true
 
 stages:
