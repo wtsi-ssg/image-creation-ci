@@ -79,7 +79,7 @@ store_openstack_image:
   stage: store
   tags:
   - packer
-  - script:
+  script:
   - cd ubuntu14.04
   - IMAGE_NAME=${IMAGE_NAME}"standard_"
   - ./cleanup.py
