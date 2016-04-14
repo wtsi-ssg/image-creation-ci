@@ -7,7 +7,7 @@ variables:
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
  OS_BASE_IMAGE: "20811a86-6dbb-4ef7-9047-75a4a6727773"
- IMAGE_NAME: "ubuntu_14_04_4_WTSI_"
+ IMAGE_NAME: "ubuntu_14_04_4_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
  OS_KEY: "test"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
@@ -39,7 +39,6 @@ build_openstack:
   - packer
  script:
   - cd ubuntu14.04
-  - IMAGE_NAME=${IMAGE_NAME}"standard_"
   - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME -s 
 
 
@@ -49,8 +48,8 @@ build_vmware:
    - packer
   script:
    - cd ubuntu14.04
-   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no  vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=${IMAGE_NAME}"standard_"$(date +%Y%m%d%H%M%S )
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
 
 test_openstack_no_disk:
@@ -59,7 +58,7 @@ test_openstack_no_disk:
    - openstack
    - kitchen
   script:
-  - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w $IMAGE_NAME |  cut -d " " -f 1)
   - cp .kitchen.openstack.no_disk.yml .kitchen.yml
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
@@ -70,7 +69,7 @@ test_openstack_disk:
    - openstack
    - kitchen
   script:
-  - export OS_BASE_IMAGE=$(openstack image list -f value | grep ubuntu_14_04_4_WTSI_standard|  cut -d " " -f 1)
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w $IMAGE_NAME |  cut -d " " -f 1)
   - cp .kitchen.openstack.disk.yml .kitchen.yml
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy

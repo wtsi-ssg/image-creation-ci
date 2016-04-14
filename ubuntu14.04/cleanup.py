@@ -77,9 +77,6 @@ def rename():
     os.remove(downloaded_file)
 
 
-
-
-
 def main():
     rename()
 
