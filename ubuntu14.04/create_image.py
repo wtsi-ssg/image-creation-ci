@@ -135,7 +135,7 @@ def openstack_cleanup(store, os_name):
             with open('image_name', 'w+') as store_name:
                 store_name.write(os_name)
 
-            final_image = nova.images.find(name=os_name_date)
+            final_image = nova.images.find(name=os_name)
 
             environ['OS_IMAGE_ID'] = final_image.id
             print("Image created and compressed with id: " + final_image.id)
