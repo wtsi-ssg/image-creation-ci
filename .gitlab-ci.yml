@@ -25,13 +25,15 @@ stages:
  - test
  - store
 
-# validate_template:
-#   stage: init
-#   tags: 
-#    - packer
-#   script:
-#    - cd ubuntu14.04
-#    - ./create_image.py validate template.json variables.json.example 
+validate_template:
+  stage: init
+  tags: 
+   - packer
+  script:
+   - touch asdf.txt
+   - cd ubuntu14.04
+   - touch asdf2.txt
+   - ./create_image.py validate template.json variables.json.example 
 
 # build_openstack:
 #  stage: build
