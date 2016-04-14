@@ -72,7 +72,7 @@ test_openstack_disk:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w $IMAGE_NAME |  cut -d " " -f 1)
   - cp .kitchen.openstack.disk.yml .kitchen.yml
   - http_proxy="" https_proxy="" kitchen test
-#   - kitchen destroy
+  - kitchen destroy
 
 store_openstack_image:
   stage: store
