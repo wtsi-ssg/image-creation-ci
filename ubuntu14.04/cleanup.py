@@ -44,17 +44,20 @@ def rename():
     with open('image_name', 'r') as name_file:
         name = name_file.readline()
 
+    new = nova.images.find(name=name)
+
+
     try:
         downloaded_file = ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
-        subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, name.strip()])
+        subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, new.id])
     except subprocess.CalledProcessError as e:
         print(e.output)
 
     try:
-        os_name = environ.get('IMAGE_NAME')
-        os_name_date = os_name + time.strftime("%Y%m%d%H%M%S")
 
-        subprocess.check_call(['glance', 'image-create', '--file', downloaded_file, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name_date])
+        name_date = name + '_' + time.strftime("%Y%m%d%H%M%S")
+
+        subprocess.check_call(['glance', 'image-create', '--file', downloaded_file, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', name_date])
         final_image = nova.images.find(name=os_name_date)
 
         print("Image created and compressed with id: " + final_image.id)
@@ -62,9 +65,9 @@ def rename():
         for image in glance.images.list():
             if 'private' not in image['visibility']:
                 continue
-            if str(os_name) not in image['name']:
+            if str(name) not in image['name']:
                 continue
-            if str(os_name_date) not in image['name']:
+            if str(name_date) not in image['name']:
                 try:
                     subprocess.check_call(['openstack', 'image', 'delete', image['id']])
                 except subprocess.CalledProcessError as e:

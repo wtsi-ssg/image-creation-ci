@@ -132,7 +132,7 @@ def openstack_cleanup(store, os_name):
 
     try:
         subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name])
-
+        print(os_name)
         with open('image_name', 'w+') as store_name:
             store_name.write(os_name)
 
