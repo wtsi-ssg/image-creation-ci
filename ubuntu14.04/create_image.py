@@ -58,7 +58,7 @@ def process_args(args):
         args.platform = ['virtualbox', 'openstack', 'vmware-iso']
 
     if 'openstack' in args.platform:
-        #This line must come before packer is called as the packer template relies upon it
+        #This line must come before packer is called as the packer template relies upon it!
         environ['IMAGE_NAME'] = ''.join(random.choice(string.lowercase) for i in range(20))
         if (args.os_name is None) and ('build' in args.mode):
             print("To use openstack you must specify the output file name")
