@@ -89,7 +89,6 @@
       "scripts": [
           "{{user `directory`}}/scripts/update.sh",
           "{{user `directory`}}/scripts/sudoers.sh",
-          "{{user `directory`}}/scripts/compiler_tools.sh",
           "{{user `extra_script`}}",
           "{{user `directory`}}/scripts/add_version.sh",
           "{{user `directory`}}/scripts/install_cloud-init.sh",
