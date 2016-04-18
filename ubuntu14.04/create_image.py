@@ -161,7 +161,7 @@ def run_packer(args):
     elif environ.get('PACKER_BIN') is not None:
         packer_bin = environ.get('PACKER_BIN')
     else:
-        process = subprocess.Popen(['which','packer'], stdout=subprocess.PIPE)
+        process = subprocess.Popen(['which', 'packer'], stdout=subprocess.PIPE)
         output = process.communicate()[0]
         if len(output.strip()) > 0:
             packer_bin = output.strip()
