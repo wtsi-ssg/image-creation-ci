@@ -156,8 +156,6 @@ def run_packer(args):
     This function creates the string that calls packer that will be passed to subprocess.
     """
 
-
-
     if args.packer is not None:
         packer_bin = args.packer
     elif environ.get('PACKER_BIN') is not None:

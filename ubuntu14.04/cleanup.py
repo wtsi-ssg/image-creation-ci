@@ -41,9 +41,14 @@ def authenticate():
 def rename():
 
     nova, glance = authenticate()
-    with open('image_name', 'r') as name_file:
-        name = name_file.readline()
 
+    # with open('image_name', 'r') as name_file:
+    #     name = name_file.readline()
+    try:
+        name = environ.get('IMAGE_NAME')
+    except:
+        print('IMAGE_NAME environment variable not set')
+        sys.exit(1)
     new = nova.images.find(name=name)
 
 

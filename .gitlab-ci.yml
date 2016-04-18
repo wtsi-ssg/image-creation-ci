@@ -15,9 +15,9 @@ variables:
  https_proxy: "http://wwwcache.sanger.ac.uk:3128"
 
 
-cache:
-  key: "$CI_BUILD_REF_NAME"
-  untracked: true
+# cache:
+#   key: "$CI_BUILD_REF_NAME"
+#   untracked: true
 
 stages:
  - init
@@ -62,6 +62,8 @@ test_openstack_no_disk:
   - cp .kitchen.openstack.no_disk.yml .kitchen.yml
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
+  - cd ubuntu14.04
+  - ./cleanup.py
 
 test_openstack_disk:
   stage: test
@@ -74,13 +76,10 @@ test_openstack_disk:
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
 
-store_openstack_image:
-  stage: store
-  tags:
-  - packer
-  script:
-  - ls
-  - cd ubuntu14.04
-  - ls
-  - ./cleanup.py
+# store_openstack_image:
+#   stage: store
+#   tags:
+#   - packer
+#   script:
+
 
