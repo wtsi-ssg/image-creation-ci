@@ -45,8 +45,6 @@ def shrink():
 
     nova, glance = authenticate()
 
-    # with open('image_name', 'r') as name_file:
-    #     name = name_file.readline()
     try:
         name = environ.get('IMAGE_NAME')
     except:
@@ -66,7 +64,7 @@ def shrink():
         name_date = name + '_' + time.strftime("%Y%m%d%H%M%S")
 
         subprocess.check_call(['glance', 'image-create', '--file', downloaded_file, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', name_date])
-        final_image = nova.images.find(name=os_name_date)
+        final_image = nova.images.find(name=name_date)
 
         print("Image created and compressed with id: " + final_image.id)
 
