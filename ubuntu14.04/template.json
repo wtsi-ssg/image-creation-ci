@@ -88,18 +88,29 @@
     {
       "scripts": [
           "{{user `directory`}}/scripts/update.sh",
-          "{{user `directory`}}/scripts/sudoers.sh",
-          "{{user `extra_script`}}",
-          "{{user `directory`}}/scripts/add_version.sh",
-          "{{user `directory`}}/scripts/install_cloud-init.sh",
-          "{{user `directory`}}/scripts/minimize.sh"
+          "{{user `directory`}}/scripts/sudoers.sh"
       ],
       "type": "shell",
       "except": [ "null" ],
       "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
       "environment_vars": [ 
-  "image={{ user `image_name` }}"
-  ]
+          "image={{ user `image_name` }}"
+      ]
+    },
+        {
+      "scripts": [
+          "{{user `extra_script`}}"
+      ],
+      "type": "shell",
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+      "override": {
+        "vmware-iso": {
+          "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }} http_proxy=http://172.18.24.1:3128/ https_proxy=http://172.18.24.1:3128/ sudo -E -S bash '{{ .Path }}'"
+        }
+      },
+      "environment_vars": [ 
+          "image={{ user `image_name` }}"
+      ]
     },
     {
       "scripts": [
@@ -116,15 +127,17 @@
       "type": "file"
     },
     {
-      "only": [ "null" ],
-      "type": "shell",
-      "environment_vars": [ 
-  "image={{ user `image_name` }}"
-  ],
       "scripts": [
-          "{{user `directory`}}/scripts/add_version.sh"
-        ]
-
+          "{{user `directory`}}/scripts/add_version.sh",
+          "{{user `directory`}}/scripts/install_cloud-init.sh",
+          "{{user `directory`}}/scripts/minimize.sh"
+      ],
+      "type": "shell",
+      "except": [ "null" ],
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+      "environment_vars": [ 
+          "image={{ user `image_name` }}"
+      ]
     }
   ]
 }
