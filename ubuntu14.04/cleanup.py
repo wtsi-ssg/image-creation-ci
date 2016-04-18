@@ -39,6 +39,9 @@ def authenticate():
 
 
 def shrink():
+    '''
+    shrinks the image and replaces the standard image
+    '''
 
     nova, glance = authenticate()
 
