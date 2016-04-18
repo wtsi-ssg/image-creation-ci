@@ -62,8 +62,7 @@ test_openstack_no_disk:
   - cp .kitchen.openstack.no_disk.yml .kitchen.yml
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
-  - cd ubuntu14.04
-  - ./cleanup.py
+
 
 test_openstack_disk:
   stage: test
@@ -76,10 +75,12 @@ test_openstack_disk:
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
 
-# store_openstack_image:
-#   stage: store
-#   tags:
-#   - packer
-#   script:
+store_openstack_image:
+  stage: store
+  tags:
+  - packer
+  script:
+  - cd ubuntu14.04
+  - ./cleanup.py
 
 
