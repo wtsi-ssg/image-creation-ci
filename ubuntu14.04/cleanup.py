@@ -38,7 +38,7 @@ def authenticate():
     return nova, glance
 
 
-def rename():
+def shrink():
 
     nova, glance = authenticate()
 
@@ -86,7 +86,7 @@ def rename():
 
 
 def main():
-    rename()
+    shrink()
 
 if __name__ == "__main__":
     main()
