@@ -30,6 +30,8 @@ validate_template:
   tags: 
    - packer
   script:
+   - pwd
+   - exit 1
    - cd ubuntu14.04
    - ./create_image.py validate template.json variables.json.example 
 
