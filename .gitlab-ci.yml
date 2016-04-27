@@ -46,7 +46,8 @@ build_vmware:
   stage: build
   artifacts:
     name: VMWare_images/"$CI_BUILD_NAME"
-    untracked: true
+    paths: 
+    - $IMAGE_NAME*.ovf
   tags:
    - packer
   script:
