@@ -55,7 +55,7 @@ build_vmware:
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
-   - cp $IMAGE_NAME*/* /opt/vmware-images/
+   - cp -r $IMAGE_NAME/ /opt/vmware-images/
    - rm vmware_private_key.pem
 
 
