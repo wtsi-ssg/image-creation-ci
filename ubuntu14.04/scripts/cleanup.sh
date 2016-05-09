@@ -21,13 +21,16 @@ function cleanup_home {
 
 	chown -R ubuntu:ubuntu $home || echo "chown failed in cleanup" && exit 1
 
-	chmod 600 $bash_history && chmod 644 $rmpdb || echo "permissions failed in cleanup" && exit 1
+	chmod 600 $bash_history && chmod 644 $rpmdb || echo "permissions failed in cleanup" && exit 1
 }
 
 function cleanup_hostfile {
 	echo "172.0.0.1 localhost" > /etc/hosts
 }
 
+function cleanup_logrotate {
+        echo "logrotate needs sorting"
+}
 
 
 case ${PACKER_BUILDER_TYPE} in
@@ -35,6 +38,7 @@ case ${PACKER_BUILDER_TYPE} in
 		cleanup_apt.conf
 		cleanup_home
 		cleanup_hostfile
+		cleanup_logrotate
 		;;
 	default)
 		;;
