@@ -5,7 +5,7 @@
 #
 
 echo "Installing cloud-init"
-
+exit 0
 echo ${PACKER_BUILDER_TYPE}
 if [ ${PACKER_BUILDER_TYPE} != 'null' -o ${PACKER_BUILDER_TYPE} == 'vmware-iso' ] ; then
 	apt-get -y install cloud-init
