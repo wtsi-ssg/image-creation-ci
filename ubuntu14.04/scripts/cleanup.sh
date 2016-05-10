@@ -15,14 +15,14 @@ function cleanup_home {
 	
 	chown  -R ubuntu:ubuntu  $home 
 
-	if [ "$?" ]; then
+	if [ "$?" -ne "0" ]; then
 		echo "chown failed"
 		exit 1
 	fi
 
 	chmod 600 $bash_history && chmod 644 $rpmdb  
 
-	if [ "$?" ]; then
+	if [ "$?" -ne "0" ]; then
 		echo "chmod failed"
 		exit 1
 	fi
