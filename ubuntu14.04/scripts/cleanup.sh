@@ -19,7 +19,7 @@ function cleanup_home {
 }
 
 function cleanup_hostfile {
-	echo "172.0.0.1 localhost" > /etc/hosts
+	sed -e  '/.sanger.ac.uk/d' -i /etc/hosts
 }
 
 function cleanup_logrotate {
