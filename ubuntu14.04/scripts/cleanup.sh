@@ -5,13 +5,7 @@
 
 function cleanup_apt.conf {
 	apt_conf=/etc/apt/apt.conf
-	proxy_string="^Aquire::http::Proxy"
-	tmp_file=$(mktemp)
-	if ( test -f ${apt_conf} && grep -iq $proxy_string ${apt_conf} ) ; then
-		grep -iv ${proxy_string} ${apt_conf} >>${tmp_file}
-		mv ${tmp_file} ${apt_conf}
-	fi
-
+	rm -f $apt_conf
 }
 
 function cleanup_home {
