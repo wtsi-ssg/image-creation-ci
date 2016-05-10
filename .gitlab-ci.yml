@@ -15,10 +15,6 @@ variables:
  https_proxy: "http://wwwcache.sanger.ac.uk:3128"
 
 
-# cache:
-#   key: "$CI_BUILD_REF_NAME"
-#   untracked: true
-
 stages:
  - init
  - build
@@ -44,10 +40,6 @@ build_openstack:
 
 build_vmware:
   stage: build
-  artifacts:
-    name: VMWare_images/"$CI_BUILD_NAME"
-    paths: 
-    - $IMAGE_NAME*.ovf
   tags:
    - packer
   script:
@@ -55,8 +47,7 @@ build_vmware:
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build template.json variables.json.example -p vmware-iso -o $IMAGE_NAME
-   - echo ~
-   - cp -r $IMAGE_NAME/ ~/ 
+   - mv $IMAGE_NAME/ /opt/images/vmware/ 
    - rm vmware_private_key.pem
 
 
