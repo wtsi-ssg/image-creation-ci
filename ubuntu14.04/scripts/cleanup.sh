@@ -12,10 +12,10 @@ function cleanup_home {
 	home=/home/ubuntu
 	bash_history=$home/.bash_history
 	rpmdb=$home/.rpmdb
+	
+	chown  -R ubuntu:ubuntu  $home #|| echo "chown failed in cleanup" && exit 1
 
-	chown -R ubuntu:ubuntu $home || echo "chown failed in cleanup" && exit 1
-
-	chmod 600 $bash_history && chmod 644 $rpmdb || echo "permissions failed in cleanup" && exit 1
+	chmod 600 $bash_history && chmod 644 $rpmdb #|| echo "permissions failed in cleanup" && exit 1
 }
 
 function cleanup_hostfile {
