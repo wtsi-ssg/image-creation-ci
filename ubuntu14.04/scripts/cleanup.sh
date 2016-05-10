@@ -13,14 +13,14 @@ function cleanup_home {
 	bash_history=$home/.bash_history
 	rpmdb=$home/.rpmdb
 	
-	chown  -R ubuntu:ubuntu  $home || echo "chown failed in cleanup" && exit 1
+	chown  -R ubuntu:ubuntu  $home 
 
 	if [ "$?" ]; then
 		echo "chown failed"
 		exit 1
 	fi
 
-	chmod 600 $bash_history && chmod 644 $rpmdb #|| echo "permissions failed in cleanup" && exit 1
+	chmod 600 $bash_history && chmod 644 $rpmdb  
 
 	if [ "$?" ]; then
 		echo "chmod failed"
