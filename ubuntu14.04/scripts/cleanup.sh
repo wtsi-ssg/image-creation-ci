@@ -10,8 +10,6 @@ function cleanup_apt.conf {
 
 function cleanup_home {
 	home=/home/ubuntu
-	bash_history=$home/.bash_history
-	rpmdb=$home/.rpmdb
 	
 	chown  -R ubuntu:ubuntu  $home 
 
@@ -20,7 +18,7 @@ function cleanup_home {
 		exit 1
 	fi
 
-	chmod 600 $bash_history && chmod 644 $rpmdb  
+	chmod -R go-rwx $home
 
 	if [ "$?" -ne "0" ]; then
 		echo "chmod failed"
