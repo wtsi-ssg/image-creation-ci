@@ -35,7 +35,7 @@ build_openstack:
   - packer
  script:
   - cd ubuntu14.04
-  - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME -s 
+  - ./create_image.py build template.json variables.json.example -p openstack -o $IMAGE_NAME
 
 
 build_vmware:
@@ -81,5 +81,4 @@ store_openstack_image:
   script:
   - cd ubuntu14.04
   - ./cleanup.py
-
 
