@@ -39,11 +39,8 @@ parser.add_argument(
     '-o', '--openstack-name', dest='os_name',
     help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
 parser.add_argument(
-    '-vf', '--var-file', dest='var_file', default='variables.json',
-    help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
-parser.add_argument(
     '-s', '--store', dest='store', action='store_true',
-    help='''\nThis is used to store the images after creation. If this is not set then the images will be destroyed after the CI has run.''')
+    help='''\nThis is used to store the images after creation. This option is now deprecated and has no effect''')
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
