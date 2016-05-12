@@ -64,18 +64,6 @@ def process_args(args):
             print("To use openstack you must specify the output file name")
             sys.exit(1)
 
-        nova, glance = authenticate()
-
-        count = 0
-        for image in glance.images.list():
-            if 'private' not in image['visibility']:
-                continue
-            if str(args.os_name) in image['name']:
-                count += 1
-                if count > 1:
-                    print("There are multiple versions of this image in the openstack repository, please clean these up before continuing")
-                    sys.exit(1)
-
     return args
 
 def authenticate():

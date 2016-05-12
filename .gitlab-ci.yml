@@ -18,7 +18,9 @@ variables:
 stages:
  - init
  - build
+ - cleanup_build
  - test
+ - cleanup_test
  - store
 
 validate_template:
@@ -50,6 +52,14 @@ build_vmware:
    - mv $IMAGE_NAME/ /var/tmp 
    - rm vmware_private_key.pem
 
+cleanup_openstack_build:
+  stage: cleanup_build
+  tags:
+   - packer
+  script:
+   - ./remove_failed_builds.py
+  when: on_failure
+
 
 test_openstack_no_disk:
   stage: test
@@ -62,7 +72,6 @@ test_openstack_no_disk:
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
 
-
 test_openstack_disk:
   stage: test
   tags:
@@ -73,6 +82,14 @@ test_openstack_disk:
   - cp .kitchen.openstack.disk.yml .kitchen.yml
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
+
+cleanup_openstack_test:
+  stage: cleanup_build
+  tags:
+   - packer
+  script:
+   - ./remove_failed_builds.py
+  when: on_failure
 
 store_openstack_image:
   stage: store
