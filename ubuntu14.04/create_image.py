@@ -19,19 +19,17 @@ import keystoneclient.v2_0.client as ksclient
 Parses the command line arguments
 """
 parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
-requiredNamed = parser.add_argument_group('required arguments')
 
-requiredNamed.add_argument(
+parser.add_argument(
     'mode', choices=['validate', 'build'],
     help='''\nSet whether to validate the template or whether to build images'''
     )
-requiredNamed.add_argument(
-    'tem_file',
+parser.add_argument(
+    '-tf', '--tem_file', default='template.json',
     help='''\nThis is used to set the template file for the image''')
-requiredNamed.add_argument(
-    'var_file',
+parser.add_argument(
+    '-vf', '--var_file', default='variables.json',
     help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
-
 parser.add_argument(
     '-p', '--platform', dest='platform', default=['all'], nargs='*',
     choices=['all', 'virtualbox', 'openstack', 'vmware-iso'],
