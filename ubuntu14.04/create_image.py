@@ -95,7 +95,8 @@ def openstack_cleanup(store, os_name):
     nova, glance = authenticate()
 
     large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
-    downloaded_file = ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
+    downloaded_file = "/warehouse/isg_warehouse/gitlab-storage/" + ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
+
 
     try:
         subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, large_image.id])
