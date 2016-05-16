@@ -2,22 +2,17 @@
 
 from __future__ import print_function
 import argparse
-import getpass
 import random
 import string
 from os import environ
 import os
 import subprocess
 import sys
-import shlex
-import time
 import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
 
-"""
-Parses the command line arguments
-"""
+
 parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
 
 parser.add_argument(
@@ -39,11 +34,12 @@ parser.add_argument(
     '-o', '--openstack-name', dest='os_name',
     help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
 parser.add_argument(
-    '-s', '--store', dest='store', action='store_true',
-    help='''\nThis is used to store the images after creation. This option is now deprecated and has no effect''')
+    '-s', '--store', dest='store', default="/warehouse/isg_warehouse/gitlab-storage/",
+    help='''\nThis is used to store the output of the script in a specified area''')
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
+
 
 def process_args(args):
     """
@@ -78,7 +74,7 @@ def authenticate():
                                project_id=environ.get('OS_TENANT_NAME'),
                                region_name=environ.get('OS_REGION_NAME'))
     except:
-        print('Authentication with openstack failed, please check that the environment variables are set correctly.')
+        print('Sourcing openstack environment variabels failed, please check that the environment variables are set correctly.')
         sys.exit(1)
 
     glance_endpoint = keystone.service_catalog.url_for(service_type='image')
@@ -86,7 +82,7 @@ def authenticate():
 
     return nova, glance
 
-def openstack_cleanup(store, os_name):
+def openstack_cleanup(file_path, os_name):
     """
     This function is only run if openstack is one of the builders.
     If the image is to be stored then the image will be shrunk and the original image deleted,
@@ -95,7 +91,10 @@ def openstack_cleanup(store, os_name):
     nova, glance = authenticate()
 
     large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
-    downloaded_file = ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
+
+    downloaded_file = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
+    local_qcow = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
+
 
     try:
         subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, large_image.id])
@@ -108,20 +107,22 @@ def openstack_cleanup(store, os_name):
             print("Failed to remove the uncompressed image from openstack, you will need to clean this up manually.")
             sys.exit(1)
 
-    local_qcow = ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
-    subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
+    try:
+        subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+
 
     os.remove(downloaded_file)
 
     try:
         subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name])
         print(os_name)
-        with open('image_name', 'w+') as store_name:
-            store_name.write(os_name)
 
         final_image = nova.images.find(name=os_name)
 
         environ['OS_IMAGE_ID'] = final_image.id
+
         print("Image created and compressed with id: " + final_image.id)
     except subprocess.CalledProcessError as e:
         print(e.output)
@@ -164,7 +165,7 @@ def run_packer(args):
 
 
     if 'validate' not in args.mode and ('openstack' in args.platform):
-            openstack_cleanup(args.store, args.os_name)
+        openstack_cleanup(args.store, args.os_name)
 
 def main():
     run_packer(process_args(parser.parse_args()))

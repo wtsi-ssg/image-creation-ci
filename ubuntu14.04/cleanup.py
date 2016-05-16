@@ -54,7 +54,7 @@ def shrink():
 
 
     try:
-        downloaded_file = ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
+        downloaded_file = "/warehouse/isg_warehouse/gitlab-storage/" + ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
         subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, new.id])
     except subprocess.CalledProcessError as e:
         print(e.output)

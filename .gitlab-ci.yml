@@ -49,7 +49,7 @@ build_vmware:
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build -vf variables.json.example -p vmware-iso -o $IMAGE_NAME
-   - mv $IMAGE_NAME/ /var/tmp 
+   - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
 
 cleanup_openstack_build:
