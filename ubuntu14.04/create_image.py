@@ -39,7 +39,7 @@ parser.add_argument(
     '-o', '--openstack-name', dest='os_name',
     help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
 parser.add_argument(
-    '-s', '--store', dest='store',
+    '-s', '--store', dest='store', default="/warehouse/isg_warehouse/gitlab-storage/",
     help='''\nThis is used to store the output of the script in a specified area''')
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
@@ -87,7 +87,7 @@ def authenticate():
 
     return nova, glance
 
-def openstack_cleanup(store, os_name):
+def openstack_cleanup(file_path, os_name):
     """
     This function is only run if openstack is one of the builders.
     If the image is to be stored then the image will be shrunk and the original image deleted,
@@ -96,13 +96,6 @@ def openstack_cleanup(store, os_name):
     nova, glance = authenticate()
 
     large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
-
-
-    if store is not None:
-        file_path = store
-    else:
-        file_path = "/warehouse/isg_warehouse/gitlab-storage/"
-
 
     downloaded_file = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
     local_qcow = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
