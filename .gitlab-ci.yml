@@ -37,7 +37,7 @@ build_openstack:
   - packer
  script:
   - cd ubuntu14.04
-  - ./create_image.py build -vf variables.json.example -p openstack -o $IMAGE_NAME
+  - ./create_image.py build -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 
 build_vmware:
@@ -48,7 +48,7 @@ build_vmware:
    - cd ubuntu14.04
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
-   - ./create_image.py build -vf variables.json.example -p vmware-iso -o $IMAGE_NAME
+   - ./create_image.py build -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
 
@@ -67,7 +67,7 @@ test_openstack_no_disk:
    - openstack
    - kitchen
   script:
-  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w $IMAGE_NAME |  cut -d " " -f 1)
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - cp .kitchen.openstack.no_disk.yml .kitchen.yml
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
@@ -78,7 +78,7 @@ test_openstack_disk:
    - openstack
    - kitchen
   script:
-  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w $IMAGE_NAME |  cut -d " " -f 1)
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - cp .kitchen.openstack.disk.yml .kitchen.yml
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
