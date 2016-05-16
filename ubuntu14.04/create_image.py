@@ -2,22 +2,17 @@
 
 from __future__ import print_function
 import argparse
-import getpass
 import random
 import string
 from os import environ
 import os
 import subprocess
 import sys
-import shlex
-import time
 import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
 
-"""
-Parses the command line arguments
-"""
+
 parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
 
 parser.add_argument(
@@ -79,7 +74,7 @@ def authenticate():
                                project_id=environ.get('OS_TENANT_NAME'),
                                region_name=environ.get('OS_REGION_NAME'))
     except:
-        print('Authentication with openstack failed, please check that the environment variables are set correctly.')
+        print('Sourcing openstack environment variabels failed, please check that the environment variables are set correctly.')
         sys.exit(1)
 
     glance_endpoint = keystone.service_catalog.url_for(service_type='image')
@@ -123,8 +118,6 @@ def openstack_cleanup(file_path, os_name):
     try:
         subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name])
         print(os_name)
-        with open('image_name', 'w+') as store_name:
-            store_name.write(os_name)
 
         final_image = nova.images.find(name=os_name)
 
