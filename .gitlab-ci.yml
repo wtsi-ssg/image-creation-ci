@@ -57,6 +57,7 @@ cleanup_openstack_build:
   tags:
    - packer
   script:
+   - cd ubuntu14.04
    - ./remove_failed_builds.py
   when: on_failure
 
@@ -88,6 +89,7 @@ cleanup_openstack_test:
   tags:
    - packer
   script:
+   - cd ubuntu14.04
    - ./remove_failed_builds.py
   when: on_failure
 
