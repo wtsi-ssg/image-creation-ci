@@ -39,11 +39,12 @@ parser.add_argument(
     '-o', '--openstack-name', dest='os_name',
     help='''\nThis is used to set the final name of the image, if not set the image name will be random.''')
 parser.add_argument(
-    '-s', '--store', dest='store', action='store_true',
-    help='''\nThis is used to store the images after creation. This option is now deprecated and has no effect''')
+    '-s', '--store', dest='store',
+    help='''\nThis is used to store the output of the script in a specified area''')
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
+
 
 def process_args(args):
     """
@@ -95,7 +96,16 @@ def openstack_cleanup(store, os_name):
     nova, glance = authenticate()
 
     large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
-    downloaded_file = "/warehouse/isg_warehouse/gitlab-storage/" + ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
+
+
+    if store is not None:
+        file_path = store
+    else:
+        file_path = "/warehouse/isg_warehouse/gitlab-storage/"
+
+
+    downloaded_file = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
+    local_qcow = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
 
 
     try:
@@ -109,8 +119,11 @@ def openstack_cleanup(store, os_name):
             print("Failed to remove the uncompressed image from openstack, you will need to clean this up manually.")
             sys.exit(1)
 
-    local_qcow = ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
-    subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
+    try:
+        subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+
 
     os.remove(downloaded_file)
 
@@ -123,6 +136,7 @@ def openstack_cleanup(store, os_name):
         final_image = nova.images.find(name=os_name)
 
         environ['OS_IMAGE_ID'] = final_image.id
+
         print("Image created and compressed with id: " + final_image.id)
     except subprocess.CalledProcessError as e:
         print(e.output)
@@ -165,7 +179,7 @@ def run_packer(args):
 
 
     if 'validate' not in args.mode and ('openstack' in args.platform):
-            openstack_cleanup(args.store, args.os_name)
+        openstack_cleanup(args.store, args.os_name)
 
 def main():
     run_packer(process_args(parser.parse_args()))
