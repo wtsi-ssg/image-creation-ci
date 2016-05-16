@@ -8,7 +8,7 @@ Currently the only Operating System supported is Ubuntu 14.04
 ## Usage
 
 **Legacy:** *./packer.sh (build|validate) (virtualbox|vmware|openstack|all)*  
-./create_image.py (build|validate) (template) (variable file) [options]
+./create_image.py (build|validate) [options]
 
 This will build images for the supplied platform(s) or all. If the option validate is issued then the template will only be checked for syntax.
 
@@ -26,7 +26,6 @@ This will build images for the supplied platform(s) or all. If the option valida
   - os  
   - subprocess  
   - sys  
-  - time  
 
 
 ## VMWare private key
