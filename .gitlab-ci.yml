@@ -99,6 +99,5 @@ store_openstack_image:
   - packer
   script:
   - cd ubuntu14.04
-  - export IMAGE_NAME="${IMAGE_NAME}"_"${CI_BUILD_REF}"
-  - ./cleanup.py
+  - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
 
