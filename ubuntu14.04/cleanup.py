@@ -8,6 +8,7 @@ import random
 import subprocess
 import os
 from os import environ
+import argparse
 import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
@@ -38,7 +39,7 @@ def authenticate():
     return nova, glance
 
 
-def shrink():
+def download(input_name, output_location, date_time):
     '''
     shrinks the image and replaces the standard image
     '''
@@ -46,48 +47,60 @@ def shrink():
     nova, glance = authenticate()
 
     try:
-        name = environ.get('IMAGE_NAME')
+        new = nova.images.find(name=input_name)
     except:
-        print('IMAGE_NAME environment variable not set')
+        print("failed to find image " + input_name + "or there are multiple image with that name")
         sys.exit(1)
-    new = nova.images.find(name=name)
 
+    if date_time:
+        file_name_ending = '_' + time.strftime("%Y%m%d%H%M%S") + ".qcow"
+    else:
+        file_name_ending = ".qcow"
+
+
+    downloaded_file = output_location + file_name_ending
+    print("downloaded file is called: " + downloaded_file)
 
     try:
-        downloaded_file = "/warehouse/isg_warehouse/gitlab-storage/" + ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
         subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, new.id])
     except subprocess.CalledProcessError as e:
         print(e.output)
+        sys.exit(1)
 
     try:
+        images = glance.images.list()
+    except:
+        print("Could not get a list of images")
+        sys.exit(1)
 
-        name_date = name + '_' + time.strftime("%Y%m%d%H%M%S")
+    for image in images:
+        if 'private' not in image['visibility']:
+            continue
+        if input_name == image['name']:
+            try:
+                subprocess.check_call(['openstack', 'image', 'delete', image['id']])
+            except subprocess.CalledProcessError as e:
+                print(e.output)
+                print('The original image could not be destroyed, please run this manually')
 
-        subprocess.check_call(['glance', 'image-create', '--file', downloaded_file, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', name_date])
-        final_image = nova.images.find(name=name_date)
+def parsing():
+    parser = argparse.ArgumentParser(description="This script cleans up the openstack images after testing and store them locally")
+    parser.add_argument(
+        'input', help='The name of the file in openstack')
+    parser.add_argument(
+        'output', help='The output name')
+    parser.add_argument(
+        '-f', '--file_path', dest='file_path', default='/warehouse/isg_warehouse/gitlab-storage/',
+        help='The output location')
+    parser.add_argument(
+        '-dt', '--datetime', dest='date_time', action='store_true', help='Store the date and time in the name of the file')
 
-        print("Image created and compressed with id: " + final_image.id)
-
-        for image in glance.images.list():
-            if 'private' not in image['visibility']:
-                continue
-            if str(name) not in image['name']:
-                continue
-            if str(name_date) not in image['name']:
-                try:
-                    subprocess.check_call(['openstack', 'image', 'delete', image['id']])
-                except subprocess.CalledProcessError as e:
-                    print(e.output)
-                    print('The original image could not be destroyed, please run this manually')
-
-    except subprocess.CalledProcessError as e:
-        print(e.output)
-
-    os.remove(downloaded_file)
+    return parser.parse_args()
 
 
 def main():
-    shrink()
+    args = parsing()
+    download(args.input, args.file_path + args.output, args.date_time)
 
 if __name__ == "__main__":
     main()
