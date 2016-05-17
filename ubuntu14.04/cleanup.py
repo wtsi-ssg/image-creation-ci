@@ -79,7 +79,8 @@ def download(input_name, output_location, date_time):
         if input_name == image['name']:
             try:
                 subprocess.check_call(['openstack', 'image', 'delete', image['id']])
-            except subprocess.CalledProcessError as e:
+                print("successfully deleted " + str(image['name']))
+	    except subprocess.CalledProcessError as e:
                 print(e.output)
                 print('The original image could not be destroyed, please run this manually')
 
