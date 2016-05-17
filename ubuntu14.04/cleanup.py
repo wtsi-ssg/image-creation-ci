@@ -90,7 +90,7 @@ def parsing():
     parser.add_argument(
         'output', help='The output name')
     parser.add_argument(
-        '-f', '--file_path', dest='file_path', default='/warehouse/isg_warehouse/SciaaS-images/openstack/',
+        '-f', '--file_path', dest='file_path', default='/warehouse/isg_warehouse/SciaaS_images/openstack/',
         help='The output location')
     parser.add_argument(
         '-dt', '--datetime', dest='date_time', action='store_true', help='Store the date and time in the name of the file')
