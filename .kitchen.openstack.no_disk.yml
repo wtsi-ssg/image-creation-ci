@@ -27,6 +27,7 @@ platforms:
   - name: ubuntu-14.04
 
 suites:
+  - name: shared
   - name: default
 
 busser:
