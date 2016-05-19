@@ -1,1 +1,1 @@
-shared/bats/essentials.bats
+../../shared/bats/essentials.bats
