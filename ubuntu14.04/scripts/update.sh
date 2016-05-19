@@ -17,7 +17,7 @@ apt-get install -y accountsservice acpid adduser alien apparmor apport\
 				cryptsetup cryptsetup-bin curl cvs dash dbus debconf debconf-i18n debianutils\
 				dh-python diffutils dkms dmidecode dmsetup dnsutils dosfstools dpkg e2fslibs\
 				e2fsprogs eatmydata ed eject ethtool fakeroot file findutils\
-				fonts-ubuntu-font-family-consol friendly-recovery ftp fuse gawk gcc-4.8-base\
+				fonts-ubuntu-font-family-console friendly-recovery ftp fuse gawk gcc-4.8-base\
 				gcc-4.9-base gdisk geoip-database gettext-base gir1.2-glib-2.0 git gnupg gpgv\
 				grep groff-base grub-common grub-legacy-ec2 grub-pc gzip hdparm hostname\
 				ifupdown info initramfs-tools initramfs-tools-bin initscripts\

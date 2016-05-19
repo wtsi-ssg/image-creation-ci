@@ -12,6 +12,7 @@ driver:
   key_name: <%= ENV['OS_KEY'] %>
   floating_ip_pool: nova
   private_key_path: ~/.ssh/test.pem
+<% if ENV['MODE'] == "volume" %>
   block_device_mapping:
     make_volume: true
     device_name: vdb
@@ -19,6 +20,7 @@ driver:
     availability_zone: nova
     delete_on_termination: true
     creation_timeout: 600
+<% end %>
 
 
 transport:
@@ -35,7 +37,8 @@ platforms:
   - name: ubuntu-14.04
 
 suites:
-  - name: volume
+  - name: shared
+  - name: <%= ENV['MODE'] %>
 
 busser:
   ruby_bindir: /usr/bin
