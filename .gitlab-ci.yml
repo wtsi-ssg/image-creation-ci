@@ -9,7 +9,6 @@ variables:
  OS_BASE_IMAGE: "20811a86-6dbb-4ef7-9047-75a4a6727773"
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
- OS_KEY: "test"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
  https_proxy: "http://wwwcache.sanger.ac.uk:3128"
@@ -70,8 +69,11 @@ test_openstack_no_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
+  - export KEYPAIR=$(date | md5sum | cut -d " " -f 1)
+  - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
+  - openstack keypair delete $KEYPAIR
 
 test_openstack_disk:
   stage: test
@@ -81,8 +83,11 @@ test_openstack_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
+  - export KEYPAIR=$(date | md5sum | cut -d " " -f 1)
+  - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
+  - openstack keypair delete $KEYPAIR
 
 cleanup_openstack_test:
   stage: cleanup_build
