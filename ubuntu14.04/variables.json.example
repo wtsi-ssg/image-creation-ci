@@ -8,5 +8,6 @@
     "null_key": "<null key file>",
     "VMWARE_BUILD_HOST": "wtgc-vmbd-01.internal.sanger.ac.uk",
     "extra_script": "scripts/compiler_tools.sh",
-    "directory": "."
+    "directory": ".",
+    "packer_directory": "."
 }

@@ -88,7 +88,8 @@
     {
       "scripts": [
           "{{user `directory`}}/scripts/update.sh",
-          "{{user `directory`}}/scripts/sudoers.sh"
+          "{{user `directory`}}/scripts/sudoers.sh",
+          "{{user `directory`}}/scripts/install_ansible.sh"
       ],
       "type": "shell",
       "except": [ "null" ],
@@ -125,6 +126,10 @@
       "destination": "/tmp/stash",
       "source": "{{user `directory`}}/data/",
       "type": "file"
+    },
+    {
+             "type": "ansible-local",
+             "playbook_file": "{{user `packer_directory`}}/ansible/packer.yml"
     },
     {
       "scripts": [
