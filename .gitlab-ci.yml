@@ -3,7 +3,7 @@ variables:
  COMPUTE_API_VERSION: "1.1"
  no_proxy: ",172.31.4.18"
  OS_CLOUDNAME: "overcloud"
- OS_AUTH_URL: "https://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
+ OS_AUTH_URL: "https://openstack-gamma.internal.sanger.ac.uk:5001/v2.0/"
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
  OS_BASE_IMAGE: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
