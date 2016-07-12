@@ -6,7 +6,7 @@ variables:
  OS_AUTH_URL: "https://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
- OS_BASE_IMAGE: ""
+ OS_BASE_IMAGE: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
