@@ -64,7 +64,7 @@
         "-- <enter><wait> "
       ]      },
       {
-        "flavor": "b1.medium",
+        "flavor": "m1.medium",
         "image_name": "{{ user `image_name` }}",
         "source_image": "{{ user `openstack_imgid` }}",
         "ssh_username": "ubuntu",
