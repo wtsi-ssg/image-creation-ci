@@ -109,7 +109,7 @@ def openstack_cleanup(file_path, os_name):
 
     if os.stat(downloaded_file).st_size == 0:
         print(f.output)
-        print("Downloaded file ({hostname}:{path}) empty".format(path=downloaded_file,hostname=os.uname()[1])
+        print("Downloaded file ({hostname}:{path}) empty".format(path=downloaded_file,hostname=os.uname()[1]))
         sys.exit(1)
 
 
