@@ -105,13 +105,13 @@ def openstack_cleanup(file_path, os_name):
         except subprocess.CalledProcessError as f:
             print(f.output)
             print("Failed to remove the uncompressed image from openstack, you will need to clean this up manually.")
-            sys.exit(1)
+        sys.exit(1)
 
     try:
         subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
     except subprocess.CalledProcessError as e:
         print(e.output)
-
+        sys.exit(1)
 
     os.remove(downloaded_file)
 
@@ -134,6 +134,7 @@ def openstack_cleanup(file_path, os_name):
     except subprocess.CalledProcessError as e:
         print(e.output)
         print('The large image could not be destroyed, please run this manually')
+        sys.exit(1)
 
 def run_packer(args):
     """
