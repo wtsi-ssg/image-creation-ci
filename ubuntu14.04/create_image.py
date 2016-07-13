@@ -11,9 +11,7 @@ import sys
 import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
-from enum import Enum   
 
-Level = Enum('Level', 'Always local None')
 debug_var = "None"
 parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
 
@@ -64,11 +62,11 @@ def process_args(args):
     debug("Local debug mode on");
     return args
 
-def debug(string, level="local"):
+def debug(string):
     """
     Output a debug string to the stdout
     """
-    if Level.debug_var >= Level.level :
+    if debug_var == "local" :
         print (string);
         sys.stdout.flush()
 
