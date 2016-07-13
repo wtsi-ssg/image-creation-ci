@@ -135,6 +135,8 @@ def openstack_cleanup(file_path, os_name):
         sys.exit(1)
 
     os.remove(downloaded_file)
+    debug("Converted file ({hostname}:{path}) size={size}".format(path=local_qcow,hostname=os.uname()[1],size=os.stat(local_qcow).st_size))
+
 
     try:
         subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name])
@@ -147,6 +149,8 @@ def openstack_cleanup(file_path, os_name):
         print("Image created and compressed with id: " + final_image.id)
     except subprocess.CalledProcessError as e:
         print(e.output)
+        sys.stdout.flush()
+        sys.exit(1)
 
     os.remove(local_qcow)
 
