@@ -69,6 +69,7 @@ def debug(string):
     """
     if debug_var == "local" :
         print (string);
+        sys.stdout.flush()
 
 
 def authenticate():
