@@ -36,7 +36,7 @@ build_openstack:
   - packer
  script:
   - cd ubuntu14.04
-  - ./create_image.py build -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 
 build_vmware:

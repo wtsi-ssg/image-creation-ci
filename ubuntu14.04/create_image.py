@@ -13,6 +13,7 @@ import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
 
 
+debug_var = "None"
 parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
 
 parser.add_argument(
@@ -39,23 +40,36 @@ parser.add_argument(
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
+parser.add_argument(
+    '-d', '--debug', dest='debug', default="None",
+    help='''\nThis is used to output debug messages in this wrapper''')
+
 
 
 def process_args(args):
     """
     Prepares the environment and runs checks depending upon the platform
     """
+    global debug_var
     if 'all' in args.platform:
         args.platform = ['virtualbox', 'openstack', 'vmware-iso']
-
     if 'openstack' in args.platform:
         #This line must come before packer is called as the packer template relies upon it!
         environ['IMAGE_NAME'] = ''.join(random.choice(string.lowercase) for i in range(20))
         if (args.os_name is None) and ('build' in args.mode):
             print("To use openstack you must specify the output file name")
             sys.exit(1)
-
+    debug_var = args.debug
+    debug("Local debug mode on");
     return args
+
+def debug(string):
+    """
+    Output a debug string to the stdout
+    """
+    if debug_var == "local" :
+        print (string);
+
 
 def authenticate():
     """
@@ -111,7 +125,7 @@ def openstack_cleanup(file_path, os_name):
         print(f.output)
         print("Downloaded file ({hostname}:{path}) empty".format(path=downloaded_file,hostname=os.uname()[1]))
         sys.exit(1)
-
+    debug("Download file ({hostname}:{path}) size={size}".format(path=downloaded_file,hostname=os.uname()[1],size=os.stat(downloaded_file).st_size))
 
     try:
         subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
@@ -175,7 +189,8 @@ def run_packer(args):
         openstack_cleanup(args.store, args.os_name)
 
 def main():
-    run_packer(process_args(parser.parse_args()))
+    args=parser.parse_args()
+    run_packer(process_args(args))
 
 if __name__ == "__main__":
     main()
