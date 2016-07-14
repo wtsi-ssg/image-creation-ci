@@ -1,12 +1,12 @@
 variables:
  OS_NO_CACHE: "True"
  COMPUTE_API_VERSION: "1.1"
- no_proxy: ",172.31.4.18"
+ no_proxy: ",172.31.0.18"
  OS_CLOUDNAME: "overcloud"
- OS_AUTH_URL: "http://172.31.4.18:5000/v2.0/"
+ OS_AUTH_URL: "http://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
- OS_BASE_IMAGE: "20811a86-6dbb-4ef7-9047-75a4a6727773"
+ OS_BASE_IMAGE: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
  IMAGE_NAME: "ubuntu_14_04_4_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
@@ -69,7 +69,7 @@ test_openstack_no_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
-  - export KEYPAIR=$(date | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
@@ -83,7 +83,7 @@ test_openstack_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
-  - export KEYPAIR=$(date | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy

@@ -12,7 +12,7 @@ import glanceclient.v2.client as glclient
 import novaclient.client as nvclient
 import keystoneclient.v2_0.client as ksclient
 
-
+debug_var = "None"
 parser = argparse.ArgumentParser(description="This script allows one to build images on vmware, openstack and/or virtualbox")
 
 parser.add_argument(
@@ -39,23 +39,37 @@ parser.add_argument(
 parser.add_argument(
     '-l', '--packer-location', dest='packer',
     help='''\nThis is used to specify the location of packer.''')
+parser.add_argument(
+    '-d', '--debug', dest='debug', default="None",
+    help='''\nThis is used to output debug messages in this wrapper''')
+
 
 
 def process_args(args):
     """
     Prepares the environment and runs checks depending upon the platform
     """
+    global debug_var
     if 'all' in args.platform:
         args.platform = ['virtualbox', 'openstack', 'vmware-iso']
-
     if 'openstack' in args.platform:
         #This line must come before packer is called as the packer template relies upon it!
         environ['IMAGE_NAME'] = ''.join(random.choice(string.lowercase) for i in range(20))
         if (args.os_name is None) and ('build' in args.mode):
             print("To use openstack you must specify the output file name")
             sys.exit(1)
-
+    debug_var = args.debug
+    debug("Local debug mode on");
     return args
+
+def debug(string):
+    """
+    Output a debug string to the stdout
+    """
+    if debug_var == "local" :
+        print (string);
+        sys.stdout.flush()
+
 
 def authenticate():
     """
@@ -75,7 +89,7 @@ def authenticate():
                                region_name=environ.get('OS_REGION_NAME'))
     except:
         print('Sourcing openstack environment variabels failed, please check that the environment variables are set correctly.')
-        sys.exit(1)
+        sys.exit(2)
 
     glance_endpoint = keystone.service_catalog.url_for(service_type='image')
     glance = glclient.Client(glance_endpoint, token=keystone.auth_token)
@@ -100,32 +114,47 @@ def openstack_cleanup(file_path, os_name):
         subprocess.check_call(['glance', 'image-download', '--progress', '--file', downloaded_file, large_image.id])
     except subprocess.CalledProcessError as e:
         print(e.output)
+        sys.stdout.flush()
         try:
             subprocess.check_call(['openstack', 'image', 'delete', large_image])
         except subprocess.CalledProcessError as f:
             print(f.output)
             print("Failed to remove the uncompressed image from openstack, you will need to clean this up manually.")
-            sys.exit(1)
+        sys.exit(3)
+
+    if os.stat(downloaded_file).st_size == 0:
+        print(f.output)
+        print("Downloaded file ({hostname}:{path}) empty".format(path=downloaded_file,hostname=os.uname()[1]))
+        sys.exit(4)
+    debug("Download file ({hostname}:{path}) size={size}".format(path=downloaded_file,hostname=os.uname()[1],size=os.stat(downloaded_file).st_size))
 
     try:
         subprocess.check_call(['qemu-img', 'convert', '-f', 'raw', '-O', 'qcow2', downloaded_file, local_qcow])
     except subprocess.CalledProcessError as e:
         print(e.output)
-
+        sys.exit(5)
 
     os.remove(downloaded_file)
+    debug("Converted file ({hostname}:{path}) size={size}".format(path=local_qcow,hostname=os.uname()[1],size=os.stat(local_qcow).st_size))
+
 
     try:
+        debug(" ".join(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name]))
         subprocess.check_call(['glance', 'image-create', '--file', local_qcow, '--disk-format', 'qcow2', '--container-format', 'bare', '--progress', '--name', os_name])
         print(os_name)
+        sys.stdout.flush()
 
         final_image = nova.images.find(name=os_name)
 
         environ['OS_IMAGE_ID'] = final_image.id
 
         print("Image created and compressed with id: " + final_image.id)
+        sys.stdout.flush()
+
     except subprocess.CalledProcessError as e:
         print(e.output)
+        sys.stdout.flush()
+        sys.exit(6)
 
     os.remove(local_qcow)
 
@@ -134,6 +163,7 @@ def openstack_cleanup(file_path, os_name):
     except subprocess.CalledProcessError as e:
         print(e.output)
         print('The large image could not be destroyed, please run this manually')
+        sys.exit(7)
 
 def run_packer(args):
     """
@@ -161,14 +191,15 @@ def run_packer(args):
         subprocess.check_call([packer_bin, args.mode, '-only='+platform, '-var-file='+ args.var_file, args.tem_file])
     except subprocess.CalledProcessError as f:
         print(f.output)
-        sys.exit(1)
+        sys.exit(8)
 
 
     if 'validate' not in args.mode and ('openstack' in args.platform):
         openstack_cleanup(args.store, args.os_name)
 
 def main():
-    run_packer(process_args(parser.parse_args()))
+    args=parser.parse_args()
+    run_packer(process_args(args))
 
 if __name__ == "__main__":
     main()
