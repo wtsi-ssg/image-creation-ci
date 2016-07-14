@@ -104,7 +104,7 @@ def openstack_cleanup(file_path, os_name):
     """
     nova, glance = authenticate()
 
-    large_image = nova.images.find(name=environ.get('IMAGE_NAME'))
+    large_image = str(nova.images.find(name=environ.get('IMAGE_NAME')))
 
     downloaded_file = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".raw"
     local_qcow = file_path + ''.join(random.choice(string.lowercase) for i in range(20)) + ".qcow"
@@ -116,6 +116,7 @@ def openstack_cleanup(file_path, os_name):
         print(e.output)
         sys.stdout.flush()
         try:
+            debug(" ".join(['openstack', 'image', 'delete', large_image]))
             subprocess.check_call(['openstack', 'image', 'delete', large_image])
         except subprocess.CalledProcessError as f:
             print(f.output)
