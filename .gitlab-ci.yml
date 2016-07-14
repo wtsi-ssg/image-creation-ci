@@ -69,7 +69,7 @@ test_openstack_no_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
-  - export KEYPAIR=$(date | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
@@ -83,7 +83,7 @@ test_openstack_disk:
   script:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
-  - export KEYPAIR=$(date | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
