@@ -9,10 +9,10 @@
     "VMWARE_BUILD_HOST": "wtgc-vmbd-01.internal.sanger.ac.uk",
     "extra_script": "scripts/compiler_tools.sh",
     "directory": ".",
-    "packer_directory": "."
-    "ansible_rolepath1": "./ansible/roles/null"
-    "ansible_rolepath2": "./ansible/roles/null"
-    "ansible_rolepath3": "./ansible/roles/null"
-    "ansible_rolepath4": "./ansible/roles/null"
+    "packer_directory": ".",
+    "ansible_rolepath1": "./ansible/roles/null",
+    "ansible_rolepath2": "./ansible/roles/null",
+    "ansible_rolepath3": "./ansible/roles/null",
+    "ansible_rolepath4": "./ansible/roles/null",
     "ansible_rolepath5": "./ansible/roles/null"
 }
