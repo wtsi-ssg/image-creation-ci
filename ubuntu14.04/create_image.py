@@ -116,6 +116,7 @@ def openstack_cleanup(file_path, os_name):
         print(e.output)
         sys.stdout.flush()
         try:
+            debug(" ".join(['openstack', 'image', 'delete', large_image]))
             subprocess.check_call(['openstack', 'image', 'delete', large_image])
         except subprocess.CalledProcessError as f:
             print(f.output)
