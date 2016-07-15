@@ -10,9 +10,14 @@
     "extra_script": "scripts/compiler_tools.sh",
     "directory": ".",
     "packer_directory": ".",
+    "ansible_rolepath0": "./ansible/roles/null",
     "ansible_rolepath1": "./ansible/roles/null",
     "ansible_rolepath2": "./ansible/roles/null",
     "ansible_rolepath3": "./ansible/roles/null",
     "ansible_rolepath4": "./ansible/roles/null",
-    "ansible_rolepath5": "./ansible/roles/null"
+    "ansible_rolepath5": "./ansible/roles/null",
+    "ansible_rolepath6": "./ansible/roles/null",
+    "ansible_rolepath7": "./ansible/roles/null",
+    "ansible_rolepath8": "./ansible/roles/null",
+    "ansible_rolepath9": "./ansible/roles/null"
 }
