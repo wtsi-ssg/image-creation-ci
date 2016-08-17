@@ -7,7 +7,7 @@
     "null_user": "<null username>",
     "null_key": "<null key file>",
     "VMWARE_BUILD_HOST": "wtgc-vmbd-01.internal.sanger.ac.uk",
-    "extra_script": "scripts/compiler_tools.sh",
+    "extra_script": "scripts/null.sh",
     "directory": ".",
     "packer_directory": ".",
     "ansible_rolepath0": "./ansible/roles/null",
