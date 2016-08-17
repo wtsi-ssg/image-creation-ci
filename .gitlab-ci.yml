@@ -48,7 +48,6 @@ build_openstack_trusty:
  stage: build
  tags:
   - packer
-  - trusty
  script:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
@@ -59,7 +58,6 @@ build_openstack_xenial:
  stage: build
  tags:
   - packer
-  - xenial
  script:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
@@ -70,7 +68,6 @@ build_vmware_trusty:
   stage: build
   tags:
    - packer
-   - trusty
   script:
    - cd packer
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
@@ -95,7 +92,6 @@ test_openstack_no_disk_trusty:
   tags:
    - openstack
    - kitchen
-   - trusty
   script:
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
@@ -111,7 +107,6 @@ test_openstack_no_disk_xenial:
   tags:
    - openstack
    - kitchen
-   - xenial
   script:
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
@@ -128,7 +123,6 @@ test_openstack_disk_trusty:
   tags:
    - openstack
    - kitchen
-   - trusty
   script:
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
@@ -144,7 +138,6 @@ test_openstack_disk_xenial:
   tags:
    - openstack
    - kitchen
-   - xenial
   script:
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
