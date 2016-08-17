@@ -24,13 +24,25 @@ stages:
  - cleanup_test
  - store
 
-validate_template:
+validate_template_trusty:
   stage: init
   tags: 
    - packer
   script:
    - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
    - ./create_image.py validate -vf variables.json.example 
+
+validate_template_xenial:
+  stage: init
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+   - ./create_image.py validate -vf variables.json.example
 
 build_openstack_trusty:
  stage: build
@@ -49,7 +61,7 @@ build_openstack_xenial:
  script:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
-  - OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+  - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_vmware_trusty:
