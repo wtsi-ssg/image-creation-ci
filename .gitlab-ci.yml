@@ -27,7 +27,7 @@ validate_template:
   tags: 
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
    - ./create_image.py validate -vf variables.json.example 
 
 build_openstack:
@@ -35,7 +35,7 @@ build_openstack:
  tags:
   - packer
  script:
-  - cd ubuntu14.04
+  - cd packer
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 
@@ -44,7 +44,7 @@ build_vmware:
   tags:
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
@@ -56,7 +56,7 @@ cleanup_openstack_build:
   tags:
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
    - ./remove_failed_builds.py
   when: on_failure
 
@@ -94,7 +94,7 @@ cleanup_openstack_test:
   tags:
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
    - ./remove_failed_builds.py
   when: on_failure
 
@@ -103,6 +103,6 @@ store_openstack_image:
   tags:
   - packer
   script:
-  - cd ubuntu14.04
+  - cd packer
   - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
 
