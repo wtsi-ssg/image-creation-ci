@@ -85,7 +85,6 @@
   "provisioners": [
     {
       "scripts": [
-          "{{user `directory`}}/scripts/update.sh",
           "{{user `directory`}}/scripts/sudoers.sh",
           "{{user `directory`}}/scripts/install_ansible.sh"
       ],
