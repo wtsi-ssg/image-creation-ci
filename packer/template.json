@@ -64,17 +64,15 @@
         "-- <enter><wait> "
       ]      },
       {
+        "type": "openstack",
         "flavor": "b1.medium",
         "image_name": "{{ user `image_name` }}",
         "source_image": "{{ user `openstack_imgid` }}",
         "ssh_username": "ubuntu",
         "use_floating_ip": "true",
         "floating_ip_pool": "nova",
-        "type": "openstack",
         "security_groups": "{{user `openstack_sg`}}"
       },
-
-
       {
         "type":         "null",
         "ssh_host":     "127.0.0.1",
