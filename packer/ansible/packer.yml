@@ -1,3 +1,8 @@
+- name: roles
+  become: true
+  hosts: all
+  roles:
+    - sanger-flex-base
 - name: example
   sudo: True
   hosts: all

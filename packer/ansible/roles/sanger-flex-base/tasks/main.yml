@@ -1,0 +1,3 @@
+---
+- name: include a sub yaml
+  include: "os_release/{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"

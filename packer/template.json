@@ -127,7 +127,8 @@
     {
              "type": "ansible-local",
              "playbook_file": "{{user `packer_directory`}}/ansible/packer.yml",
-             "role_paths" :  [ "{{user `ansible_rolepath0`}}",
+             "role_paths" :  [ "ansible/roles/sanger-flex-base",
+                               "{{user `ansible_rolepath0`}}",
                                "{{user `ansible_rolepath1`}}",
                                "{{user `ansible_rolepath2`}}",
                                "{{user `ansible_rolepath3`}}",
