@@ -6,8 +6,10 @@ variables:
  OS_AUTH_URL: "http://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
  NOVA_VERSION: "1.1"
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
- OS_BASE_IMAGE: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
- IMAGE_NAME: "ubuntu_14_04_4_WTSI_standard"
+ OS_BASE_IMAGE_TRUSTY: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
+ IMAGE_NAME_TRUSTY: "ubuntu_14_04_4_WTSI_standard"
+ OS_BASE_IMAGE_XENIAL: "002ca5be-3934-43d3-9d2c-eda816b57019"
+ IMAGE_NAME_XENIAL: "ubuntu_14_06_4_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
@@ -30,26 +32,38 @@ validate_template:
    - cd packer
    - ./create_image.py validate -vf variables.json.example 
 
-build_openstack:
+build_openstack_trusty:
  stage: build
  tags:
   - packer
  script:
   - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
+build_openstack_xenial:
+ stage: build
+ tags:
+  - packer
+ script:
+  - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+  - OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
-build_vmware:
+build_vmware_trusty:
   stage: build
   tags:
    - packer
   script:
    - cd packer
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
-   - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
-   - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
+   - IMAGE_NAME=${IMAGE_NAME_TRUSTY}"_"$(date +%Y%m%d%H%M%S )
+   - echo ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - echo mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
+
 
 cleanup_openstack_build:
   stage: cleanup_build
@@ -61,12 +75,14 @@ cleanup_openstack_build:
   when: on_failure
 
 
-test_openstack_no_disk:
+test_openstack_no_disk_trusty:
   stage: test
   tags:
    - openstack
    - kitchen
+   - trusty
   script:
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
   - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
@@ -75,12 +91,47 @@ test_openstack_no_disk:
   - kitchen destroy
   - openstack keypair delete $KEYPAIR
 
-test_openstack_disk:
+test_openstack_no_disk_xenial:
   stage: test
   tags:
    - openstack
    - kitchen
+   - xenial
   script:
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=default
+  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
+  - openstack keypair create $KEYPAIR >> $KEYPAIR
+  - http_proxy="" https_proxy=""  kitchen test
+  - kitchen destroy
+  - openstack keypair delete $KEYPAIR
+
+
+test_openstack_disk_trusty:
+  stage: test
+  tags:
+   - openstack
+   - kitchen
+   - trusty
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=volume
+  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
+  - openstack keypair create $KEYPAIR >> $KEYPAIR
+  - http_proxy="" https_proxy="" kitchen test
+  - kitchen destroy
+  - openstack keypair delete $KEYPAIR
+
+test_openstack_disk_xenial:
+  stage: test
+  tags:
+   - openstack
+   - kitchen
+   - xenial
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
   - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
