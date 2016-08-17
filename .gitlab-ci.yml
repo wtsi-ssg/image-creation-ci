@@ -48,6 +48,7 @@ build_openstack_trusty:
  stage: build
  tags:
   - packer
+  - trusty
  script:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
@@ -58,6 +59,7 @@ build_openstack_xenial:
  stage: build
  tags:
   - packer
+  - xenial
  script:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
@@ -68,6 +70,7 @@ build_vmware_trusty:
   stage: build
   tags:
    - packer
+   - trusty
   script:
    - cd packer
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
