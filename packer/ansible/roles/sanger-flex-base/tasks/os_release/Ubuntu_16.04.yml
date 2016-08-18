@@ -298,9 +298,8 @@
     - libxext6
     - libxml2
     - libxmuu1
-    - libxtables10
+    - libxtables11
     - libyaml-0-2
-    - linux-generic-lts-wily
     - locales
     - lockfile-progs
     - login
