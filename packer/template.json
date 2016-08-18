@@ -4,6 +4,7 @@
   "variables": {
     "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
     "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
+    "image_user": "{{ env `IMAGE_USERNAME`}}",
     "image_name": "{{ env `IMAGE_NAME`}}",
     "vm_pass": "{{ env `VMWARE_PASSWORD` }}"
   },
@@ -68,7 +69,7 @@
         "flavor": "b1.medium",
         "image_name": "{{ user `image_name` }}",
         "source_image": "{{ user `openstack_imgid` }}",
-        "ssh_username": "ubuntu",
+        "ssh_username": "{{ user `image_user` }}",
         "use_floating_ip": "true",
         "floating_ip_pool": "nova",
         "security_groups": "{{user `openstack_sg`}}"
