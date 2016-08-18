@@ -235,7 +235,7 @@
     - libpam-runtime
     - libpam-systemd
     - libparse-debianchangelog-perl
-    - libparted
+    - libparted2
     - libpcap0.8
     - libpci3
     - libpcre3
@@ -265,7 +265,7 @@
     - libsemanage1
     - libsemanage-common
     - libsepol1
-    - libsigc++-2.0-0c2a
+    - libsigc++-2.0-0v5
     - libsigsegv2
     - libslang2
     - libsqlite3-0
@@ -291,7 +291,7 @@
     - libwrap0
     - libx11-6
     - libx11-data
-    - libxapian22
+    - libxapian22v5
     - libxau6
     - libxcb1
     - libxdmcp6
@@ -344,7 +344,7 @@
     - pciutils
     - perl
     - perl-base
-    - perl-modules
+    - perl-modules-5.22
     - plymouth
     - plymouth-theme-ubuntu-text
     - policykit-1
@@ -417,7 +417,6 @@
     - ssh-import-id
     - subversion
     - sudo
-    - systemd-services
     - systemd-shim
     - sysvinit-utils
     - sysv-rc
