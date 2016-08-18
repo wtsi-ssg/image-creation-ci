@@ -76,7 +76,7 @@ build_openstack_xenial:
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
-build_openstack_xenial:
+build_openstack_centos7:
  stage: build
  tags:
   - packer
