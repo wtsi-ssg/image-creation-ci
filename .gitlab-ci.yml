@@ -9,7 +9,9 @@ variables:
  OS_BASE_IMAGE_TRUSTY: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
  IMAGE_NAME_TRUSTY: "ubuntu_14_04_4_WTSI_standard"
  OS_BASE_IMAGE_XENIAL: "002ca5be-3934-43d3-9d2c-eda816b57019"
- IMAGE_NAME_XENIAL: "ubuntu_14_06_4_WTSI_standard"
+ IMAGE_NAME_XENIAL: "ubuntu_16_06_4_WTSI_standard"
+ OS_BASE_IMAGE_CENTOS7: "9d932078-d405-454f-9bc6-3398605f32bd"
+ IMAGE_NAME_CENTOS7: "centos_7_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
  http_proxy: "http://wwwcache.sanger.ac.uk:3128"
@@ -44,6 +46,16 @@ validate_template_xenial:
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
    - ./create_image.py validate -vf variables.json.example
 
+validate_template_centos7:
+  stage: init
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
+   - ./create_image.py validate -vf variables.json.example
+
 build_openstack_trusty:
  stage: build
  tags:
@@ -62,6 +74,16 @@ build_openstack_xenial:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+
+build_openstack_xenial:
+ stage: build
+ tags:
+  - packer
+ script:
+  - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+  - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_vmware_trusty:
@@ -97,7 +119,7 @@ test_openstack_no_disk_trusty:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
   - export PLATFORM="ubuntu-14.04"
-  - export KEYPAIR=$( echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
@@ -113,11 +135,28 @@ test_openstack_no_disk_xenial:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
   - export PLATFORM="ubuntu-16.04"
-  - export KEYPAIR=$( echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N )| md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy=""  kitchen test
   - kitchen destroy
   - openstack keypair delete $KEYPAIR
+
+test_openstack_no_disk_centos7:
+  stage: test
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=default
+  - export PLATFORM="centos-7.0"
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - openstack keypair create $KEYPAIR >> $KEYPAIR
+  - http_proxy="" https_proxy=""  kitchen test
+  - kitchen destroy
+  - openstack keypair delete $KEYPAIR
+
 
 
 test_openstack_disk_trusty:
@@ -130,7 +169,7 @@ test_openstack_disk_trusty:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
   - export PLATFORM="ubuntu-14.04"
-  - export KEYPAIR=$( echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
@@ -146,11 +185,28 @@ test_openstack_disk_xenial:
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
   - export PLATFORM="ubuntu-16.04"
-  - export KEYPAIR=$( echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N | md5sum | cut -d " " -f 1)
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - openstack keypair create $KEYPAIR >> $KEYPAIR
   - http_proxy="" https_proxy="" kitchen test
   - kitchen destroy
   - openstack keypair delete $KEYPAIR
+
+test_openstack_disk_centos7:
+  stage: test
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=volume
+  - export PLATFORM="centos-7.0"
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - openstack keypair create $KEYPAIR >> $KEYPAIR
+  - http_proxy="" https_proxy="" kitchen test
+  - kitchen destroy
+  - openstack keypair delete $KEYPAIR
+
 
 cleanup_openstack_test:
   stage: cleanup_build

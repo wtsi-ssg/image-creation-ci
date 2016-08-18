@@ -34,7 +34,7 @@ provisioner:
   name: shell
 
 platforms:
-  - name: ubuntu-14.04
+  - name: <%= ENV['PLATFORM'] %>
 
 suites:
   - name: <%= ENV['MODE'] %>
