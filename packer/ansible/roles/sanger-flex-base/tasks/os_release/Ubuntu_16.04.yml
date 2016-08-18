@@ -156,7 +156,7 @@
     - libcryptsetup4
     - libcurl3
     - libcurl3-gnutls
-    - libcwidget3
+    - libcwidget3v5
     - libdb5.3
     - libdbus-1-3
     - libdbus-glib-1-2
