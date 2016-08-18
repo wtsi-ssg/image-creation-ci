@@ -132,16 +132,16 @@
     - libapparmor1
     - libapparmor-perl
     - libapt-inst1.5
-    - libapt-pkg4.12
+    - libapt-pkg5.0
     - libarchive-extract-perl
     - libasn1-8-heimdal
     - libasprintf0c2
     - libattr1
     - libaudit1
     - libaudit-common
-    - libbind9-90
+    - libbind9-140
     - libblkid1
-    - libboost-iostreams1.54.0
+    - libboost-iostreams1.58.0
     - libbsd0
     - libbz2-1.0
     - libc6
@@ -162,11 +162,11 @@
     - libdbus-glib-1-2
     - libdebconfclient0
     - libdevmapper1.02.1
-    - libdns100
+    - libdns162
     - libdrm2
     - libedit2
     - libelf1
-    - libept1.4.12
+    - libept1.5.0
     - libestr0
     - libevent-2.0-5
     - libexpat1
@@ -178,13 +178,13 @@
     - libgck-1-0
     - libgcr-3-common
     - libgcr-base-3-1
-    - libgcrypt11
+    - libgcrypt20
     - libgdbm3
     - libgeoip1
     - libgirepository-1.0-1
     - libglib2.0-0
     - libglib2.0-data
-    - libgnutls26
+    - libgnutls30
     - libgnutls-openssl27
     - libgpg-error0
     - libgpm2
@@ -194,12 +194,12 @@
     - libheimbase1-heimdal
     - libheimntlm0-heimdal
     - libhx509-5-heimdal
-    - libicu52
+    - libicu55
     - libidn11
     - libio-string-perl
-    - libisc95
-    - libisccc90
-    - libisccfg90
+    - libisc160
+    - libisccc140
+    - libisccfg140
     - libjson0
     - libjson-c2
     - libk5crypto3
@@ -214,7 +214,7 @@
     - liblockfile1
     - liblockfile-bin
     - liblog-message-simple-perl
-    - liblwres90
+    - liblwres141
     - liblzma5
     - libmagic1
     - libmodule-pluggable-perl
@@ -235,7 +235,7 @@
     - libpam-runtime
     - libpam-systemd
     - libparse-debianchangelog-perl
-    - libparted0debian1
+    - libparted
     - libpcap0.8
     - libpci3
     - libpcre3
@@ -247,17 +247,17 @@
     - libpolkit-backend-1-0
     - libpolkit-gobject-1-0
     - libpopt0
-    - libprocps3
+    - libprocps4
     - libpython2.7
     - libpython2.7-minimal
     - libpython2.7-stdlib
-    - libpython3.4-minimal
-    - libpython3.4-stdlib
+    - libpython3.5-minimal
+    - libpython3.5-stdlib
     - libpython3-stdlib
     - libpython-stdlib
     - libreadline6
     - libroken18-heimdal
-    - librtmp0
+    - librtmp1
     - libsasl2-2
     - libsasl2-modules
     - libsasl2-modules-db
@@ -273,8 +273,6 @@
     - libssl1.0.0
     - libstdc++6
     - libsub-name-perl
-    - libsystemd-daemon0
-    - libsystemd-login0
     - libtasn1-6
     - libterm-ui-perl
     - libtext-charwidth-perl
@@ -363,8 +361,8 @@
     - python2.7
     - python2.7-minimal
     - python3
-    - python3.4
-    - python3.4-minimal
+    - python3.5
+    - python3.5-minimal
     - python3-apport
     - python3-apt
     - python3-commandnotfound
