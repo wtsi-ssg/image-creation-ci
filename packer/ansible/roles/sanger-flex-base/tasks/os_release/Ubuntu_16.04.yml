@@ -135,7 +135,7 @@
     - libapt-pkg5.0
     - libarchive-extract-perl
     - libasn1-8-heimdal
-    - libasprintf0c2
+    - libasprintf0v5
     - libattr1
     - libaudit1
     - libaudit-common
