@@ -131,7 +131,7 @@
     - libacl1
     - libapparmor1
     - libapparmor-perl
-    - libapt-inst1.5
+    - libapt-inst2.0
     - libapt-pkg5.0
     - libarchive-extract-perl
     - libasn1-8-heimdal
