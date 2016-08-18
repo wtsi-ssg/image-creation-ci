@@ -34,6 +34,7 @@ validate_template_trusty:
    - cd packer
    - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
+   - export OS_USERNAME="ubuntu"
    - ./create_image.py validate -vf variables.json.example 
 
 validate_template_xenial:
@@ -44,6 +45,7 @@ validate_template_xenial:
    - cd packer
    - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+   - export OS_USERNAME="ubuntu"
    - ./create_image.py validate -vf variables.json.example
 
 validate_template_centos7:
@@ -54,6 +56,7 @@ validate_template_centos7:
    - cd packer
    - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
+   - export OS_USERNAME="centos"
    - ./create_image.py validate -vf variables.json.example
 
 build_openstack_trusty:
@@ -64,6 +67,7 @@ build_openstack_trusty:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
+  - export OS_USERNAME="ubuntu"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_xenial:
@@ -74,6 +78,7 @@ build_openstack_xenial:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+  - export OS_USERNAME="ubuntu"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_centos7:
@@ -84,6 +89,7 @@ build_openstack_centos7:
   - cd packer
   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
+  - export OS_USERNAME="centos"
   - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_vmware_trusty:
