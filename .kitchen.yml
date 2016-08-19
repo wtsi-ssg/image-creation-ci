@@ -27,6 +27,7 @@ transport:
   ssh_key: <%= ENV['KEYPAIR'] %> 
   connection_timeout: 10
   connection_retries: 5
+  username:  <%= ENV['IMAGE_USERNAME'] %>
 
 provisioner:
   name: shell
