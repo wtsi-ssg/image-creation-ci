@@ -4,10 +4,6 @@
     update_cache=yes
     cache_valid_time=3600
 
-- name: Upgrade all the packages
-  sudo: yes
-  command: apt-get -y upgrade
-
 - name: install basic depends
   apt: name={{ item }} state=present
   with_items:
