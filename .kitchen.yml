@@ -8,7 +8,7 @@ driver:
   - ssh
   image_ref: <%= ENV['OS_BASE_IMAGE'] %>
   flavor_ref: m1.medium
-  username: ubuntu
+  username: <%= ENV['IMAGE_USERNAME'] %>
   key_name: <%= ENV['KEYPAIR'] %>
   floating_ip_pool: nova
   private_key_path: <%= ENV['KEYPAIR'] %>
@@ -27,8 +27,6 @@ transport:
   ssh_key: <%= ENV['KEYPAIR'] %> 
   connection_timeout: 10
   connection_retries: 5
-  username: ubuntu
-  password: ubuntu
 
 provisioner:
   name: shell
