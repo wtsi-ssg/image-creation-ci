@@ -35,6 +35,6 @@ if [ "$USER" == "ubuntu" ] ; then
  echo ubuntu | sudo -E -S bash /tmp/install_ansible_ubuntu.sh
 fi
 if [ "$USER" == "centos" ] ; then
- sudo -E -S bash /tmp/install_ansible_ubuntu.sh
+ sudo -E -S bash /tmp/install_ansible_centos.sh
 fi
 true
