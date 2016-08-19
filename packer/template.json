@@ -81,17 +81,14 @@
         "ssh_private_key_file": "{{ user `null_key` }}"
       }
   ],
-
-
   "provisioners": [
     {
       "scripts": [
-          "{{user `directory`}}/scripts/sudoers.sh",
-          "{{user `directory`}}/scripts/install_ansible.sh"
+          "{{user `directory`}}/scripts/sudoers.sh"
       ],
       "type": "shell",
       "except": [ "null" ],
-      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+      "execute_command": " {{ .Vars }} bash '{{ .Path }}'",
       "environment_vars": [ 
           "image={{ user `image_name` }}"
       ]
