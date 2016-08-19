@@ -1,3 +1,5 @@
 #!/bin/bash
 
-apt-get install -y ruby rubygems-integration 
+if [ "$USER" == "ubuntu" ] ; then
+  apt-get install -y ruby rubygems-integration
+fi
