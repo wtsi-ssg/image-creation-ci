@@ -1,5 +1,5 @@
 #!/bin/bash
 
-if [ "$USER" == "ubuntu" ] ; then
+if [ "$IMAGE_USERNAME" == "ubuntu" ] ; then
   apt-get install -y ruby rubygems-integration
 fi
