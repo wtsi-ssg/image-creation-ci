@@ -18,3 +18,5 @@
     - "@Buildsystem building group"
     - "@Additional Development"
     - "@Compute Node"
+    - "atop"
+    - "strace"
