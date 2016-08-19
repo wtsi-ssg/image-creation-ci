@@ -3,11 +3,3 @@
   hosts: all
   roles:
     - sanger-flex-base
-- name: example
-  sudo: True
-  hosts: all
-  tasks:
-    - name: install apt packages
-      apt: pkg={{ item }}  update_cache=yes cache_valid_time=3600
-      with_items:
-        - atop

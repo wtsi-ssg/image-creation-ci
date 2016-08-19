@@ -21,6 +21,7 @@
     - apt-utils
     - apt-xapian-index
     - at
+    - atop
     - automake
     - autotools-dev
     - base-files
