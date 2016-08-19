@@ -15,8 +15,26 @@
 #  You should have received a copy of the GNU General Public License along
 #  with this program. If not, see <http://www.gnu.org/licenses/>. 
 #
+#!/bin/bash -eux
+cat << EOF > /tmp/install_ansible_ubuntu.sh
+#!/bin/bash -eux
 apt-get install software-properties-common
 apt-add-repository -y ppa:ansible/ansible
 apt-get update
 apt-get -y install ansible
 apt-get -y upgrade
+EOF
+cat << EOF > /tmp/install_ansible_centos.sh
+#!/bin/bash -eux
+yum -y install epel-release
+yum -y install ansible
+yum -y update
+EOF
+chmod 755 /tmp/install_ansible_ubuntu.sh /tmp/install_ansible_centos.sh
+if [ "$USER" == "ubuntu" ] ; then
+ echo ubuntu | sudo -E -S bash /tmp/install_ansible_ubuntu.sh
+fi
+if [ "$USER" == "centos" ] ; then
+ sudo -E -S bash /tmp/install_ansible_ubuntu.sh
+fi
+true
