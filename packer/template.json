@@ -10,7 +10,9 @@
     "iso_url":          "{{ env `ISO_URL` }}",
     "iso_checksum":     "{{ env `ISO_CHECKSUM` }}",
     "boot_command":     "{{ env `BOOT_COMMAND` }}",
-    "preseed":          "{{ env `PRESEED` }}"
+    "preseed":          "{{ env `PRESEED` }}",
+    "packer_username":  "{{ env `PACKER_USERNAME` }}",
+    "packer_password":  "{{ env `PACKER_PASSWORD` }}"
   },
 
   "builders": [
