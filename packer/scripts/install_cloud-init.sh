@@ -10,7 +10,7 @@ function cloud-init {
         PLATFORM=$(python -mplatform)
 
         if [ "$( echo "$PLATFORM" | sed -e 's/.*ubuntu.*/ubuntu/i')" = "ubuntu" ] ; then
-          apt-get -y install cloud-init
+          apt-get -y install cloud-init patch
           export cc_disk_setup=/usr/lib/python2.7/dist-packages/cloudinit/config/cc_disk_setup.py
           export cc_disk_setup_md5=08b45fa565f2cf3fdf31760ae93a6962
           cat <<-EOF > /tmp/patch
