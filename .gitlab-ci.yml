@@ -5,7 +5,7 @@ variables:
  OS_CLOUDNAME: "overcloud"
  OS_AUTH_URL: "http://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
  NOVA_VERSION: "1.1"
- PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
+ PACKER_BIN: "/home/gitlab-runner/packer-0.10.1"
  OS_BASE_IMAGE_TRUSTY: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
  IMAGE_NAME_TRUSTY: "ubuntu_14_04_4_WTSI_standard"
  ISO_URL_TRUSTY: "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso"
