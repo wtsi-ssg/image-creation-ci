@@ -9,71 +9,71 @@ function cloud-init {
 
         PLATFORM=$(python -mplatform)
 
-        if [ "$( echo $PLATFORM | sed -e 's/.*ubuntu.*/ubuntu/i')" = "ubuntu" ] ; then
+        if [ "$( echo "$PLATFORM" | sed -e 's/.*ubuntu.*/ubuntu/i')" = "ubuntu" ] ; then
           apt-get -y install cloud-init
           export cc_disk_setup=/usr/lib/python2.7/dist-packages/cloudinit/config/cc_disk_setup.py
           export cc_disk_setup_md5=08b45fa565f2cf3fdf31760ae93a6962
           cat <<-EOF > /tmp/patch
-                --- cc_disk_setup.py    2016-03-14 15:24:37.179403160 +0000
-                +++ cc_disk_setup.py.new        2016-03-14 15:24:48.411402930 +0000
-                @@ -108,7 +108,6 @@
-                 
-                                 if origname is None:
-                                         continue
-                -
-                                 (dev, part) = util.expand_dotted_devname(origname)
-                 
-                                 tformed = tformer(dev)
-                @@ -121,7 +120,7 @@
-                 
-                                 if part and 'partition' in definition:
-                                         definition['_partition'] = definition['partition']
-                -        definition['partition'] = part
-                +            definition['partition'] = part
-                 
-                 
-                 def value_splitter(values, start=None):
-                @@ -305,7 +304,7 @@
+		--- cc_disk_setup.py    2016-03-14 15:24:37.179403160 +0000
+		+++ cc_disk_setup.py.new        2016-03-14 15:24:48.411402930 +0000
+		@@ -108,7 +108,6 @@
+		 
+		                 if origname is None:
+		                         continue
+		-
+		                 (dev, part) = util.expand_dotted_devname(origname)
+		 
+		                 tformed = tformer(dev)
+		@@ -121,7 +120,7 @@
+		 
+		                 if part and 'partition' in definition:
+		                         definition['_partition'] = definition['partition']
+		-        definition['partition'] = part
+		+            definition['partition'] = part
+		 
+		 
+		 def value_splitter(values, start=None):
+		@@ -305,7 +304,7 @@
 
-                         # If the child count is higher 1, then there are child nodes
-                         # such as partition or device mapper nodes
-                         use_count = [x for x in enumerate_disk(device)]
-                -    if len(use_count.splitlines()) > 1:
-                +    if len(use_count) > 1:
-                                 return True
-                 
-                         # If we see a file system, then its used
+		         # If the child count is higher 1, then there are child nodes
+		         # such as partition or device mapper nodes
+		         use_count = [x for x in enumerate_disk(device)]
+		-    if len(use_count.splitlines()) > 1:
+		+    if len(use_count) > 1:
+		                 return True
+		 
+		         # If we see a file system, then its used
 
-                EOF
+		EOF
         fi
 
-        if [ "$( echo $PLATFORM | sed -e 's/.*centos.*/centos/i')" = "centos" ] ; then
+        if [ "$( echo "$PLATFORM" | sed -e 's/.*centos.*/centos/i')" = "centos" ] ; then
           yum install -y cloud-init
           export cc_disk_setup=/usr/lib/python2.7/site-packages/cloudinit/config/cc_disk_setup.py
           export cc_disk_setup_md5=03bab30bd86753459af74127a084dd55
           cat <<-EOF > /tmp/patch
-                --- /usr/lib/python2.7/site-packages/cloudinit/config/cc_disk_setup.py	2014-04-01 18:26:07.000000000 +0000
-                +++ /tmp/cc_disk_setup.py	2016-08-22 16:45:17.215872238 +0000
-                @@ -120,7 +120,7 @@
-                 
-                         if part and 'partition' in definition:
-                             definition['_partition'] = definition['partition']
-                -        definition['partition'] = part
-                +    definition['partition'] = part
-                 
-                 
-                 def value_splitter(values, start=None):
-                @@ -304,7 +304,7 @@
-                     # If the child count is higher 1, then there are child nodes
-                     # such as partition or device mapper nodes
-                     use_count = [x for x in enumerate_disk(device)]
-                -    if len(use_count.splitlines()) > 1:
-                +    if len(use_count) > 1:
-                         return True
-                 
-                     # If we see a file system, then its used
-                
-                EOF
+		--- /usr/lib/python2.7/site-packages/cloudinit/config/cc_disk_setup.py	2014-04-01 18:26:07.000000000 +0000
+		+++ /tmp/cc_disk_setup.py	2016-08-22 16:45:17.215872238 +0000
+		@@ -120,7 +120,7 @@
+		
+		         if part and 'partition' in definition:
+		             definition['_partition'] = definition['partition']
+		-        definition['partition'] = part
+		+    definition['partition'] = part
+		
+		
+		 def value_splitter(values, start=None):
+		@@ -304,7 +304,7 @@
+		      # If the child count is higher 1, then there are child nodes
+		      # such as partition or device mapper nodes
+		      use_count = [x for x in enumerate_disk(device)]
+		-      if len(use_count.splitlines()) > 1:
+		+      if len(use_count) > 1:
+		          return True
+		
+		     # If we see a file system, then its used
+		
+		EOF
         fi
 
 	echo "Patching cc_disk_setup.py"
@@ -84,7 +84,7 @@ function cloud-init {
 
 	if [ ${cc_disk_setup_md5} = "${chksum}" ] ; then
 		echo "Applying patch"
-		cat /tmp/patch | patch -p1 $cc_disk_setup
+		patch -p1 $cc_disk_setup < /tmp/patch
 	else
 		echo "Version of ${cc_disk_setup} doesn't match expected - not patching"
 	fi
