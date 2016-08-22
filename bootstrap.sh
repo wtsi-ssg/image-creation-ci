@@ -5,8 +5,10 @@ if [ "${SUDO_USER}" = "ubuntu" ] ; then
 fi
  
 if [ "${SUDO_USER}" = "centos" ] ; then
-  yum install -y rubygems ruby-devel
+  yum install -y rubygems ruby-devel gcc
   gem install rspec-core
   gem install serverspec
+  gem install rdoc
+  gem install json
 fi
 
