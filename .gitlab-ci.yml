@@ -8,6 +8,12 @@ variables:
  PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
  OS_BASE_IMAGE_TRUSTY: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
  IMAGE_NAME_TRUSTY: "ubuntu_14_04_4_WTSI_standard"
+ ISO_URL_TRUSTY: "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso"
+ ISO_CHECKSUM_TRUSTY: "2ac1f3e0de626e54d05065d6f549fa3a"
+ BOOT_COMMAND_TRUSTY: "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic"
+ PACKER_USERNAME_TRUSTY: "ubuntu"
+ PACKER_PASSWORD_TRUSTY: "ubuntu"
+ PRESEED_TRUSTY: "ubuntu-preseed.cfg"
  OS_BASE_IMAGE_XENIAL: "002ca5be-3934-43d3-9d2c-eda816b57019"
  IMAGE_NAME_XENIAL: "ubuntu_16_06_4_WTSI_standard"
  OS_BASE_IMAGE_CENTOS7: "62313395-5876-439c-9a36-86839ad27195"
@@ -98,6 +104,12 @@ build_vmware_trusty:
    - packer
   script:
    - cd packer
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
+   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
+   - export PRESEED="$PRESEED_TRUSTY"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME_TRUSTY}"_"$(date +%Y%m%d%H%M%S )
    - echo ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"

@@ -2,11 +2,15 @@
 {
   "min_packer_version": "0.9.0",
   "variables": {
-    "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
-    "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
-    "image_user": "{{ env `IMAGE_USERNAME`}}",
-    "image_name": "{{ env `IMAGE_NAME`}}",
-    "vm_pass": "{{ env `VMWARE_PASSWORD` }}"
+    "openstack_imgid":  "{{ env `OS_BASE_IMAGE`}}",
+    "openstack_sg":     "{{ env `OS_SECURITY_GRP`}}",
+    "image_user":       "{{ env `IMAGE_USERNAME`}}",
+    "image_name":       "{{ env `IMAGE_NAME`}}",
+    "vm_pass":          "{{ env `VMWARE_PASSWORD` }}",
+    "iso_url":          "{{ env `ISO_URL` }}",
+    "iso_checksum":     "{{ env `ISO_CHECKSUM` }}",
+    "boot_command":     "{{ env `BOOT_COMMAND` }}",
+    "preseed":          "{{ env `PRESEED` }}
   },
 
   "builders": [
@@ -40,7 +44,7 @@
       "boot_command": [ 
         "{{user `boot_cmd`}}",
         "hostname={{ .Name }} ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `PRESEED` }}",
         "netcfg/get_hostname={{ .Name }} ",
         "-- <enter><wait> "
       ]
