@@ -5,6 +5,6 @@ if [ "${SUDO_USER}" = "ubuntu" ] ; then
 fi
  
 if [ "${SUDO_USER}" = "centos" ] ; then
-  yum install -y rubygems
+  yum install -y rubygems ruby-devel
 fi
 
