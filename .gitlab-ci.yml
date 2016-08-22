@@ -20,8 +20,7 @@ variables:
  IMAGE_NAME_CENTOS7: "centos_7_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
- http_proxy: "http://wwwcache.sanger.ac.uk:3128"
- https_proxy: "http://wwwcache.sanger.ac.uk:3128"
+ proxy: "http://wwwcache.sanger.ac.uk:3128"
 
 
 stages:
@@ -128,6 +127,8 @@ build_vmware_trusty:
    - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
    - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
+   - export http_proxy="$http_proxy"
+   - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - IMAGE_NAME=${IMAGE_NAME_TRUSTY}"_"$(date +%Y%m%d%H%M%S )
    - echo ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
