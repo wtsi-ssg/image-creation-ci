@@ -157,6 +157,8 @@ test_openstack_no_disk_trusty:
   - export MODE=default
   - export PLATFORM="ubuntu-14.04"
   - export IMAGE_USERNAME="ubuntu"
+  - export http_proxy=""
+  - export http_proxys=""
   - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - ./kitchen_wrapper.sh
 
@@ -171,6 +173,8 @@ test_openstack_no_disk_xenial:
   - export MODE=default
   - export PLATFORM="ubuntu-16.04"
   - export IMAGE_USERNAME="ubuntu"
+  - export http_proxy=""
+  - export http_proxys=""
   - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N )| md5sum | cut -d " " -f 1)
   - ./kitchen_wrapper.sh
 
@@ -185,6 +189,8 @@ test_openstack_no_disk_centos7:
   - export MODE=default
   - export PLATFORM="centos-7.0"
   - export IMAGE_USERNAME="centos"
+  - export http_proxy=""
+  - export http_proxys=""
   - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - ./kitchen_wrapper.sh
 
@@ -199,6 +205,8 @@ test_openstack_disk_trusty:
   - export MODE=volume
   - export PLATFORM="ubuntu-14.04"
   - export IMAGE_USERNAME="ubuntu"
+  - export http_proxy=""
+  - export http_proxys=""
   - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - ./kitchen_wrapper.sh
 
@@ -213,6 +221,8 @@ test_openstack_disk_xenial:
   - export MODE=volume
   - export PLATFORM="ubuntu-16.04"
   - export IMAGE_USERNAME="ubuntu"
+  - export http_proxy=""
+  - export http_proxys=""
   - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - ./kitchen_wrapper.sh
 
@@ -227,6 +237,8 @@ test_openstack_disk_centos7:
   - export MODE=volume
   - export PLATFORM="centos-7.0"
   - export IMAGE_USERNAME="centos"
+  - export http_proxy=""
+  - export http_proxys=""
   - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
   - ./kitchen_wrapper.sh
 
