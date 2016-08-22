@@ -41,6 +41,12 @@ validate_template_trusty:
    - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
    - export IMAGE_USERNAME="ubuntu"
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
+   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
+   - export PRESEED="$PRESEED_TRUSTY"
    - ./create_image.py validate -vf variables.json.example 
 
 validate_template_xenial:
@@ -52,6 +58,12 @@ validate_template_xenial:
    - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
    - export IMAGE_USERNAME="ubuntu"
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
+   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
+   - export PRESEED="$PRESEED_TRUSTY"
    - ./create_image.py validate -vf variables.json.example
 
 validate_template_centos7:
@@ -63,6 +75,12 @@ validate_template_centos7:
    - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
    - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
    - export IMAGE_USERNAME="centos"
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
+   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
+   - export PRESEED="$PRESEED_TRUSTY"
    - ./create_image.py validate -vf variables.json.example
 
 build_openstack_trusty:
