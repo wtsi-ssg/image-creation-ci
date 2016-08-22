@@ -17,5 +17,6 @@ if [ "${SUDO_USER}" = "centos" ] ; then
   gem install serverspec
   gem install rdoc
   gem install json
+  chmod -R 777 $GEM_PATH
 fi
 
