@@ -10,7 +10,7 @@
     "iso_url":          "{{ env `ISO_URL` }}",
     "iso_checksum":     "{{ env `ISO_CHECKSUM` }}",
     "boot_command":     "{{ env `BOOT_COMMAND` }}",
-    "preseed":          "{{ env `PRESEED` }}
+    "preseed":          "{{ env `PRESEED` }}"
   },
 
   "builders": [
