@@ -13,10 +13,10 @@ if [ "${SUDO_USER}" = "centos" ] ; then
   GEM_PATH="/tmp/verifier/gems"; export GEM_PATH
   GEM_CACHE="/tmp/verifier/gems/cache"; export GEM_CACHE
   yum install -y rubygems ruby-devel gcc
+  gem install rdoc
   gem install rspec-core
   gem install serverspec
-  gem install rdoc
   gem install json
-  chmod -R 777 $GEM_PATH
+  chmod -R 777 $BUSSER_ROOT
 fi
 
