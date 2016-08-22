@@ -92,7 +92,7 @@ build_openstack_trusty:
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
   - export IMAGE_USERNAME="ubuntu"
-  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - echo ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_xenial:
  stage: build
@@ -103,7 +103,7 @@ build_openstack_xenial:
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
   - export IMAGE_USERNAME="ubuntu"
-  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - echo ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_centos7:
  stage: build
