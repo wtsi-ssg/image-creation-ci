@@ -6,5 +6,7 @@ fi
  
 if [ "${SUDO_USER}" = "centos" ] ; then
   yum install -y rubygems ruby-devel
+  gem install rspec-core
+  gem install serverspec
 fi
 
