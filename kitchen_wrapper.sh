@@ -45,6 +45,10 @@ kitchen verify $KITCHEN_FLAGS> >(tee -a /tmp/stdout-${BUILD}.log) 2> >(tee -a /t
     echo "$n of 100...."
     sleep $EACH_LOOP
   done
+  rm -f /tmp/stdout-${BUILD}.log  /tmp/stderr-${BUILD}.log
+  kitchen destroy
+  openstack keypair delete $KEYPAIR
+  exit $ERR
  }
 IP=`grep "Attaching floating IP" /tmp/stdout-${BUILD}.log | tail -1 | sed -e 's/^.*<//' -e 's/>$//' -e 's/ *//'`
 }
