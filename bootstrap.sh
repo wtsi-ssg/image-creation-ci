@@ -5,6 +5,13 @@ if [ "${SUDO_USER}" = "ubuntu" ] ; then
 fi
  
 if [ "${SUDO_USER}" = "centos" ] ; then
+  http_proxy=""; export http_proxy
+  https_proxy=""; export https_proxy
+  no_proxy=",172.31.0.18"; export no_proxy
+  BUSSER_ROOT="/tmp/verifier"; export BUSSER_ROOT
+  GEM_HOME="/tmp/verifier/gems"; export GEM_HOME
+  GEM_PATH="/tmp/verifier/gems"; export GEM_PATH
+  GEM_CACHE="/tmp/verifier/gems/cache"; export GEM_CACHE
   yum install -y rubygems ruby-devel gcc
   gem install rspec-core
   gem install serverspec
