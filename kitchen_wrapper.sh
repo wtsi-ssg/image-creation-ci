@@ -58,8 +58,6 @@ export KEYPAIR="${CI_BUILD_ID}${MODE}"
 export KEYPAIR_FILENAME="${KEYPAIR}"
 openstack keypair create $KEYPAIR > $KEYPAIR_FILENAME
 chmod 700 $KEYPAIR_FILENAME
-cp -p $KEYPAIR_FILENAME test_cluster/master
-cp -p $KEYPAIR_FILENAME test_cluster/compute
 run_test
 rm -f /tmp/stdout-${BUILD}.log  /tmp/stderr-${BUILD}.log 
 kitchen destroy
