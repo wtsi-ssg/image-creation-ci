@@ -59,7 +59,7 @@ function cloud-init {
 		         if part and 'partition' in definition:
 		             definition['_partition'] = definition['partition']
 		-        definition['partition'] = part
-		+    definition['partition'] = part
+		+        definition['partition'] = part
 		
 		
 		 def value_splitter(values, start=None):
