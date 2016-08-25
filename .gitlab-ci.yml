@@ -15,7 +15,13 @@ variables:
  PACKER_PASSWORD_TRUSTY: "ubuntu"
  PRESEED_TRUSTY: "ubuntu-preseed.cfg"
  OS_BASE_IMAGE_XENIAL: "002ca5be-3934-43d3-9d2c-eda816b57019"
- IMAGE_NAME_XENIAL: "ubuntu_16_06_4_WTSI_standard"
+ IMAGE_NAME_XENIAL: "ubuntu_16_04_1_WTSI_standard"
+ ISO_URL_XENIAL: "http://releases.ubuntu.com/16.04.1/ubuntu-16.04-server-amd64.iso"
+ ISO_CHECKSUM_XENIAL: "23e97cd5d4145d4105fbf29878534049"
+ BOOT_COMMAND_XENIAL: "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic"
+ PACKER_USERNAME_XENIAL: "ubuntu"
+ PACKER_PASSWORD_XENIAL: "ubuntu"
+ PRESEED_XENIAL: "ubuntu-preseed.cfg"
  OS_BASE_IMAGE_CENTOS7: "62313395-5876-439c-9a36-86839ad27195"
  IMAGE_NAME_CENTOS7: "centos_7_WTSI_standard"
  OS_SECURITY_GRP: "ssh"
@@ -134,6 +140,27 @@ build_vmware_trusty:
    - export 
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
+   - rm vmware_private_key.pem
+
+build_vmware_xenial:
+  stage: build
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export ISO_URL="$ISO_URL_XENIAL"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_XENIAL"
+   - export BOOT_COMMAND="$BOOT_COMMAND_XENIAL"
+   - export PACKER_USERNAME="$PACKER_USERNAME_XENIAL"
+   - export PACKER_PASSWORD="$PACKER_PASSWORD_XENIAL"
+   - export PRESEED="$PRESEED_XENIAL"
+   - export http_proxy="$http_proxy"
+   - export https_proxy="$http_proxy"
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - export IMAGE_NAME=${IMAGE_NAME_XENIAL}"_"$(date +%Y%m%d%H%M%S )
+   - export
+   - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem
 
 cleanup_openstack_build:
