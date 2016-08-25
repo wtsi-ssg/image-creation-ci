@@ -73,6 +73,19 @@ function cloud-init {
 		 
 		     # If we see a file system, then its used
 		EOF
+	   cat <<-EOF > /tmp/cloud_patch
+		--- /etc/cloud/cloud.cfg	2016-08-25 10:23:29.039875922 +0000
+		+++ /tmp/cloud.cfg	2016-08-25 10:29:36.125698275 +0000
+		@@ -25,7 +25,6 @@
+		  - ssh
+		 
+		 cloud_config_modules:
+		+ - disk_setup
+		  - mounts
+		  - locale
+		  - set-passwords
+		EOF
+          patch -p1 /etc/cloud/cloud.cfg < /tmp/cloud_patch   
         fi
 
 	echo "Patching cc_disk_setup.py"
