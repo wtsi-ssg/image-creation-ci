@@ -12,7 +12,8 @@
     "boot_command":     "{{ env `BOOT_COMMAND` }}",
     "preseed":          "{{ env `PRESEED` }}",
     "packer_username":  "{{ env `PACKER_USERNAME` }}",
-    "packer_password":  "{{ env `PACKER_PASSWORD` }}"
+    "packer_password":  "{{ env `PACKER_PASSWORD` }}",
+    "boot_cmd":         "{{ env `BOOT_COMMAND` }}"
   },
 
   "builders": [
