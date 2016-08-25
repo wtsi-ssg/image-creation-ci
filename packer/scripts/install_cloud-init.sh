@@ -48,7 +48,7 @@ function cloud-init {
         fi
 
         if [ "$( echo "$PLATFORM" | sed -e 's/.*centos.*/centos/i')" = "centos" ] ; then
-          yum install -y cloud-init
+          yum install -y cloud-init patch
           export cc_disk_setup=/usr/lib/python2.7/site-packages/cloudinit/config/cc_disk_setup.py
           export cc_disk_setup_md5=03bab30bd86753459af74127a084dd55
           cat <<-EOF > /tmp/patch
