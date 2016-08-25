@@ -91,7 +91,7 @@ build_openstack_trusty:
   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
   - export IMAGE_USERNAME="ubuntu"
-  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - echo ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_xenial:
  stage: build
@@ -102,7 +102,7 @@ build_openstack_xenial:
   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
   - export IMAGE_USERNAME="ubuntu"
-  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - echo ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_centos7:
  stage: build
@@ -113,7 +113,7 @@ build_openstack_centos7:
   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
   - export IMAGE_USERNAME="centos"
-  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - echo ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_vmware_trusty:
   stage: build
@@ -130,7 +130,8 @@ build_vmware_trusty:
    - export http_proxy="$http_proxy"
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=${IMAGE_NAME_TRUSTY}"_"$(date +%Y%m%d%H%M%S )
+   - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}"_"$(date +%Y%m%d%H%M%S )
+   - export 
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
