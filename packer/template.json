@@ -48,6 +48,12 @@
       "boot_wait": "10s",
       "disk_size": 40960,
       "guest_os_type": "ubuntu-64",
+      "remote_type": "esx5",
+      "remote_username": "vmbuildadmin",
+      "remote_host": "{{ user `VMWARE_BUILD_HOST` }}",
+      "remote_private_key_file": "vmware_private_key.pem",
+      "remote_datastore": "wtgc-vmbd-01:datastore1",
+      "remote_password": "{{ user `vm_pass` }}",
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
