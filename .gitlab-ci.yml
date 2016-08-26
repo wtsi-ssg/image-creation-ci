@@ -18,7 +18,7 @@ variables:
  IMAGE_NAME_XENIAL: "ubuntu_16_04_1_WTSI_standard"
  ISO_URL_XENIAL: "http://releases.ubuntu.com/16.04.1/ubuntu-16.04-server-amd64.iso"
  ISO_CHECKSUM_XENIAL: "23e97cd5d4145d4105fbf29878534049"
- BOOT_COMMAND_XENIAL: "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto GBlocale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive kbd-chooser/method=GB keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false console-setup/layoutcode=GB console-setup/modelcode=pc105  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
+ BOOT_COMMAND_XENIAL: "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive kbd-chooser/method=GB keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false console-setup/layoutcode=GB console-setup/modelcode=pc105  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
  PACKER_USERNAME_XENIAL: "ubuntu"
  PACKER_PASSWORD_XENIAL: "ubuntu"
  PRESEED_XENIAL: "ubuntu-preseed.cfg"
