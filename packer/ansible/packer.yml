@@ -1,6 +1,5 @@
 - name: roles
-  su: yes
-  su_user: root
+  sudo: True
   hosts: all
   roles:
     - sanger-flex-base
