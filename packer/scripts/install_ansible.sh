@@ -37,4 +37,5 @@ fi
 if [ "$USER" == "centos" ] ; then
  sudo -E -S bash /tmp/install_ansible_centos.sh
 fi
+ansible all -c local -m shell   -i "localhost," -m setup 
 true
