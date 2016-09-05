@@ -137,7 +137,7 @@ build_vmware_trusty:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}"_"$(date +%Y%m%d%H%M%S )
-   - echo ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
 
@@ -157,7 +157,7 @@ build_vmware_xenial:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_XENIAL}"_"$(date +%Y%m%d%H%M%S )
-   - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - echo ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem
 
