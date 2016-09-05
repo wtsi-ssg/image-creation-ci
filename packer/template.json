@@ -42,7 +42,7 @@
       "headless": false,
       "version": 8,
       "tools_upload_flavor": "linux",
-      "ssh_pty" : true,
+      "ssh_pty" : "true",
       "format": "ovf",
       "boot_command": [ 
         "{{user `boot_cmd`}}",
