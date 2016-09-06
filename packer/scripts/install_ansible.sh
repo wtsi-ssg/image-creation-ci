@@ -18,9 +18,11 @@
 #!/bin/bash -eux
 cat << EOF > /tmp/install_ansible_ubuntu.sh
 #!/bin/bash -eux
+apt-cache policy ansible
 apt-get install software-properties-common
 apt-add-repository -y ppa:ansible/ansible
 apt-get update
+apt-cache policy ansible
 apt-get -y install ansible
 apt-get -y upgrade
 EOF
