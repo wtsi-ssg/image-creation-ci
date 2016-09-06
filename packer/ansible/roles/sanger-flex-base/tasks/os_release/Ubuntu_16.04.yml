@@ -413,7 +413,6 @@
     - software-properties-common
     - ssh-import-id
     - subversion
-    - sudo
     - systemd-shim
     - sysvinit-utils
     - sysv-rc

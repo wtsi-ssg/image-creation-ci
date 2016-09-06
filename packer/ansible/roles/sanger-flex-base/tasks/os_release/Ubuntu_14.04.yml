@@ -416,7 +416,6 @@
     - software-properties-common
     - ssh-import-id
     - subversion
-    - sudo
     - systemd-services
     - systemd-shim
     - sysvinit-utils
