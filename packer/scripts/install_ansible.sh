@@ -34,12 +34,12 @@ esac
 cat << EOF > /tmp/install_ansible_ubuntu.sh
 #!/bin/bash -eux
 apt-cache policy ansible
-apt-get -y install software-properties-common
+apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y install software-properties-common
 apt-add-repository -y ppa:ansible/ansible
-apt-get update
+apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" update
 apt-cache policy ansible
-apt-get -y install ansible
-apt-get -y upgrade
+apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y install ansible
+apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  -y upgrade
 EOF
 cat << EOF > /tmp/install_ansible_centos.sh
 #!/bin/bash -eux
