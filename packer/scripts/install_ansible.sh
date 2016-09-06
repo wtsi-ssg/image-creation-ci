@@ -16,6 +16,21 @@
 #  with this program. If not, see <http://www.gnu.org/licenses/>. 
 #
 #!/bin/bash -eux
+case ${PACKER_BUILDER_TYPE} in
+         null)
+        ;;
+        openstack)
+        ;;
+        vmware-iso)
+                export http_proxy=http://172.18.24.1:3128/ 
+                export https_proxy=http://172.18.24.1:3128/
+        ;;
+        *)
+                echo "Unknown builder!"
+                exit 1
+        ;;
+esac
+
 cat << EOF > /tmp/install_ansible_ubuntu.sh
 #!/bin/bash -eux
 apt-cache policy ansible
