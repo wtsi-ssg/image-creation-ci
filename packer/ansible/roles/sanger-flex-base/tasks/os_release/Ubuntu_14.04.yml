@@ -331,7 +331,6 @@
     - openssh-server
     - openssh-sftp-server
     - openssl
-    - open-vm-tools
     - overlayroot
     - parted
     - passwd
