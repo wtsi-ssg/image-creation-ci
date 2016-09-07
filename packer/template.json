@@ -13,6 +13,7 @@
     "packer_username":  "{{ env `PACKER_USERNAME` }}",
     "packer_password":  "{{ env `PACKER_PASSWORD` }}",
     "boot_cmd":         "{{ env `BOOT_COMMAND` }}"
+    "preeseed":         "{{ env `PRESEED` }}"
   },
 
   "builders": [

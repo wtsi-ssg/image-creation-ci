@@ -25,10 +25,11 @@ variables:
  OS_BASE_IMAGE_CENTOS7: "62313395-5876-439c-9a36-86839ad27195"
  IMAGE_NAME_CENTOS7: "centos_7_WTSI_standard"
  ISO_URL_CENTOS: "http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1511.iso"
- ISO_CHECKSUM_CENTOS: "783eef50e1fb91c78901d0421d8114a29b998478"
+ ISO_CHECKSUM_CENTOS: "99d305fa40ec9e28ef8450c3bcc45f85"
  BOOT_COMMAND_CENTOS: "<tab> text "
  PACKER_USERNAME_CENTOS: "centos"
  PACKER_PASSWORD_CENTOS: "centos"
+ PRESEED_CENTOS: "ks.cfg"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
  proxy: "http://wwwcache.sanger.ac.uk:3128"
@@ -90,7 +91,7 @@ validate_template_centos7:
    - export BOOT_COMMAND="$BOOT_COMMAND_CENTOS"
    - export PACKER_USERNAME="$PACKER_USERNAME_CENTOS"
    - export PACKER_PASSWORD="$PACKER_PASSWORD_CENTOS"
-   - export PRESEED="$PRESEED_TRUSTY"
+   - export PRESEED="$PRESEED_CENTOS"
    - ./create_image.py validate -vf variables.json.example
 
 build_openstack_trusty:
@@ -181,6 +182,7 @@ build_vmware_centos:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_CENTOS}"_"$(date +%Y%m%d%H%M%S )
+   - export PRESEED="$PRESEED_CENTOS"
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/is
 
