@@ -14,7 +14,7 @@
     "packer_password":  "{{ env `PACKER_PASSWORD` }}",
     "boot_cmd":         "{{ env `BOOT_COMMAND` }}" ,
     "preseed":          "{{ env `PRESEED` }}",
-    "centosks":         "{{ env `CENTOSKS` }}
+    "centosks":         "{{ env `CENTOSKS` }}"
   },
 
   "builders": [
