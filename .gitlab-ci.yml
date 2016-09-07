@@ -58,6 +58,7 @@ validate_template_trusty:
    - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
    - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
+   - export CENTOSKS="thisoptionisnotforubuntu"
    - ./create_image.py validate -vf variables.json.example 
 
 validate_template_xenial:
@@ -75,6 +76,7 @@ validate_template_xenial:
    - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
    - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
+   - export CENTOSKS="thisoptionisnotforubuntu"
    - ./create_image.py validate -vf variables.json.example
 
 validate_template_centos7:
@@ -92,6 +94,7 @@ validate_template_centos7:
    - export PACKER_USERNAME="$PACKER_USERNAME_CENTOS"
    - export PACKER_PASSWORD="$PACKER_PASSWORD_CENTOS"
    - export PRESEED="$PRESEED_CENTOS"
+   - export CENTOSKS="ks"
    - ./create_image.py validate -vf variables.json.example
 
 build_openstack_trusty:
@@ -143,6 +146,7 @@ build_vmware_trusty:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}"-"$(date +%Y%m%d%H%M%S )
+   - export CENTOSKS="thisoptionisnotforubuntu"
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
@@ -163,6 +167,7 @@ build_vmware_xenial:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_XENIAL}"-"$(date +%Y%m%d%H%M%S )
+   - export CENTOSKS="thisoptionisnotforubuntu"
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem
@@ -183,6 +188,7 @@ build_vmware_centos:
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_CENTOS7}"-"$(date +%Y%m%d%H%M%S )
    - export PRESEED="$PRESEED_CENTOS"
+   - export CENTOSKS="ks"
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/is
 
