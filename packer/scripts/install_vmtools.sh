@@ -1,22 +1,10 @@
 #!/bin/bash
-
-CD=/dev/cdrom
-MNT=/mnt
-VM_INSTALL_SCRIPT=vmware-install.pl
-VM_INSTALL_OPTS="--default --force-install"
-
-mount ${CD} ${MNT}
-ls -l ${MNT}
-mount 
-
-TARBALL=$( ls -1 ${MNT} | grep tar.gz )
-
 cd /tmp
+curl ftp://ftp.sanger.ac.uk/pub/users/jb23/VMware-Tools-10.0.9-3917699.tar.gz -o - | tar xf -
 
+tar xfz /tmp/VMware-Tools-10.0.9-3917699.tar.gz 
+mount -o ro,loop /tmp/VMware-Tools-10.0.9-3917699/vmtools/linux.iso //mnt/run_upgrader.sh 
 
-tar xfz ${MNT}/${TARBALL}
+/mnt/run_upgrader.sh  -p "--default --force-install"
 
-cd $( ls -1 | grep vmware-tools )
-
-test -x ${VM_INSTALL_SCRIPT} && ./${VM_INSTALL_SCRIPT} ${VM_INSTALL_OPTS}
-
+umount /mnt
