@@ -6,6 +6,8 @@ VM_INSTALL_SCRIPT=vmware-install.pl
 VM_INSTALL_OPTS="--default --force-install"
 
 mount ${CD} ${MNT}
+ls -l ${MNT}
+mount 
 
 TARBALL=$( ls -1 ${MNT} | grep tar.gz )
 
