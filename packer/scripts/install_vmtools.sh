@@ -1,9 +1,8 @@
 #!/bin/bash
 cd /tmp
-curl ftp://ftp.sanger.ac.uk/pub/users/jb23/VMware-Tools-10.0.9-3917699.tar.gz -o - | tar xf -
+curl ftp://ftp.sanger.ac.uk/pub/users/jb23/VMware-Tools-10.0.9-3917699.tar.gz -o - | tar xzvf -
 
-tar xfz /tmp/VMware-Tools-10.0.9-3917699.tar.gz 
-mount -o ro,loop /tmp/VMware-Tools-10.0.9-3917699/vmtools/linux.iso //mnt/run_upgrader.sh 
+mount -o ro,loop /tmp/VMware-Tools-10.0.9-3917699/vmtools/linux.iso /mnt
 
 /mnt/run_upgrader.sh  -p "--default --force-install"
 
