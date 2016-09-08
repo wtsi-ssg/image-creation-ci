@@ -4,6 +4,6 @@ curl ftp://ftp.sanger.ac.uk/pub/users/jb23/VMware-Tools-10.0.9-3917699.tar.gz -o
 
 mount -o ro,loop /tmp/VMware-Tools-10.0.9-3917699/vmtools/linux.iso /mnt
 
-/mnt/run_upgrader.sh  -p "--default --force-install"
+/mnt/run_upgrader.sh  # -p "--default --force-install"
 
 umount /mnt
