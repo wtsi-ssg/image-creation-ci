@@ -121,14 +121,6 @@
       ]
     },
     {
-      "scripts": [
-          "{{user `directory`}}/scripts/install_vmtools.sh"
-      ],
-      "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
-      "only": ["vmware-iso"]
-    },
-    {
       "only": ["openstack"],
       "destination": "/tmp/stash",
       "source": "{{user `directory`}}/data/",
@@ -148,6 +140,14 @@
                                "{{user `ansible_rolepath7`}}",
                                "{{user `ansible_rolepath8`}}",
                                "{{user `ansible_rolepath9`}}" ]
+    },
+    {
+      "scripts": [
+          "{{user `directory`}}/scripts/install_vmtools.sh"
+      ],
+      "type": "shell",
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+      "only": ["vmware-iso"]
     },
     {
       "scripts": [
