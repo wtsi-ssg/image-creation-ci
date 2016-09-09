@@ -52,46 +52,8 @@
         "netcfg/get_hostname={{ .Name }} ",
         "{{user `centosks` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed` }} ",
         "-- <wait><enter><wait> " ]
-      },
-      {
-      "type": "virtualbox-iso",
-      "output_directory": "{{ user `image_name` }}",
-      "guest_os_type": "Ubuntu_64",
-      "iso_url": "{{ user `iso_url` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_checksum_type": "md5",
-      "ssh_username": "{{user `packer_username`}}",
-      "ssh_password": "{{user `packer_password`}}",
-      "ssh_timeout": "60m",
-      "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-      "http_directory": "{{user `directory`}}/data/",
-      "headless": false,
-      "ssh_pty" : true,
-      "boot_command": [ 
-        "{{user `boot_cmd`}}",
-        "hostname={{ .Name }} ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-        "netcfg/get_hostname={{ .Name }} ",
-        "-- <enter><wait> "
-      ]      },
-      {
-        "type": "openstack",
-        "flavor": "b1.medium",
-        "image_name": "{{ user `image_name` }}",
-        "source_image": "{{ user `openstack_imgid` }}",
-        "ssh_username": "{{ user `image_user` }}",
-        "use_floating_ip": "true",
-        "floating_ip_pool": "nova",
-        "ssh_pty" : true,
-        "security_groups": "{{user `openstack_sg`}}"
-      },
-      {
-        "type":         "null",
-        "ssh_host":     "127.0.0.1",
-        "ssh_username": "{{ user `null_user` }}",
-        "ssh_private_key_file": "{{ user `null_key` }}"
       }
-  ],
+    ],
   "provisioners": [
     {
       "scripts": [
@@ -99,7 +61,6 @@
           "{{user `directory`}}/scripts/install_ansible.sh"
       ],
       "type": "shell",
-      "except": [ "null" ],
       "execute_command": " {{ .Vars }} bash '{{ .Path }}'",
       "environment_vars": [ 
           "image={{ user `image_name` }}"
@@ -110,21 +71,10 @@
           "{{user `extra_script`}}"
       ],
       "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
-      "override": {
-        "vmware-iso": {
-          "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }} http_proxy=http://172.18.24.1:3128/ https_proxy=http://172.18.24.1:3128/ sudo -E -S bash '{{ .Path }}'"
-        }
-      },
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }} http_proxy=http://172.18.24.1:3128/ https_proxy=http://172.18.24.1:3128/ sudo -E -S bash '{{ .Path }}'",
       "environment_vars": [ 
           "image={{ user `image_name` }}"
       ]
-    },
-    {
-      "only": ["openstack"],
-      "destination": "/tmp/stash",
-      "source": "{{user `directory`}}/data/",
-      "type": "file"
     },
     {
              "type": "ansible-local",
@@ -146,8 +96,7 @@
           "{{user `directory`}}/scripts/install_vmtools.sh"
       ],
       "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
-      "only": ["vmware-iso"]
+      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'"
     },
     {
       "scripts": [
@@ -157,7 +106,6 @@
           "{{user `directory`}}/scripts/minimize.sh"
       ],
       "type": "shell",
-      "except": [ "null" ],
       "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
       "environment_vars": [ 
           "image={{ user `image_name` }}"

@@ -19,62 +19,6 @@
 
   "builders": [
       {
-      "type": "vmware-iso",
-      "vm_name": "{{ user `image_name` }}",
-      "output_directory": "{{ user `image_name` }}",
-      "vmx_template_path": "{{user `directory`}}/packer.vmx",
-      "guest_os_type": "ubuntu-64",
-      "remote_type": "esx5",
-      "remote_username": "vmbuildadmin",
-      "remote_host": "{{ user `VMWARE_BUILD_HOST` }}",
-      "remote_private_key_file": "vmware_private_key.pem",
-      "remote_datastore": "wtgc-vmbd-01:datastore1",
-      "remote_password": "{{ user `vm_pass` }}",
-      "iso_url": "{{ user `iso_url` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_checksum_type": "md5",
-      "vnc_port_min": 5970,
-      "vnc_port_max": 5990,
-      "ssh_username": "{{user `packer_username`}}",
-      "ssh_password": "{{user `packer_password`}}",
-      "ssh_timeout": "60m",
-      "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-      "http_directory": "{{user `directory`}}/data/",
-      "headless": false,
-      "version": 8,
-      "tools_upload_flavor": "linux",
-      "ssh_pty" : "true",
-      "format": "ovf",
-      "boot_command": [ 
-        "{{user `boot_cmd`}}",
-        "hostname={{ .Name }} ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed` }} ",
-        "netcfg/get_hostname={{ .Name }} ",
-        "{{user `centosks` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed` }} ",
-        "-- <wait><enter><wait> " ]
-      },
-      {
-      "type": "virtualbox-iso",
-      "output_directory": "{{ user `image_name` }}",
-      "guest_os_type": "Ubuntu_64",
-      "iso_url": "{{ user `iso_url` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_checksum_type": "md5",
-      "ssh_username": "{{user `packer_username`}}",
-      "ssh_password": "{{user `packer_password`}}",
-      "ssh_timeout": "60m",
-      "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-      "http_directory": "{{user `directory`}}/data/",
-      "headless": false,
-      "ssh_pty" : true,
-      "boot_command": [ 
-        "{{user `boot_cmd`}}",
-        "hostname={{ .Name }} ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-        "netcfg/get_hostname={{ .Name }} ",
-        "-- <enter><wait> "
-      ]      },
-      {
         "type": "openstack",
         "flavor": "b1.medium",
         "image_name": "{{ user `image_name` }}",
@@ -84,14 +28,8 @@
         "floating_ip_pool": "nova",
         "ssh_pty" : true,
         "security_groups": "{{user `openstack_sg`}}"
-      },
-      {
-        "type":         "null",
-        "ssh_host":     "127.0.0.1",
-        "ssh_username": "{{ user `null_user` }}",
-        "ssh_private_key_file": "{{ user `null_key` }}"
       }
-  ],
+    ],
   "provisioners": [
     {
       "scripts": [
@@ -99,7 +37,6 @@
           "{{user `directory`}}/scripts/install_ansible.sh"
       ],
       "type": "shell",
-      "except": [ "null" ],
       "execute_command": " {{ .Vars }} bash '{{ .Path }}'",
       "environment_vars": [ 
           "image={{ user `image_name` }}"
@@ -111,17 +48,11 @@
       ],
       "type": "shell",
       "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
-      "override": {
-        "vmware-iso": {
-          "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }} http_proxy=http://172.18.24.1:3128/ https_proxy=http://172.18.24.1:3128/ sudo -E -S bash '{{ .Path }}'"
-        }
-      },
       "environment_vars": [ 
           "image={{ user `image_name` }}"
       ]
     },
     {
-      "only": ["openstack"],
       "destination": "/tmp/stash",
       "source": "{{user `directory`}}/data/",
       "type": "file"
@@ -143,21 +74,12 @@
     },
     {
       "scripts": [
-          "{{user `directory`}}/scripts/install_vmtools.sh"
-      ],
-      "type": "shell",
-      "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
-      "only": ["vmware-iso"]
-    },
-    {
-      "scripts": [
           "{{user `directory`}}/scripts/add_version.sh",
           "{{user `directory`}}/scripts/install_cloud-init.sh",
           "{{user `directory`}}/scripts/cleanup.sh",
           "{{user `directory`}}/scripts/minimize.sh"
       ],
       "type": "shell",
-      "except": [ "null" ],
       "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
       "environment_vars": [ 
           "image={{ user `image_name` }}"
