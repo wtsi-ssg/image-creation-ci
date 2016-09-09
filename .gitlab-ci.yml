@@ -190,7 +190,8 @@ build_vmware_centos:
    - export PRESEED="$PRESEED_CENTOS"
    - export CENTOSKS="ks"
    - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
-   - mv $IMAGE_NAME/ /warehouse/is
+   - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
+   - rm vmware_private_key.pem
 
 cleanup_openstack_build:
   stage: cleanup_build
