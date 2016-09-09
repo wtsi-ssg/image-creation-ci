@@ -199,6 +199,11 @@ cleanup_openstack_build:
    - packer
   script:
    - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+   - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
    - ./remove_failed_builds.py
   when: on_failure
 
@@ -305,7 +310,13 @@ cleanup_openstack_test:
    - packer
   script:
    - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
    - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+   - ./remove_failed_builds.py
+
   when: on_failure
 
 store_openstack_image:
@@ -314,6 +325,9 @@ store_openstack_image:
   - packer
   script:
   - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
   - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
-
-
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
+  - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+  - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
