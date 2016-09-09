@@ -95,7 +95,7 @@ validate_template_xenial_openstack:
    - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
    - export CENTOSKS="thisoptionisnotforubuntu"
-   - ./create_image.py validate -rf template-openstack-ubuntu.json -vf variables.json.example
+   - ./create_image.py validate -tf template-openstack-ubuntu.json -vf variables.json.example
 
 validate_template_xenial_vmware:
   stage: init
@@ -113,7 +113,7 @@ validate_template_xenial_vmware:
    - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
    - export CENTOSKS="thisoptionisnotforubuntu"
-   - ./create_image.py validate -rf template-vmware-ubuntu.json -vf variables.json.example
+   - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
 
 validate_template_centos7_openstack:
@@ -185,7 +185,7 @@ build_openstack_centos7:
   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
   - export IMAGE_USERNAME="centos"
-  - ./create_image.py build -d local -rf template-openstack-centos.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+  - ./create_image.py build -d local -tf template-openstack-centos.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_vmware_trusty:
   stage: build
