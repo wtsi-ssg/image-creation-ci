@@ -70,10 +70,11 @@ case ${PACKER_BUILDER_TYPE} in
                         cleanup_home_centos
                         cleanup_yum
                         ;;
-                     ubuntu
+                     ubuntu)
 		        cleanup_apt.conf
 		        cleanup_home_ubuntu
                         ;;
+                esac
 		;;
 	default)
 		;;
