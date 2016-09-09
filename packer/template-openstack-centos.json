@@ -8,7 +8,7 @@
     "image_name":       "{{ env `IMAGE_NAME`}}",
     "packer_username":  "{{ env `PACKER_USERNAME` }}",
     "packer_password":  "{{ env `PACKER_PASSWORD` }}",
-    "preseed":          "{{ env `PRESEED` }}",
+    "preseed":          "{{ env `PRESEED` }}"
   },
 
   "builders": [
