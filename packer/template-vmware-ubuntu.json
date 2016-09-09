@@ -2,8 +2,6 @@
 {
   "min_packer_version": "0.9.0",
   "variables": {
-    "openstack_imgid":  "{{ env `OS_BASE_IMAGE`}}",
-    "openstack_sg":     "{{ env `OS_SECURITY_GRP`}}",
     "image_user":       "{{ env `IMAGE_USERNAME`}}",
     "image_name":       "{{ env `IMAGE_NAME`}}",
     "vm_pass":          "{{ env `VMWARE_PASSWORD` }}",
@@ -14,7 +12,6 @@
     "packer_password":  "{{ env `PACKER_PASSWORD` }}",
     "boot_cmd":         "{{ env `BOOT_COMMAND` }}" ,
     "preseed":          "{{ env `PRESEED` }}",
-    "centosks":         "{{ env `CENTOSKS` }}"
   },
 
   "builders": [
@@ -50,7 +47,6 @@
         "hostname={{ .Name }} ",
         "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed` }} ",
         "netcfg/get_hostname={{ .Name }} ",
-        "{{user `centosks` }}=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed` }} ",
         "-- <wait><enter><wait> " ]
       }
     ],
