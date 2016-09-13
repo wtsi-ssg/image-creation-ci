@@ -1,7 +1,7 @@
 variables:
  OS_NO_CACHE: "True"
  COMPUTE_API_VERSION: "1.1"
- no_proxy: ",172.31.0.18"
+ no_proxy: ",172.31.0.18" 
  OS_CLOUDNAME: "overcloud"
  OS_AUTH_URL: "http://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
  NOVA_VERSION: "1.1"
