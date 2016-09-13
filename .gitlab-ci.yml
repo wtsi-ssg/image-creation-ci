@@ -41,7 +41,7 @@ stages:
  - build_openstack
  - build_vmware
  - cleanup_build
- - test
+ - test_openstack
  - cleanup_test
  - store
 
