@@ -7,7 +7,7 @@
             "security_groups": "{{user `openstack_sg`}}",
             "source_image": "{{ user `openstack_imgid` }}",
             "ssh_pty": true,
-            "ssh_username": "{{ user `image_user` }}",
+            "ssh_username": "centos",
             "type": "openstack",
             "use_floating_ip": "true"
         }
@@ -29,7 +29,7 @@
             "environment_vars": [
                 "image={{ user `image_name` }}"
             ],
-            "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "execute_command": "echo centos | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
             "scripts": [
                 "{{user `extra_script`}}"
             ],
@@ -61,7 +61,7 @@
             "environment_vars": [
                 "image={{ user `image_name` }}"
             ],
-            "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "execute_command": "echo centos | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
             "scripts": [
                 "{{user `directory`}}/scripts/add_version.sh",
                 "{{user `directory`}}/scripts/install_cloud-init.sh",
@@ -73,11 +73,7 @@
     ],
     "variables": {
         "image_name": "{{ env `IMAGE_NAME`}}",
-        "image_user": "{{ env `IMAGE_USERNAME`}}",
         "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
-        "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
-        "packer_password": "{{ env `PACKER_PASSWORD` }}",
-        "packer_username": "{{ env `PACKER_USERNAME` }}",
-        "preseed": "{{ env `PRESEED` }}"
+        "openstack_sg": "{{ env `OS_SECURITY_GRP`}}"
     }
 }
