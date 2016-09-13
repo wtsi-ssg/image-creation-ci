@@ -36,15 +36,17 @@ variables:
 
 
 stages:
- - init
- - build
+ - init_openstack
+ - init_vmware
+ - build_openstack
+ - build_vmware
  - cleanup_build
  - test
  - cleanup_test
  - store
 
 validate_template_trusty_openstack:
-  stage: init
+  stage: init_openstack
   tags: 
    - packer
   script:
@@ -55,7 +57,7 @@ validate_template_trusty_openstack:
    - ./create_image.py validate -tf template-openstack-ubuntu.json -vf variables.json.example 
 
 validate_template_trusty_vmware:
-  stage: init
+  stage: init_vmware
   tags:
    - packer
   script:
@@ -71,7 +73,7 @@ validate_template_trusty_vmware:
    - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
 validate_template_xenial_openstack:
-  stage: init
+  stage: init_openstack
   tags:
    - packer
   script:
@@ -82,7 +84,7 @@ validate_template_xenial_openstack:
    - ./create_image.py validate -tf template-openstack-ubuntu.json -vf variables.json.example
 
 validate_template_xenial_vmware:
-  stage: init
+  stage: init_vmware
   tags:
    - packer
   script:
@@ -98,7 +100,7 @@ validate_template_xenial_vmware:
    - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
 validate_template_centos7_openstack:
-  stage: init
+  stage: init_openstack
   tags:
    - packer
   script:
@@ -109,7 +111,7 @@ validate_template_centos7_openstack:
    - ./create_image.py validate -tf template-openstack-centos.json -vf variables.json.example
 
 validate_template_centos7_vmware:
-  stage: init
+  stage: init_vmware
   tags:
    - packer
   script:
@@ -126,7 +128,7 @@ validate_template_centos7_vmware:
 
 
 build_openstack_trusty:
- stage: build
+ stage: build_openstack
  tags:
   - packer
  script:
@@ -137,7 +139,7 @@ build_openstack_trusty:
   - ./create_image.py build -d local -tf template-openstack-ubuntu.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_xenial:
- stage: build
+ stage: build_openstack
  tags:
   - packer
  script:
@@ -148,7 +150,7 @@ build_openstack_xenial:
   - ./create_image.py build -d local -tf template-openstack-ubuntu.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_openstack_centos7:
- stage: build
+ stage: build_openstack
  tags:
   - packer
  script:
@@ -159,7 +161,7 @@ build_openstack_centos7:
   - ./create_image.py build -d local -tf template-openstack-centos.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
 
 build_vmware_trusty:
-  stage: build
+  stage: build_vmware
   tags:
    - packer
   script:
@@ -179,7 +181,7 @@ build_vmware_trusty:
    - rm vmware_private_key.pem
 
 build_vmware_xenial:
-  stage: build
+  stage: build_vmware
   tags:
    - packer
   script:
@@ -199,7 +201,7 @@ build_vmware_xenial:
    - rm vmware_private_key.pem
 
 build_vmware_centos:
-  stage: build
+  stage: build_vmware
   tags:
    - packer
   script:
@@ -234,7 +236,7 @@ cleanup_openstack_build:
 
 
 test_openstack_no_disk_trusty:
-  stage: test
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
@@ -250,7 +252,7 @@ test_openstack_no_disk_trusty:
   - ./kitchen_wrapper.sh
 
 test_openstack_no_disk_xenial:
-  stage: test
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
@@ -266,7 +268,7 @@ test_openstack_no_disk_xenial:
   - ./kitchen_wrapper.sh
 
 test_openstack_no_disk_centos7:
-  stage: test
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
@@ -282,7 +284,7 @@ test_openstack_no_disk_centos7:
   - ./kitchen_wrapper.sh
 
 test_openstack_disk_trusty:
-  stage: test
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
@@ -298,7 +300,7 @@ test_openstack_disk_trusty:
   - ./kitchen_wrapper.sh
 
 test_openstack_disk_xenial:
-  stage: test
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
@@ -314,7 +316,7 @@ test_openstack_disk_xenial:
   - ./kitchen_wrapper.sh
 
 test_openstack_disk_centos7:
-  stage: test
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
