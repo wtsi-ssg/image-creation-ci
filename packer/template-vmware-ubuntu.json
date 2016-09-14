@@ -18,15 +18,15 @@
             "output_directory": "{{ user `image_name` }}",
             "remote_datastore": "wtgc-vmbd-01:datastore1",
             "remote_host": "{{ user `VMWARE_BUILD_HOST` }}",
-            "remote_password": "{{ user `vm_pass` }}",
+            "remote_password": "ubuntu",
             "remote_private_key_file": "vmware_private_key.pem",
             "remote_type": "esx5",
             "remote_username": "vmbuildadmin",
-            "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-            "ssh_password": "{{user `packer_password`}}",
+            "shutdown_command": "echo ubuntu | sudo -S shutdown -P now",
+            "ssh_password": "ubuntu",
             "ssh_pty": "true",
             "ssh_timeout": "60m",
-            "ssh_username": "{{user `packer_username`}}",
+            "ssh_username": "ubuntu",
             "tools_upload_flavor": "linux",
             "type": "vmware-iso",
             "version": 8,
@@ -53,7 +53,7 @@
             "environment_vars": [
                 "image={{ user `image_name` }}"
             ],
-            "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }} http_proxy=http://172.18.24.1:3128/ https_proxy=http://172.18.24.1:3128/ sudo -E -S bash '{{ .Path }}'",
+            "execute_command": "echo ubuntu | {{ .Vars }} http_proxy=http://172.18.24.1:3128/ https_proxy=http://172.18.24.1:3128/ sudo -E -S bash '{{ .Path }}'",
             "scripts": [
                 "{{user `extra_script`}}"
             ],
@@ -77,7 +77,7 @@
             "type": "ansible-local"
         },
         {
-            "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "execute_command": "echo ubuntu | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
             "scripts": [
                 "{{user `directory`}}/scripts/install_vmtools.sh"
             ],
@@ -87,7 +87,7 @@
             "environment_vars": [
                 "image={{ user `image_name` }}"
             ],
-            "execute_command": "echo '{{user `packer_username`}}' | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "execute_command": "echo ubuntu | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
             "scripts": [
                 "{{user `directory`}}/scripts/add_version.sh",
                 "{{user `directory`}}/scripts/install_cloud-init.sh",
@@ -104,8 +104,6 @@
         "image_user": "{{ env `IMAGE_USERNAME`}}",
         "iso_checksum": "{{ env `ISO_CHECKSUM` }}",
         "iso_url": "{{ env `ISO_URL` }}",
-        "packer_password": "{{ env `PACKER_PASSWORD` }}",
-        "packer_username": "{{ env `PACKER_USERNAME` }}",
         "preseed": "{{ env `PRESEED` }}",
         "vm_pass": "{{ env `VMWARE_PASSWORD` }}"
     }

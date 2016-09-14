@@ -11,16 +11,12 @@ variables:
  ISO_URL_TRUSTY: "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso"
  ISO_CHECKSUM_TRUSTY: "2ac1f3e0de626e54d05065d6f549fa3a"
  BOOT_COMMAND_TRUSTY: "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
- PACKER_USERNAME_TRUSTY: "ubuntu"
- PACKER_PASSWORD_TRUSTY: "ubuntu"
  PRESEED_TRUSTY: "ubuntu-preseed.cfg"
  OS_BASE_IMAGE_XENIAL: "002ca5be-3934-43d3-9d2c-eda816b57019"
  IMAGE_NAME_XENIAL: "xenial-WTSI-standard-"
  ISO_URL_XENIAL: "http://releases.ubuntu.com/16.04.1/ubuntu-16.04-server-amd64.iso"
  ISO_CHECKSUM_XENIAL: "23e97cd5d4145d4105fbf29878534049"
  BOOT_COMMAND_XENIAL: "<esc><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
- PACKER_USERNAME_XENIAL: "ubuntu"
- PACKER_PASSWORD_XENIAL: "ubuntu"
  PRESEED_XENIAL: "ubuntu-preseed.cfg"
  OS_BASE_IMAGE_CENTOS7: "62313395-5876-439c-9a36-86839ad27195"
  IMAGE_NAME_CENTOS7: "centos7-WTSI-standard-"
@@ -64,8 +60,6 @@ validate_template_trusty_vmware:
    - export ISO_URL="$ISO_URL_TRUSTY"
    - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
    - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
-   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
-   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
    - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
@@ -91,8 +85,6 @@ validate_template_xenial_vmware:
    - export ISO_URL="$ISO_URL_TRUSTY"
    - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
    - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
-   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
-   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
    - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
@@ -163,14 +155,12 @@ build_vmware_trusty:
    - export ISO_URL="$ISO_URL_TRUSTY"
    - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
    - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
-   - export PACKER_USERNAME="$PACKER_USERNAME_TRUSTY"
-   - export PACKER_PASSWORD="$PACKER_PASSWORD_TRUSTY"
    - export PRESEED="$PRESEED_TRUSTY"
    - export http_proxy="$http_proxy"
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}${CI_BUILD_ID}
-   - echo ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
 
@@ -183,14 +173,12 @@ build_vmware_xenial:
    - export ISO_URL="$ISO_URL_XENIAL"
    - export ISO_CHECKSUM="$ISO_CHECKSUM_XENIAL"
    - export BOOT_COMMAND="$BOOT_COMMAND_XENIAL"
-   - export PACKER_USERNAME="$PACKER_USERNAME_XENIAL"
-   - export PACKER_PASSWORD="$PACKER_PASSWORD_XENIAL"
    - export PRESEED="$PRESEED_XENIAL"
    - export http_proxy="$http_proxy"
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_XENIAL}${CI_BUILD_ID}
-   - echo ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem
 
