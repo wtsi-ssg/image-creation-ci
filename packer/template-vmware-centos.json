@@ -23,7 +23,7 @@
             "remote_type": "esx5",
             "remote_username": "vmbuildadmin",
             "shutdown_command": "echo '{{user `packer_username`}}' | sudo -S shutdown -P now",
-            "ssh_password": "{{user `packer_password`}}",
+            "ssh_password": "centos",
             "ssh_pty": "true",
             "ssh_timeout": "60m",
             "ssh_username": "{{user `packer_username`}}",
@@ -104,7 +104,6 @@
         "image_user": "{{ env `IMAGE_USERNAME`}}",
         "iso_checksum": "{{ env `ISO_CHECKSUM` }}",
         "iso_url": "{{ env `ISO_URL` }}",
-        "packer_password": "{{ env `PACKER_PASSWORD` }}",
         "packer_username": "{{ env `PACKER_USERNAME` }}",
         "preseed": "{{ env `PRESEED` }}",
         "vm_pass": "{{ env `VMWARE_PASSWORD` }}"

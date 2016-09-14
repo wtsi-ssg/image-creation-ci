@@ -28,7 +28,6 @@ variables:
  ISO_CHECKSUM_CENTOS: "99d305fa40ec9e28ef8450c3bcc45f85"
  BOOT_COMMAND_CENTOS: "<tab> text "
  PACKER_USERNAME_CENTOS: "centos"
- PACKER_PASSWORD_CENTOS: "centos"
  PRESEED_CENTOS: "ks.cfg"
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
@@ -122,7 +121,6 @@ validate_template_centos7_vmware:
    - export ISO_CHECKSUM="$ISO_CHECKSUM_CENTOS"
    - export BOOT_COMMAND="$BOOT_COMMAND_CENTOS"
    - export PACKER_USERNAME="$PACKER_USERNAME_CENTOS"
-   - export PACKER_PASSWORD="$PACKER_PASSWORD_CENTOS"
    - export PRESEED="$PRESEED_CENTOS"
    - ./create_image.py validate -tf template-vmware-centos.json -vf variables.json.example
 
@@ -176,7 +174,7 @@ build_vmware_trusty:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}${CI_BUILD_ID}
-   - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - echo ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
 
@@ -196,7 +194,7 @@ build_vmware_xenial:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_XENIAL}${CI_BUILD_ID}
-   - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - echo ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem
 
@@ -210,7 +208,6 @@ build_vmware_centos:
    - export ISO_CHECKSUM="$ISO_CHECKSUM_CENTOS"
    - export BOOT_COMMAND="$BOOT_COMMAND_CENTOS"
    - export PACKER_USERNAME="$PACKER_USERNAME_CENTOS"
-   - export PACKER_PASSWORD="$PACKER_PASSWORD_CENTOS"
    - export http_proxy="$http_proxy"
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
