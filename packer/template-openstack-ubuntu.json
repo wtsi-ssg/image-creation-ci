@@ -75,6 +75,6 @@
         "image_name": "{{ env `IMAGE_NAME`}}",
         "image_user": "{{ env `IMAGE_USERNAME`}}",
         "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
-        "openstack_sg": "{{ env `OS_SECURITY_GRP`}}",
+        "openstack_sg": "{{ env `OS_SECURITY_GRP`}}"
     }
 }
