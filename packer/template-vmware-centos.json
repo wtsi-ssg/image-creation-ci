@@ -101,7 +101,6 @@
         "boot_cmd": "{{ env `BOOT_COMMAND` }}",
         "boot_command": "{{ env `BOOT_COMMAND` }}",
         "image_name": "{{ env `IMAGE_NAME`}}",
-        "image_user": "{{ env `IMAGE_USERNAME`}}",
         "iso_checksum": "{{ env `ISO_CHECKSUM` }}",
         "iso_url": "{{ env `ISO_URL` }}",
         "vm_pass": "{{ env `VMWARE_PASSWORD` }}"

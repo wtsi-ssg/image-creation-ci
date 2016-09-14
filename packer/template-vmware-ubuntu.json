@@ -4,7 +4,7 @@
             "boot_command": [
                 "{{user `boot_cmd`}}",
                 "hostname={{ .Name }} ",
-                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed` }} ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu-preseed.cfg ",
                 "netcfg/get_hostname={{ .Name }} ",
                 "-- <wait><enter><wait> "
             ],
@@ -101,10 +101,8 @@
         "boot_cmd": "{{ env `BOOT_COMMAND` }}",
         "boot_command": "{{ env `BOOT_COMMAND` }}",
         "image_name": "{{ env `IMAGE_NAME`}}",
-        "image_user": "{{ env `IMAGE_USERNAME`}}",
         "iso_checksum": "{{ env `ISO_CHECKSUM` }}",
         "iso_url": "{{ env `ISO_URL` }}",
-        "preseed": "{{ env `PRESEED` }}",
         "vm_pass": "{{ env `VMWARE_PASSWORD` }}"
     }
 }
