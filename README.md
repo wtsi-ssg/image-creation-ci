@@ -28,13 +28,13 @@ This will build images for the supplied platform(s) or all. If the option valida
   - sys  
 
 
-## VMWare private key
+## VMWare Credentials
 
-Communication with the ESX server is via SSH a private key is required to connect to the server, this should be placed in the file **vmware_private_key.pem** 
+Communication with the ESXi server is via SSH both with a private key which is stored on the ESXi server and via password authentication. The password for ESXi is stored in the varibles project setting. The username is specified in the template.json as remote_username.
 
 ## Openstack Credentials
 
-The openstack.sh script should be modified with the appropriate openstack credentials & environment in the variables:-
+The openstack credentials & environment is configured in the **remote_username**
 
 
 - COMPUTE_API_VERSION
@@ -55,15 +55,15 @@ Should match the COMPUTE_API_VERSION above.
 
 - OS_USERNAME
 
-Username to connect to the openstack environment with
+** Defined in Variables section of project settings ** Username to connect to the openstack environment with
 
 - OS_PASSWORD
 
-Password for the above user
+** Defined in Variables section of project settings ** Password for the above user
 
 - OS_TENANT_NAME
 
-Tenant within openstack to use for the build
+** Defined in Variables section of project settings ** Tenant within openstack to use for the build
 
 - OS_BASE_IMAGE
 
@@ -77,7 +77,7 @@ Security group to apply to the build (must allow SSH access to the booted image)
 
 ## Variables
 
-The files *variables.json* contains configuration variables required to build the image important variables are:-
+The files *variables.json* contains default configuration variables required to build the image important variables are:-
 
 ### packer_username &  packer_password
 The username & password that will be burnt into the image as a default user
