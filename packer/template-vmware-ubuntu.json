@@ -77,7 +77,7 @@
             "type": "ansible-local"
         },
         {
-            "execute_command": ubuntu | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "execute_command": "echo ubuntu | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
             "scripts": [
                 "{{user `directory`}}/scripts/install_vmtools.sh"
             ],
