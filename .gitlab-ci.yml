@@ -56,8 +56,6 @@ validate_template_trusty_vmware:
    - export ISO_URL="$ISO_URL_TRUSTY"
    - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
    - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
-   - export PACKER_PASSWORD="ubuntu"
-   - export PACKER_USERNAME="ubuntu"
    - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
 validate_template_xenial_openstack:
@@ -80,8 +78,6 @@ validate_template_xenial_vmware:
    - export ISO_URL="$ISO_URL_TRUSTY"
    - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
    - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
-   - export PACKER_PASSWORD="ubuntu"
-   - export PACKER_USERNAME="ubuntu"
    - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
 
 validate_template_centos7_openstack:
@@ -150,8 +146,6 @@ build_vmware_trusty:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}${CI_BUILD_ID}
-   - export PACKER_PASSWORD="ubuntu"
-   - export PACKER_USERNAME="ubuntu"
    - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
    - rm vmware_private_key.pem
@@ -169,8 +163,6 @@ build_vmware_xenial:
    - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
    - export IMAGE_NAME=${IMAGE_NAME_XENIAL}${CI_BUILD_ID}
-   - export PACKER_PASSWORD="ubuntu"
-   - export PACKER_USERNAME="ubuntu"
    - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem

@@ -99,7 +99,6 @@
     ],
     "variables": {
         "boot_cmd": "{{ env `BOOT_COMMAND` }}",
-        "boot_command": "{{ env `BOOT_COMMAND` }}",
         "image_name": "{{ env `IMAGE_NAME`}}",
         "iso_checksum": "{{ env `ISO_CHECKSUM` }}",
         "iso_url": "{{ env `ISO_URL` }}",
