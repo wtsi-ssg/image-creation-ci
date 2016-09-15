@@ -18,7 +18,7 @@
             "output_directory": "{{ user `image_name` }}",
             "remote_datastore": "wtgc-vmbd-01:datastore1",
             "remote_host": "{{ user `VMWARE_BUILD_HOST` }}",
-            "remote_password": "ubuntu",
+            "remote_password": "{{ user `vm_pass` }}",
             "remote_private_key_file": "vmware_private_key.pem",
             "remote_type": "esx5",
             "remote_username": "vmbuildadmin",
