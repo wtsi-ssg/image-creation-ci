@@ -1,54 +1,187 @@
 variables:
  OS_NO_CACHE: "True"
  COMPUTE_API_VERSION: "1.1"
- no_proxy: ",172.31.0.18"
+ no_proxy: ",172.31.0.18" 
  OS_CLOUDNAME: "overcloud"
  OS_AUTH_URL: "http://openstack-gamma.internal.sanger.ac.uk:5000/v2.0/"
  NOVA_VERSION: "1.1"
- PACKER_BIN: "/home/gitlab-runner/packer-0.9.1"
- OS_BASE_IMAGE: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
- IMAGE_NAME: "ubuntu_14_04_4_WTSI_standard"
+ PACKER_BIN: "/home/gitlab-runner/packer-0.10.1"
+ OS_BASE_IMAGE_TRUSTY: "8f50f1c3-b094-492b-8c73-191a8f1f5582"
+ IMAGE_NAME_TRUSTY: "trusty-WTSI-standard-"
+ ISO_URL_TRUSTY: "http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso"
+ ISO_CHECKSUM_TRUSTY: "2ac1f3e0de626e54d05065d6f549fa3a"
+ BOOT_COMMAND_TRUSTY: "<esc><esc><enter><wait> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
+ OS_BASE_IMAGE_XENIAL: "002ca5be-3934-43d3-9d2c-eda816b57019"
+ IMAGE_NAME_XENIAL: "xenial-WTSI-standard-"
+ ISO_URL_XENIAL: "http://releases.ubuntu.com/16.04.1/ubuntu-16.04-server-amd64.iso"
+ ISO_CHECKSUM_XENIAL: "23e97cd5d4145d4105fbf29878534049"
+ BOOT_COMMAND_XENIAL: "<esc><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs> /install/vmlinuz debian-installer=en_GB auto locale=en_GB kbd-chooser/method=gb fb=false debconf/frontend=noninteractive keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=GB keyboard-configuration/variant=GB console-setup/ask_detect=false  initrd=/install/initrd.gz netcfg/get_domain=vm  noapic "
+ OS_BASE_IMAGE_CENTOS7: "62313395-5876-439c-9a36-86839ad27195"
+ IMAGE_NAME_CENTOS7: "centos7-WTSI-standard-"
+ ISO_URL_CENTOS: "http://www.mirrorservice.org/sites/mirror.centos.org/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1511.iso"
+ ISO_CHECKSUM_CENTOS: "99d305fa40ec9e28ef8450c3bcc45f85"
+ BOOT_COMMAND_CENTOS: "<tab> text "
  OS_SECURITY_GRP: "ssh"
  VMWARE_BUILD_HOST: "wtgc-vmbd-01.internal.sanger.ac.uk"
- http_proxy: "http://wwwcache.sanger.ac.uk:3128"
- https_proxy: "http://wwwcache.sanger.ac.uk:3128"
+ proxy: "http://wwwcache.sanger.ac.uk:3128"
 
 
 stages:
- - init
- - build
+ - init_openstack
+ - init_vmware
+ - build_openstack
+ - build_vmware
  - cleanup_build
- - test
+ - test_openstack
  - cleanup_test
  - store
 
-validate_template:
-  stage: init
+validate_template_trusty_openstack:
+  stage: init_openstack
   tags: 
    - packer
   script:
-   - cd ubuntu14.04
-   - ./create_image.py validate -vf variables.json.example 
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
+   - ./create_image.py validate -tf template-openstack-ubuntu.json -vf variables.json.example 
 
-build_openstack:
- stage: build
- tags:
-  - packer
- script:
-  - cd ubuntu14.04
-  - ./create_image.py build -d local -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
-
-
-build_vmware:
-  stage: build
+validate_template_trusty_vmware:
+  stage: init_vmware
   tags:
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
+
+validate_template_xenial_openstack:
+  stage: init_openstack
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+   - ./create_image.py validate -tf template-openstack-ubuntu.json -vf variables.json.example
+
+validate_template_xenial_vmware:
+  stage: init_vmware
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - ./create_image.py validate -tf template-vmware-ubuntu.json -vf variables.json.example
+
+validate_template_centos7_openstack:
+  stage: init_openstack
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+   - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
+   - ./create_image.py validate -tf template-openstack-centos.json -vf variables.json.example
+
+validate_template_centos7_vmware:
+  stage: init_vmware
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+   - export ISO_URL="$ISO_URL_CENTOS"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_CENTOS"
+   - export BOOT_COMMAND="$BOOT_COMMAND_CENTOS"
+   - ./create_image.py validate -tf template-vmware-centos.json -vf variables.json.example
+
+
+build_openstack_trusty:
+ stage: build_openstack
+ tags:
+  - packer
+ script:
+  - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - export OS_BASE_IMAGE="$OS_BASE_IMAGE_TRUSTY"
+  - ./create_image.py build -d local -tf template-openstack-ubuntu.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+
+build_openstack_xenial:
+ stage: build_openstack
+ tags:
+  - packer
+ script:
+  - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+  - export OS_BASE_IMAGE="$OS_BASE_IMAGE_XENIAL"
+  - ./create_image.py build -d local -tf template-openstack-ubuntu.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+
+build_openstack_centos7:
+ stage: build_openstack
+ tags:
+  - packer
+ script:
+  - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+  - export OS_BASE_IMAGE="$OS_BASE_IMAGE_CENTOS7"
+  - ./create_image.py build -d local -tf template-openstack-centos.json -vf variables.json.example -p openstack -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+
+build_vmware_trusty:
+  stage: build_vmware
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export ISO_URL="$ISO_URL_TRUSTY"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_TRUSTY"
+   - export BOOT_COMMAND="$BOOT_COMMAND_TRUSTY"
+   - export http_proxy="$http_proxy"
+   - export https_proxy="$http_proxy"
    - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
-   - IMAGE_NAME=${IMAGE_NAME}"_"$(date +%Y%m%d%H%M%S )
-   - ./create_image.py build -d local -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - export IMAGE_NAME=${IMAGE_NAME_TRUSTY}${CI_BUILD_ID}
+   - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
    - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware 
+   - rm vmware_private_key.pem
+
+build_vmware_xenial:
+  stage: build_vmware
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export ISO_URL="$ISO_URL_XENIAL"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_XENIAL"
+   - export BOOT_COMMAND="$BOOT_COMMAND_XENIAL"
+   - export http_proxy="$http_proxy"
+   - export https_proxy="$http_proxy"
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - export IMAGE_NAME=${IMAGE_NAME_XENIAL}${CI_BUILD_ID}
+   - ./create_image.py build -d local -tf template-vmware-ubuntu.json -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
+   - rm vmware_private_key.pem
+
+build_vmware_centos:
+  stage: build_vmware
+  tags:
+   - packer
+  script:
+   - cd packer
+   - export ISO_URL="$ISO_URL_CENTOS"
+   - export ISO_CHECKSUM="$ISO_CHECKSUM_CENTOS"
+   - export BOOT_COMMAND="$BOOT_COMMAND_CENTOS"
+   - export http_proxy="$http_proxy"
+   - export https_proxy="$http_proxy"
+   - sshpass -p $VMWARE_PASSWORD scp -oStrictHostKeyChecking=no vmbuildadmin@wtgc-vmbd-01.internal.sanger.ac.uk:~/vmware_private_key.pem .
+   - export IMAGE_NAME=${IMAGE_NAME_CENTOS7}${CI_BUILD_ID}
+   - ./create_image.py build -d local -tf template-vmware-centos.json  -vf variables.json.example -p vmware-iso -o "${IMAGE_NAME}"_"${CI_BUILD_REF}"
+   - mv $IMAGE_NAME/ /warehouse/isg_warehouse/SciaaS_images/vmware
    - rm vmware_private_key.pem
 
 cleanup_openstack_build:
@@ -56,46 +189,125 @@ cleanup_openstack_build:
   tags:
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+   - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
    - ./remove_failed_builds.py
   when: on_failure
 
 
-test_openstack_no_disk:
-  stage: test
+test_openstack_no_disk_trusty:
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
   script:
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=default
-  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
-  - openstack keypair create $KEYPAIR >> $KEYPAIR
-  - http_proxy="" https_proxy=""  kitchen test
-  - kitchen destroy
-  - openstack keypair delete $KEYPAIR
+  - export IMAGE_USERNAME="ubuntu"
+  - export PLATFORM="ubuntu-14.04"
+  - export http_proxy=""
+  - export http_proxys=""
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - ./kitchen_wrapper.sh
 
-test_openstack_disk:
-  stage: test
+test_openstack_no_disk_xenial:
+  stage: test_openstack
   tags:
    - openstack
    - kitchen
   script:
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=default
+  - export IMAGE_USERNAME="ubuntu"
+  - export PLATFORM="ubuntu-16.04"
+  - export http_proxy=""
+  - export http_proxys=""
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N )| md5sum | cut -d " " -f 1)
+  - ./kitchen_wrapper.sh
+
+test_openstack_no_disk_centos7:
+  stage: test_openstack
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=default
+  - export PLATFORM="centos-7.0"
+  - export IMAGE_USERNAME="centos"
+  - export http_proxy=""
+  - export http_proxys=""
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - ./kitchen_wrapper.sh
+
+test_openstack_disk_trusty:
+  stage: test_openstack
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
   - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
   - export MODE=volume
-  - export KEYPAIR=$(date +%s-%N | md5sum | cut -d " " -f 1)
-  - openstack keypair create $KEYPAIR >> $KEYPAIR
-  - http_proxy="" https_proxy="" kitchen test
-  - kitchen destroy
-  - openstack keypair delete $KEYPAIR
+  - export IMAGE_USERNAME="ubuntu"
+  - export PLATFORM="ubuntu-14.04"
+  - export http_proxy=""
+  - export http_proxys=""
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - ./kitchen_wrapper.sh
+
+test_openstack_disk_xenial:
+  stage: test_openstack
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=volume
+  - export IMAGE_USERNAME="ubuntu"
+  - export PLATFORM="ubuntu-16.04"
+  - export http_proxy=""
+  - export http_proxys=""
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - ./kitchen_wrapper.sh
+
+test_openstack_disk_centos7:
+  stage: test_openstack
+  tags:
+   - openstack
+   - kitchen
+  script:
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
+  - export OS_BASE_IMAGE=$(openstack image list -f value | grep -w "${IMAGE_NAME}"_"${CI_BUILD_REF}" |  cut -d " " -f 1)
+  - export MODE=volume
+  - export IMAGE_USERNAME="centos"
+  - export PLATFORM="centos-7.0"
+  - export http_proxy=""
+  - export http_proxys=""
+  - export KEYPAIR=$( (echo -n $PLATFORM ; echo -n $MODE ; date +%s-%N ) | md5sum | cut -d " " -f 1)
+  - ./kitchen_wrapper.sh
 
 cleanup_openstack_test:
   stage: cleanup_build
   tags:
    - packer
   script:
-   - cd ubuntu14.04
+   - cd packer
+   - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
    - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+   - ./remove_failed_builds.py
+   - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+   - ./remove_failed_builds.py
+
   when: on_failure
 
 store_openstack_image:
@@ -103,6 +315,10 @@ store_openstack_image:
   tags:
   - packer
   script:
-  - cd ubuntu14.04
+  - cd packer
+  - export IMAGE_NAME="$IMAGE_NAME_CENTOS7"
   - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
-
+  - export IMAGE_NAME="$IMAGE_NAME_TRUSTY"
+  - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"
+  - export IMAGE_NAME="$IMAGE_NAME_XENIAL"
+  - ./cleanup.py -dt "${IMAGE_NAME}"_"${CI_BUILD_REF}" "${IMAGE_NAME}"

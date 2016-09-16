@@ -1,0 +1,6 @@
+---
+- name: Debug run a command
+  shell: find /tmp -ls
+  register: result
+- name: include a sub yaml
+  include: "os_release/{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"
