@@ -1,0 +1,79 @@
+{
+    "builders": [
+        {
+            "flavor": "b1.medium",
+            "floating_ip_pool": "nova",
+            "image_name": "{{ user `image_name` }}",
+            "security_groups": "{{user `openstack_sg`}}",
+            "source_image": "{{ user `openstack_imgid` }}",
+            "ssh_pty": true,
+            "ssh_username": "centos",
+            "type": "openstack",
+            "use_floating_ip": "true"
+        }
+    ],
+    "min_packer_version": "0.9.0",
+    "provisioners": [
+        {
+            "environment_vars": [
+                "image={{ user `image_name` }}"
+            ],
+            "execute_command": " {{ .Vars }} bash '{{ .Path }}'",
+            "scripts": [
+                "{{user `directory`}}/scripts/sudoers.sh",
+                "{{user `directory`}}/scripts/install_ansible.sh"
+            ],
+            "type": "shell"
+        },
+        {
+            "environment_vars": [
+                "image={{ user `image_name` }}"
+            ],
+            "execute_command": "echo centos | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "scripts": [
+                "{{user `extra_script`}}"
+            ],
+            "type": "shell"
+        },
+        {
+            "destination": "/tmp/stash",
+            "source": "{{user `directory`}}/data/",
+            "type": "file"
+        },
+        {
+            "playbook_file": "{{user `packer_directory`}}/ansible/packer.yml",
+            "role_paths": [
+                "ansible/roles/sanger-flex-base",
+                "{{user `ansible_rolepath0`}}",
+                "{{user `ansible_rolepath1`}}",
+                "{{user `ansible_rolepath2`}}",
+                "{{user `ansible_rolepath3`}}",
+                "{{user `ansible_rolepath4`}}",
+                "{{user `ansible_rolepath5`}}",
+                "{{user `ansible_rolepath6`}}",
+                "{{user `ansible_rolepath7`}}",
+                "{{user `ansible_rolepath8`}}",
+                "{{user `ansible_rolepath9`}}"
+            ],
+            "type": "ansible-local"
+        },
+        {
+            "environment_vars": [
+                "image={{ user `image_name` }}"
+            ],
+            "execute_command": "echo centos | {{ .Vars }}  sudo -E -S bash '{{ .Path }}'",
+            "scripts": [
+                "{{user `directory`}}/scripts/add_version.sh",
+                "{{user `directory`}}/scripts/install_cloud-init.sh",
+                "{{user `directory`}}/scripts/cleanup.sh",
+                "{{user `directory`}}/scripts/minimize.sh"
+            ],
+            "type": "shell"
+        }
+    ],
+    "variables": {
+        "image_name": "{{ env `IMAGE_NAME`}}",
+        "openstack_imgid": "{{ env `OS_BASE_IMAGE`}}",
+        "openstack_sg": "{{ env `OS_SECURITY_GRP`}}"
+    }
+}

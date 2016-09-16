@@ -1,0 +1,22 @@
+---
+
+- name: Install packages
+  yum: name={{ item }} state=present
+  with_items:
+    - "@Development tools" 
+    - "@System administration tools"
+    - "@Python"
+    - "@Perl Support"
+    - "@Networking Tools"
+    - "@MySQL Database client"
+    - "@Haskell"
+    - "@TeX support"
+    - "@Haskell"
+    - "@Emacs"
+    - "@Core"
+    - "@Compatibility libraries"
+    - "@Buildsystem building group"
+    - "@Additional Development"
+    - "@Compute Node"
+    - "atop"
+    - "strace"

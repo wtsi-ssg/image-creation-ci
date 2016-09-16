@@ -1,1 +1,0 @@
-../../shared/bats/essentials.bats
