@@ -1,6 +1,4 @@
 require 'serverspec'
-require 'socket'
-hostname = Socket.gethostname
 
 # Required by serverspec
 set :backend, :exec
