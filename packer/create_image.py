@@ -188,9 +188,13 @@ def run_packer(args):
     for element in args.platform:
         platform += element +','
 
+    debugflag=''
+    if args.mode == 'build':
+        debugflag = '-debug'
+
     try:
-        debug(" ".join([packer_bin, args.mode, '-debug', '-only='+platform, '-var-file='+ args.var_file, args.tem_file]))
-        subprocess.check_call([packer_bin, args.mode, '-debug', '-only='+platform, '-var-file='+ args.var_file, args.tem_file])
+        debug(" ".join([packer_bin, args.mode, debugflag, '-only='+platform, '-var-file='+ args.var_file, args.tem_file]))
+        subprocess.check_call([packer_bin, args.mode, debugflag, '-only='+platform, '-var-file='+ args.var_file, args.tem_file])
     except subprocess.CalledProcessError as f:
         print(f.output)
         sys.exit(8)
