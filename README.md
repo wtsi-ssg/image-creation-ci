@@ -4,7 +4,7 @@ This repository contains scripts to build images on:
 - VMWare
 - Openstack   
 
-Currently the only Operating System supported is Ubuntu 14.04 
+Currently Ubuntu 14.04, Ubuntu 16.04 and Centos 7.2 are supported.
 ## Usage
 
 **Legacy:** *./packer.sh (build|validate) (virtualbox|vmware|openstack|all)*  
